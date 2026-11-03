@@ -52,7 +52,10 @@
         const importMap = document.createElement('script')
         importMap.type = 'importmap'
         importMap.textContent = JSON.stringify({
-          imports: { three: `${base}vendor/three/three.module.min.js` },
+          imports: {
+            'three': `${base}vendor/three/three.module.min.js`,
+            'three/addons/': `${base}vendor/three/addons/`,
+          },
         })
         document.head.append(importMap)
 
