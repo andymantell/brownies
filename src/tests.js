@@ -1,4 +1,4 @@
-import { config } from './config.js';
+import { config } from './config.js'
 import {
   test,
   check,
@@ -8,7 +8,7 @@ import {
   whereIsCharacter,
   putCharacterAt,
   stepsBetween,
-} from './engine/testing.js';
+} from './engine/testing.js'
 
 // 🧪 Our tests!
 //
@@ -24,58 +24,58 @@ test(
   'Walks when you press a key',
   'Holding down the right arrow key for 1 second should make the character walk.',
   async () => {
-    const start = whereIsCharacter();
+    const start = whereIsCharacter()
 
-    await holdKey('ArrowRight', 1);
+    await holdKey('ArrowRight', 1)
 
-    const end = whereIsCharacter();
-    check('The character walked at least 3 steps', stepsBetween(start, end) >= 3);
+    const end = whereIsCharacter()
+    check('The character walked at least 3 steps', stepsBetween(start, end) >= 3)
   },
-);
+)
 
 test(
   'Stands still when nobody touches anything',
   "If we don't press any keys, the character should stay where they are.",
   async () => {
-    const start = whereIsCharacter();
+    const start = whereIsCharacter()
 
-    await wait(1);
+    await wait(1)
 
-    const end = whereIsCharacter();
-    check('The character has not moved', stepsBetween(start, end) < 0.01);
+    const end = whereIsCharacter()
+    check('The character has not moved', stepsBetween(start, end) < 0.01)
   },
-);
+)
 
 test(
   'Walks to where you tap',
   'Tapping the grass should make the character walk to that spot and stop there.',
   async () => {
-    const spot = { x: 3, z: 3 };
+    const spot = { x: 3, z: 3 }
 
-    tapGround(spot.x, spot.z);
-    await wait(2);
+    tapGround(spot.x, spot.z)
+    await wait(2)
 
-    const end = whereIsCharacter();
-    check('The character is on the spot we tapped', stepsBetween(end, spot) < 0.5);
+    const end = whereIsCharacter()
+    check('The character is on the spot we tapped', stepsBetween(end, spot) < 0.5)
   },
-);
+)
 
 test(
   "Can't fall off the edge",
   'Walking towards the edge of the field for a long time should not take the character off it.',
   async () => {
-    putCharacterAt(25, 0); // near the edge
-    await wait(1); // give the camera time to catch up so we can watch
+    putCharacterAt(25, 0) // near the edge
+    await wait(1) // give the camera time to catch up so we can watch
 
-    await holdKey('ArrowRight', 2);
+    await holdKey('ArrowRight', 2)
 
-    const end = whereIsCharacter();
-    check('The character is still on the field', isOnTheField(end));
+    const end = whereIsCharacter()
+    check('The character is still on the field', isOnTheField(end))
   },
-);
+)
 
 // Is a spot inside the field? (The field goes from -half to +half in both directions.)
 function isOnTheField(spot) {
-  const half = config.world.size / 2;
-  return Math.abs(spot.x) < half && Math.abs(spot.z) < half;
+  const half = config.world.size / 2
+  return Math.abs(spot.x) < half && Math.abs(spot.z) < half
 }

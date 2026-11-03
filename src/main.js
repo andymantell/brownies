@@ -1,16 +1,16 @@
-import { config } from './config.js';
-import { createScreen, startGameLoop } from './engine/index.js';
-import { createWorld } from './world.js';
-import { createCharacter } from './character.js';
-import { createControls } from './controls.js';
-import { connectTests } from './engine/testing.js';
-import { createTestSidebar } from './engine/test-sidebar.js';
-import './tests.js';
+import { config } from './config.js'
+import { createScreen, startGameLoop } from './engine/index.js'
+import { createWorld } from './world.js'
+import { createCharacter } from './character.js'
+import { createControls } from './controls.js'
+import { connectTests } from './engine/testing.js'
+import { createTestSidebar } from './engine/test-sidebar.js'
+import './tests.js'
 
 // This is where the game starts. It builds everything, then runs the game loop.
 
 // Put the game's name on the browser tab.
-document.title = config.title;
+document.title = config.title
 
 // Build everything.
 const screen = createScreen(document.getElementById('game'), {
@@ -19,26 +19,26 @@ const screen = createScreen(document.getElementById('game'), {
   cameraFollowSpeed: config.camera.followSpeed,
   sunColour: config.sun.colour,
   sunStrength: config.sun.strength,
-});
-const world = createWorld(screen);
-const character = createCharacter(screen);
-const controls = createControls(screen);
+})
+const world = createWorld(screen)
+const character = createCharacter(screen)
+const controls = createControls(screen)
 
 // The game loop runs about 60 times every second.
 // Each time, we move things a tiny bit and draw a new picture.
 startGameLoop((secondsPassed) => {
-  const direction = controls.getDirection(character.position);
-  character.update(secondsPassed, direction);
-  world.keepOnField(character.position);
+  const direction = controls.getDirection(character.position)
+  character.update(secondsPassed, direction)
+  world.keepOnField(character.position)
 
-  screen.follow(character.position, secondsPassed);
-  screen.draw();
-});
+  screen.follow(character.position, secondsPassed)
+  screen.draw()
+})
 
 // Hook up the tests, and the sidebar that runs them (see tests.js).
-connectTests({ character, controls, screen });
-createTestSidebar();
+connectTests({ character, controls, screen })
+createTestSidebar()
 
 // Lets you play with the game from the browser console. Try:
 //   game.character.person.scale.set(3, 3, 3)
-window.game = { screen, world, character, config };
+window.game = { screen, world, character, config }

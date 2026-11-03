@@ -34,23 +34,32 @@
       Three.js lives in /vendor so the game still works on dodgy wifi.
     -->
     <script>
-      (async () => {
-        let version = '';
+      async function loadGame() {
+        let version = ''
         try {
-          const response = await fetch('version.txt', { cache: 'no-store' });
-          if (response.ok) version = (await response.text()).trim();
+          const response = await fetch('version.txt', { cache: 'no-store' })
+          if (response.ok) {
+            const text = await response.text()
+            version = text.trim()
+          }
         } catch {}
-        const base = version ? `./${version}/` : './';
 
-        const importMap = document.createElement('script');
-        importMap.type = 'importmap';
+        let base = './'
+        if (version) {
+          base = `./${version}/`
+        }
+
+        const importMap = document.createElement('script')
+        importMap.type = 'importmap'
         importMap.textContent = JSON.stringify({
           imports: { three: `${base}vendor/three/three.module.min.js` },
-        });
-        document.head.append(importMap);
+        })
+        document.head.append(importMap)
 
-        await import(`${base}src/main.js`);
-      })();
+        await import(`${base}src/main.js`)
+      }
+
+      loadGame()
     </script>
   </body>
 </html>

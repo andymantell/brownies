@@ -27,4 +27,4 @@ export const config = {
     colour: '#fff4e0',
     strength: 2.2,
   },
-};
+}
