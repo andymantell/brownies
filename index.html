@@ -4,16 +4,53 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
     <title>Brownies Game</title>
-    <link rel="stylesheet" href="style.css" />
+    <style>
+      html,
+      body {
+        margin: 0;
+        height: 100%;
+        overflow: hidden;
+        background: #bfe6ff;
+      }
 
-    <!-- Three.js lives in /vendor so the game still works on dodgy wifi -->
-    <script type="importmap">
-      { "imports": { "three": "./vendor/three/three.module.min.js" } }
-    </script>
+      #game {
+        display: block;
+        width: 100vw;
+        height: 100vh;
+        touch-action: none; /* stop the page scrolling when you tap/drag on phones */
+      }
+    </style>
   </head>
   <body>
     <canvas id="game"></canvas>
 
-    <script type="module" src="src/main.js"></script>
+    <!--
+      Cache-busting loader.
+      When deployed, the game's JavaScript lives in a folder named after the commit
+      (e.g. /3958ea34/src/main.js), and version.txt says which folder is current.
+      version.txt is always fetched fresh, so a new deploy means brand new URLs and the
+      browser can't use an old cached copy. Locally version.txt is empty, so files load
+      from ./src as normal (use serve.py to stop the browser caching them).
+      Three.js lives in /vendor so the game still works on dodgy wifi.
+    -->
+    <script>
+      (async () => {
+        let version = '';
+        try {
+          const response = await fetch('version.txt', { cache: 'no-store' });
+          if (response.ok) version = (await response.text()).trim();
+        } catch {}
+        const base = version ? `./${version}/` : './';
+
+        const importMap = document.createElement('script');
+        importMap.type = 'importmap';
+        importMap.textContent = JSON.stringify({
+          imports: { three: `${base}vendor/three/three.module.min.js` },
+        });
+        document.head.append(importMap);
+
+        await import(`${base}src/main.js`);
+      })();
+    </script>
   </body>
 </html>

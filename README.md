@@ -6,15 +6,13 @@ Plain HTML and JavaScript with [Three.js](https://threejs.org/). No build step, 
 
 ## Run it on your laptop
 
-Browsers won't load JavaScript modules from a `file://` page, so start a tiny local web server in this folder:
+Browsers won't load JavaScript modules from a `file://` page, so start the tiny local web server in this folder:
 
 ```sh
-python3 -m http.server 8000
-# or
-npx serve .
+python3 serve.py
 ```
 
-Then open http://localhost:8000 and refresh after each change.
+Then open http://localhost:8000 and refresh after each change. `serve.py` tells the browser not to cache anything, so you always see your latest code.
 
 ## Play
 
@@ -42,4 +40,4 @@ game.character.person.scale.set(3, 3, 3)
 
 ## Deploying
 
-Every push to `main` deploys to GitHub Pages using `.github/workflows/pages.yml`.
+Every push to `main` deploys to GitHub Pages using `.github/workflows/pages.yml`. Each deploy puts the code in a new folder named after the commit, and `index.html` reads `version.txt` to find it, so nobody gets a stale cached copy.

@@ -24,10 +24,15 @@ jobs:
       - uses: actions/checkout@v4
 
       # No build step: the game is plain HTML + JavaScript, so just publish the files.
+      # The JavaScript goes in a folder named after the commit, and version.txt points
+      # index.html at it, so browsers never mix old cached files with a new deploy.
       - name: Collect site files
         run: |
-          mkdir _site
-          cp -r index.html style.css src vendor _site/
+          VERSION="${GITHUB_SHA::8}"
+          mkdir -p "_site/$VERSION"
+          cp index.html _site/
+          cp -r src vendor "_site/$VERSION/"
+          echo "$VERSION" > _site/version.txt
 
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
