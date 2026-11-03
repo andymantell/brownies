@@ -38,6 +38,12 @@ You can also poke the game from the browser console through `window.game`, for e
 game.character.person.scale.set(3, 3, 3)
 ```
 
+## Tests
+
+Click the peeling corner in the top right of the game to open the tests, then press ▶ to watch the character do each one. The tests live in `src/tests.js`, and each one is a name, a description, some steps and a `check('what we expect', ...)`.
+
+The same tests run in a headless browser on every push (`tools/run-tests.mjs`), and the site only deploys if they all pass.
+
 ## Deploying
 
 Every push to `main` deploys to GitHub Pages using `.github/workflows/pages.yml`. Each deploy puts the code in a new folder named after the commit, and `index.html` reads `version.txt` to find it, so nobody gets a stale cached copy.

@@ -3,6 +3,9 @@ import { createScreen, startGameLoop } from './engine/index.js';
 import { createWorld } from './world.js';
 import { createCharacter } from './character.js';
 import { createControls } from './controls.js';
+import { connectTests } from './engine/testing.js';
+import { createTestSidebar } from './engine/test-sidebar.js';
+import './tests.js';
 
 // This is where the game starts. It builds everything, then runs the game loop.
 
@@ -31,6 +34,10 @@ startGameLoop((secondsPassed) => {
   screen.follow(character.position, secondsPassed);
   screen.draw();
 });
+
+// Hook up the tests, and the sidebar that runs them (see tests.js).
+connectTests({ character, controls, screen });
+createTestSidebar();
 
 // Lets you play with the game from the browser console. Try:
 //   game.character.person.scale.set(3, 3, 3)

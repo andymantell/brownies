@@ -28,6 +28,9 @@ export function createControls(screen) {
   }
 
   return {
+    // Forget about any tapped spot, so the character stops.
+    stopWalking: forgetTappedSpot,
+
     // Which way should the character walk right now?
     getDirection(characterPosition) {
       const direction = stillDirection();

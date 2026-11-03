@@ -1,0 +1,208 @@
+/* The test sidebar and its peeling corner. */
+
+.test-peel,
+.test-sidebar {
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+/* ---- The peeling corner (top right) ---- */
+
+.test-peel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 96px;
+  height: 96px;
+  border: 0;
+  padding: 0 10px 0 0;
+  cursor: pointer;
+  /* The bottom-left half is the folded-over "back" of the page; the top-right half shows through. */
+  background:
+    linear-gradient(225deg, transparent 49.5%, rgba(0, 0, 0, 0.12) 50%, transparent 58%),
+    linear-gradient(45deg, #fffdf5 0%, #f3ecd8 50%, transparent 50%);
+  border-bottom-left-radius: 10px;
+  filter: drop-shadow(-3px 3px 4px rgba(0, 0, 0, 0.25));
+  color: #4b3f72;
+  font-size: 13px;
+  font-weight: 700;
+  text-align: left;
+  display: flex;
+  align-items: flex-end;
+  padding: 0 0 18px 10px;
+  transform-origin: top right;
+  transition: transform 0.2s ease;
+}
+
+.test-peel:hover,
+.test-peel:focus-visible {
+  transform: scale(1.15);
+}
+
+.tests-open .test-peel {
+  transform: scale(0);
+}
+
+/* ---- The sidebar ---- */
+
+.test-sidebar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: min(360px, 90vw);
+  box-sizing: border-box;
+  padding: 16px;
+  overflow-y: auto;
+  background: #fffdf5;
+  color: #2d2640;
+  box-shadow: -6px 0 24px rgba(0, 0, 0, 0.2);
+  border-radius: 16px 0 0 16px;
+  transform: translateX(105%);
+  transition: transform 0.3s ease;
+}
+
+.tests-open .test-sidebar {
+  transform: translateX(0);
+}
+
+.test-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.test-header h2 {
+  margin: 0;
+  font-size: 22px;
+}
+
+.test-close {
+  border: 0;
+  background: #eee6d0;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.test-sidebar button {
+  font: inherit;
+}
+
+.test-run-all,
+.test-run {
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+  font-weight: 700;
+  color: white;
+  background: #6c5ce7;
+}
+
+.test-run-all {
+  width: 100%;
+  margin-top: 16px;
+  padding: 12px;
+  font-size: 16px;
+}
+
+.test-run {
+  padding: 6px 14px;
+  font-size: 14px;
+}
+
+.busy .test-run-all,
+.busy .test-run {
+  opacity: 0.5;
+  cursor: wait;
+}
+
+.test-summary {
+  margin: 12px 0;
+  font-size: 15px;
+  text-align: center;
+}
+
+/* ---- One card per test ---- */
+
+.test-card {
+  margin-bottom: 12px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: white;
+  border: 3px solid #e8e1cc;
+  transition: border-color 0.2s;
+}
+
+.test-card[data-state="running"] {
+  border-color: #fdcb6e;
+}
+.test-card[data-state="passed"] {
+  border-color: #55c57a;
+}
+.test-card[data-state="failed"] {
+  border-color: #ff6b6b;
+}
+
+.test-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.test-card h3 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.test-status {
+  flex-shrink: 0;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: #eee6d0;
+}
+[data-state="running"] .test-status {
+  background: #fdcb6e;
+}
+[data-state="passed"] .test-status {
+  background: #55c57a;
+  color: white;
+}
+[data-state="failed"] .test-status {
+  background: #ff6b6b;
+  color: white;
+}
+
+.test-description {
+  margin: 6px 0 10px;
+  font-size: 14px;
+  color: #5b5470;
+}
+
+.test-checks {
+  list-style: none;
+  margin: 10px 0 0;
+  padding: 0;
+}
+
+.test-checks:empty {
+  display: none;
+}
+
+.test-checks li {
+  display: flex;
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  font-size: 14px;
+}
+.test-checks li.passed {
+  background: #e8f8ee;
+}
+.test-checks li.failed {
+  background: #ffecec;
+}
