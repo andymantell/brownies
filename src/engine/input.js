@@ -42,21 +42,69 @@ export function createKeyboard() {
   }
 }
 
-// Run `whenTapped(spot)` whenever someone clicks or taps the ground.
-// `spot` is the place in the world they tapped.
-export function onTapGround(screen, whenTapped) {
+// Keeps track of a finger (or a mouse button) held down on the ground.
+// `whenPressed(spot)` runs as soon as the finger goes down, with the spot it touched.
+//   const finger = createFinger(screen, (spot) => { ... })
+//   if (finger.isDown()) { const spot = finger.spotOnGround() }
+export function createFinger(screen, whenPressed) {
+  let isDown = false
+  let fingerId = null // which finger, if there's more than one on the screen
+  const whereOnScreen = { x: 0, y: 0 }
+
   screen.canvas.addEventListener('pointerdown', (event) => {
-    const spot = findSpotOnGround(event, screen.camera)
-    if (spot) {
-      whenTapped(spot)
+    // Only follow the first finger. Ignore any others.
+    if (isDown) {
+      return
+    }
+    isDown = true
+    fingerId = event.pointerId
+    whereOnScreen.x = event.clientX
+    whereOnScreen.y = event.clientY
+
+    // Keep listening to this finger even if it slides off the game
+    // (fake fingers from the tests can't be captured, so that's OK to skip).
+    try {
+      screen.canvas.setPointerCapture(event.pointerId)
+    } catch {}
+
+    whenPressed(findSpotOnGround(whereOnScreen, screen.camera))
+  })
+
+  window.addEventListener('pointermove', (event) => {
+    if (isDown && event.pointerId === fingerId) {
+      whereOnScreen.x = event.clientX
+      whereOnScreen.y = event.clientY
     }
   })
+
+  function letGo(event) {
+    if (event.pointerId === fingerId) {
+      isDown = false
+      fingerId = null
+    }
+  }
+  window.addEventListener('pointerup', letGo)
+  window.addEventListener('pointercancel', letGo)
+
+  return {
+    // Is a finger held down on the game right now?
+    isDown() {
+      return isDown
+    },
+
+    // The spot on the ground under the finger, right now.
+    // (Worked out fresh each time, because the camera moves under the finger.)
+    spotOnGround() {
+      return findSpotOnGround(whereOnScreen, screen.camera)
+    },
+  }
 }
 
-function findSpotOnGround(event, camera) {
+// Find the spot on the ground under a point on the screen (in pixels).
+function findSpotOnGround(whereOnScreen, camera) {
   // three.js wants the screen position as numbers from -1 to 1.
-  const across = (event.clientX / window.innerWidth) * 2 - 1
-  const up = -(event.clientY / window.innerHeight) * 2 + 1
+  const across = (whereOnScreen.x / window.innerWidth) * 2 - 1
+  const up = -(whereOnScreen.y / window.innerHeight) * 2 + 1
   const screenPosition = new THREE.Vector2(across, up)
 
   // Shine an imaginary laser from the camera through that point, and see where it hits the ground.

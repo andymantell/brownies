@@ -5,6 +5,9 @@ import {
   wait,
   holdKey,
   tapGround,
+  pressGround,
+  slideFingerTo,
+  liftFinger,
   whereIsCharacter,
   putCharacterAt,
   stepsBetween,
@@ -57,6 +60,35 @@ test(
 
     const end = whereIsCharacter()
     check('The character is on the spot we tapped', stepsBetween(end, spot) < 0.5)
+  },
+)
+
+test(
+  'Follows your finger',
+  'Holding your finger down and sliding it should make the character follow it.',
+  async () => {
+    // A held finger moves with the camera, so let the camera settle first.
+    await wait(1)
+
+    // Put a finger down a little way to the side.
+    pressGround(2, 0)
+    await wait(0.5)
+    const afterPressing = whereIsCharacter()
+    check('The character walked towards the finger', afterPressing.x > 1)
+
+    // Slide the finger, still holding it down.
+    slideFingerTo(2, 4)
+    await wait(0.5)
+    const afterSliding = whereIsCharacter()
+    check('The character followed the finger', afterSliding.z > afterPressing.z + 1)
+
+    // Let go, and the character should soon stop.
+    liftFinger()
+    await wait(2)
+    const afterLettingGo = whereIsCharacter()
+    await wait(0.5)
+    const end = whereIsCharacter()
+    check('The character stops after you let go', stepsBetween(afterLettingGo, end) < 0.01)
   },
 )
 

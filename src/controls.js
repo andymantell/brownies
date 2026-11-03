@@ -1,13 +1,14 @@
 import {
   createKeyboard,
-  onTapGround,
+  createFinger,
   makeTapMarker,
   SCREEN,
   stillDirection,
   directionFromTo,
 } from './engine/index.js'
 
-// Works out which way the player wants to walk: from the keyboard, or by tapping the grass.
+// Works out which way the player wants to walk: from the keyboard, or by
+// tapping the grass (or holding a finger down and sliding it around).
 
 export function createControls(screen) {
   const keyboard = createKeyboard()
@@ -17,10 +18,14 @@ export function createControls(screen) {
   const marker = makeTapMarker()
   screen.add(marker.ring)
 
-  onTapGround(screen, (spot) => {
+  const finger = createFinger(screen, (spot) => {
+    walkTo(spot)
+  })
+
+  function walkTo(spot) {
     tappedSpot = spot
     marker.showAt(spot)
-  })
+  }
 
   function forgetTappedSpot() {
     tappedSpot = null
@@ -54,6 +59,12 @@ export function createControls(screen) {
         return direction.normalize() // so walking diagonally isn't faster
       }
 
+      // Finger held down? Keep walking to wherever it is now.
+      // When it lets go, we carry on to the last spot, just like a tap.
+      if (finger.isDown()) {
+        walkTo(finger.spotOnGround())
+      }
+
       // Walking to a tapped spot?
       if (tappedSpot) {
         const route = directionFromTo(characterPosition, tappedSpot)
@@ -61,7 +72,10 @@ export function createControls(screen) {
         const distance = route.distance
 
         if (distance < 0.1) {
-          forgetTappedSpot() // we've arrived!
+          // We've arrived! Stop here (but keep the ring if the finger is still down).
+          if (!finger.isDown()) {
+            forgetTappedSpot()
+          }
           return stillDirection()
         }
         return towardsSpot
