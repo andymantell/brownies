@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <title>Brownies Game</title>
+    <link rel="stylesheet" href="style.css" />
+
+    <!-- Three.js lives in /vendor so the game still works on dodgy wifi -->
+    <script type="importmap">
+      { "imports": { "three": "./vendor/three/three.module.min.js" } }
+    </script>
+  </head>
+  <body>
+    <canvas id="game"></canvas>
+
+    <div id="hud">
+      <h1 id="title">Our Game</h1>
+      <p class="hint">Arrow keys / WASD to walk, or tap the grass</p>
+    </div>
+
+    <script type="module" src="src/main.js"></script>
+  </body>
+</html>
