@@ -19,7 +19,7 @@ export const config = {
   },
 
   camera: {
-    viewSize: 14, // bigger number = zoomed further out
+    zoom: 14, // how much of the world fits on screen: bigger number = zoomed further out
     followSpeed: 4, // how quickly the camera catches up with the character
   },
 

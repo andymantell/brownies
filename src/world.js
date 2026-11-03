@@ -1,49 +1,26 @@
-import * as THREE from 'three';
 import { config } from './config.js';
+import { makeBox, makeFlatGround, makeSquaresPicture, keepInsideSquare } from './engine/index.js';
 
-// The world: for now just a big flat field of grass. Add trees, houses, ponds... here!
+// The world: for now just a big field of grass, floating in the sky.
+// This is a good place to add trees, houses, ponds...
 
-export function createWorld(scene) {
+export function createWorld(screen) {
   const size = config.world.size;
 
-  // A grid of squares, each a slightly different green, so it doesn't look like plastic.
-  const geometry = new THREE.PlaneGeometry(size, size, size, size).toNonIndexed();
-  geometry.rotateX(-Math.PI / 2);
+  // The grass on top.
+  const grassPicture = makeSquaresPicture({ squaresAcross: size, colour: config.world.grassColour });
+  const grass = makeFlatGround({ size, picture: grassPicture });
+  screen.add(grass);
 
-  const base = new THREE.Color(config.world.grassColour);
-  const colours = [];
-  const tile = new THREE.Color();
-  const verticesPerSquare = 6; // two triangles
-  const count = geometry.attributes.position.count;
-  for (let i = 0; i < count; i += verticesPerSquare) {
-    tile.copy(base).offsetHSL((Math.random() - 0.5) * 0.02, 0, (Math.random() - 0.5) * 0.025);
-    for (let v = 0; v < verticesPerSquare; v++) colours.push(tile.r, tile.g, tile.b);
-  }
-  geometry.setAttribute('color', new THREE.Float32BufferAttribute(colours, 3));
-
-  const ground = new THREE.Mesh(
-    geometry,
-    new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 1 }),
-  );
-  ground.receiveShadow = true;
-  ground.name = 'ground';
-  scene.add(ground);
-
-  // A chunky soil edge under the field so it looks like a floating island.
-  const soil = new THREE.Mesh(
-    new THREE.BoxGeometry(size, 2, size),
-    new THREE.MeshStandardMaterial({ color: '#8b5e3c', roughness: 1 }),
-  );
-  soil.position.y = -1.001;
-  scene.add(soil);
+  // A chunky block of soil underneath, so the field looks like a floating island.
+  const soil = makeBox({ width: size, height: 2, depth: size, colour: '#8b5e3c' });
+  soil.position.y = -1.01; // just below the grass
+  screen.add(soil);
 
   return {
-    ground,
-    // Keep things on the field.
-    clamp(position, margin = 0.5) {
-      const half = size / 2 - margin;
-      position.x = THREE.MathUtils.clamp(position.x, -half, half);
-      position.z = THREE.MathUtils.clamp(position.z, -half, half);
+    // Stop someone walking off the edge of the field.
+    keepOnField(position) {
+      keepInsideSquare(position, size / 2 - 0.5);
     },
   };
 }

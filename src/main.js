@@ -1,35 +1,38 @@
-import * as THREE from 'three';
 import { config } from './config.js';
-import { createScene } from './scene.js';
+import { createScreen, startGameLoop } from './engine/index.js';
 import { createWorld } from './world.js';
 import { createCharacter } from './character.js';
 import { createControls } from './controls.js';
 
-// This is where everything gets plugged together, and the game loop runs.
+// This is where the game starts. It builds everything, then runs the game loop.
 
+// Put the game's name at the top of the screen and on the browser tab.
 document.getElementById('title').textContent = config.title;
 document.title = config.title;
 
-const canvas = document.getElementById('game');
-const { renderer, scene, camera, follow } = createScene(canvas);
-const world = createWorld(scene);
-const character = createCharacter(scene);
-const controls = createControls({ canvas, camera, scene });
+// Build everything.
+const screen = createScreen(document.getElementById('game'), {
+  skyColour: config.world.skyColour,
+  zoom: config.camera.zoom,
+  cameraFollowSpeed: config.camera.followSpeed,
+  sunColour: config.sun.colour,
+  sunStrength: config.sun.strength,
+});
+const world = createWorld(screen);
+const character = createCharacter(screen);
+const controls = createControls(screen);
 
-const clock = new THREE.Clock();
+// The game loop runs about 60 times every second.
+// Each time, we move things a tiny bit and draw a new picture.
+startGameLoop((secondsPassed) => {
+  const direction = controls.getDirection(character.position);
+  character.update(secondsPassed, direction);
+  world.keepOnField(character.position);
 
-function tick() {
-  const dt = Math.min(clock.getDelta(), 0.1); // don't jump miles if the tab was hidden
+  screen.follow(character.position, secondsPassed);
+  screen.draw();
+});
 
-  const direction = controls.getDirection(character.position, dt);
-  character.update(dt, direction);
-  world.clamp(character.position);
-
-  follow(character.position, dt);
-  renderer.render(scene, camera);
-}
-
-renderer.setAnimationLoop(tick);
-
-// Handy for poking at things from the browser console, e.g. game.character.object.scale.setScalar(3)
-window.game = { THREE, scene, camera, world, character, config };
+// Lets you play with the game from the browser console. Try:
+//   game.character.person.scale.set(3, 3, 3)
+window.game = { screen, world, character, config };

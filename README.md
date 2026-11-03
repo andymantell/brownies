@@ -26,17 +26,18 @@ Then open http://localhost:8000 and refresh after each change.
 | File | What it does |
 | --- | --- |
 | `src/config.js` | The fun knobs: colours, speed, zoom, title. Start here. |
-| `src/character.js` | The box character and its walk animation |
+| `src/main.js` | Builds everything and runs the game loop |
 | `src/world.js` | The grassy field. Add trees, houses, ponds here. |
-| `src/helpers.js` | `makeBox({ width, height, depth, colour })` for building anything out of cubes |
+| `src/character.js` | The box character and its walk animation |
 | `src/controls.js` | Keyboard and tap-to-move |
-| `src/scene.js` | Renderer, isometric camera, sun and shadows |
-| `src/main.js` | Plugs it all together and runs the game loop |
+| `src/engine/` | The fiddly behind-the-scenes stuff (three.js, canvas, maths), hidden behind helpers with clear names like `makeBox`, `createKeyboard` and `startGameLoop`. You don't need to read it to change the game. |
+
+The files outside `engine/` never touch three.js directly, so they stay short and readable.
 
 You can also poke the game from the browser console through `window.game`, for example:
 
 ```js
-game.character.object.scale.setScalar(3)
+game.character.person.scale.set(3, 3, 3)
 ```
 
 ## Deploying
