@@ -6,8 +6,7 @@ import { createControls } from './controls.js';
 
 // This is where the game starts. It builds everything, then runs the game loop.
 
-// Put the game's name at the top of the screen and on the browser tab.
-document.getElementById('title').textContent = config.title;
+// Put the game's name on the browser tab.
 document.title = config.title;
 
 // Build everything.
