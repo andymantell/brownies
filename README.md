@@ -28,6 +28,8 @@ Then open http://localhost:8000 and refresh after each change. `serve.py` tells 
 | `src/world.js` | The grassy field. Add trees, houses, ponds here. |
 | `src/character.js` | The box character and its walk animation |
 | `src/controls.js` | Keyboard and tap-to-move |
+| `src/speech.js` | The things the character says in a speech bubble |
+| `models/` | 3D models made in Blender, as `.glb` files |
 | `src/engine/` | The fiddly behind-the-scenes stuff (three.js, canvas, maths), hidden behind helpers with clear names like `makeBox`, `createKeyboard` and `startGameLoop`. You don't need to read it to change the game. |
 
 The files outside `engine/` never touch three.js directly, so they stay short and readable.
@@ -36,6 +38,24 @@ You can also poke the game from the browser console through `window.game`, for e
 
 ```js
 game.character.person.scale.set(3, 3, 3)
+```
+
+## Making models in Blender
+
+Scripts in `tools/blender/` build a model in [Blender](https://www.blender.org/) and export it as a `.glb` file into `models/`. `make-toadstool.py` is a worked example to copy. Blender doesn't need to be open. On this laptop it isn't on the PATH, so use its full path, from this folder:
+
+```sh
+"C:\Program Files\Blender Foundation\Blender 5.1\blender.exe" --background --python tools/blender/make-toadstool.py
+```
+
+To put a model in the game, import `loadModel` from `./engine/index.js` in `src/world.js`, add a little helper, and call `addToadstool(screen)` from `createWorld`:
+
+```js
+async function addToadstool(screen) {
+  const toadstool = await loadModel('models/toadstool.glb')
+  toadstool.position.set(3, 0, -3) // 3 steps across, 3 steps back
+  screen.add(toadstool)
+}
 ```
 
 ## Tests
