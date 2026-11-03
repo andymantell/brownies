@@ -1,0 +1,43 @@
+/* The speech bubble above the character's head. */
+
+.speech-bubble {
+  position: fixed;
+  z-index: 1; /* below the test sidebar */
+  max-width: 220px;
+  padding: 10px 16px;
+  border-radius: 18px;
+  background: white;
+  color: #2d2640;
+  font-family: "Comic Sans MS", "Chalkboard SE", "Comic Neue", system-ui, sans-serif;
+  font-size: 17px;
+  font-weight: 700;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.18);
+  pointer-events: none; /* taps go straight through to the grass */
+
+  /* The bubble's bottom middle (where the tail is) sits on the spot it's given. */
+  transform: translate(-50%, calc(-100% - 14px)) scale(0.4);
+  transform-origin: 50% calc(100% + 14px);
+  opacity: 0;
+  transition:
+    transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1),
+    opacity 0.2s ease;
+}
+
+/* The little tail pointing down at the character. */
+.speech-bubble::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -12px;
+  margin-left: -10px;
+  border-width: 14px 10px 0;
+  border-style: solid;
+  border-color: white transparent transparent;
+}
+
+/* Popped in. */
+.speech-bubble.showing {
+  transform: translate(-50%, calc(-100% - 14px)) scale(1);
+  opacity: 1;
+}

@@ -3,6 +3,7 @@
 .test-peel,
 .test-sidebar {
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  z-index: 10; /* on top of the speech bubble */
 }
 
 /* ---- The peeling corner (top right) ---- */

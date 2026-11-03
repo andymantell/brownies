@@ -50,3 +50,14 @@ function keepBetween(number, smallest, biggest) {
   const notTooBig = Math.min(notTooSmall, biggest)
   return notTooBig
 }
+
+// A random number somewhere between two numbers, like 10.7 between 10 and 15.
+export function randomNumberBetween(smallest, biggest) {
+  return smallest + Math.random() * (biggest - smallest)
+}
+
+// Pick one thing from a list, at random.
+export function pickAtRandom(list) {
+  const position = Math.floor(Math.random() * list.length)
+  return list[position]
+}

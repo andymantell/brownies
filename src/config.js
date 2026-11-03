@@ -23,6 +23,12 @@ export const config = {
     followSpeed: 4, // how quickly the camera catches up with the character
   },
 
+  speech: {
+    showForSeconds: 3, // how long the speech bubble stays up
+    quietForAtLeast: 10, // the shortest wait (in seconds) before saying something else
+    quietForAtMost: 15, // the longest wait
+  },
+
   sun: {
     colour: '#fff4e0',
     strength: 2.2,

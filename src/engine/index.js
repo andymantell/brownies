@@ -13,4 +13,13 @@ export { makeFlatGround } from './ground.js'
 export { createKeyboard, onTapGround, SCREEN } from './input.js'
 export { makeTapMarker } from './marker.js'
 export { loadModel } from './models.js'
-export { stillDirection, directionFromTo, angleOf, turnTowards, keepInsideSquare } from './maths.js'
+export { makeSpeechBubble } from './speech-bubble.js'
+export {
+  stillDirection,
+  directionFromTo,
+  angleOf,
+  turnTowards,
+  keepInsideSquare,
+  randomNumberBetween,
+  pickAtRandom,
+} from './maths.js'
