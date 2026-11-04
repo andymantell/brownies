@@ -178,7 +178,7 @@
 
       .steps .card {
         width: clamp(6rem, 14vw, 13rem);
-        height: 34vh;
+        min-height: 34vh;
       }
 
       .steps .card:nth-child(2) { margin-bottom: 4vh; }
@@ -294,8 +294,9 @@
           column-gap: 10px;
           width: 100%;
           height: auto;
+          min-height: 0;
           margin: 0;
-          padding: 8px 12px;
+          padding: 6px 12px;
           text-align: left;
         }
 
@@ -303,7 +304,7 @@
         .steps .card .big-emoji {
           grid-row: 1 / span 3;
           margin: 0;
-          font-size: 2.4rem;
+          font-size: 2.1rem;
         }
 
         .steps .card:nth-child(n) {
@@ -368,7 +369,7 @@
         }
 
         .steps .card {
-          height: 36vh;
+          min-height: 36vh;
         }
 
         .steps .card:nth-child(2) { margin-bottom: 3vh; }
@@ -404,12 +405,12 @@
       </div>
     </section>
 
-    <!-- 3. My journey: 22 years of building things -->
+    <!-- 3. My journey: 23 years of building things -->
     <section class="slide">
-      <h2>22 years of building things</h2>
+      <h2>23 years of building things</h2>
       <div class="steps">
-        <div class="card"><span class="big-emoji">🎓</span><span class="year">Education</span>School, then university</div>
-        <div class="card"><span class="big-emoji">🌱</span><span class="year">2007</span>Early career</div>
+        <div class="card"><span class="big-emoji">🎓</span><span class="year">Education</span>Maths, physics, computers<small>Then uni: how brains think</small></div>
+        <div class="card"><span class="big-emoji">🌱</span><span class="year">2003</span>Early career<small>A year in industry, then developer jobs</small></div>
         <div class="card"><span class="big-emoji">💼</span><span class="year">2009</span>Freelancing and my own business</div>
         <div class="card"><span class="big-emoji">🏠</span><span class="year">2016</span>Land Registry<small>Who owns which house?</small></div>
         <div class="card"><span class="big-emoji">🏥</span><span class="year">2020</span>Websites for the NHS</div>
