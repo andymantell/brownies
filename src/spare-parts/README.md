@@ -85,7 +85,7 @@ import './spare-parts/particle-tests.js' // just after import './tests.js'
 
 const particles = makeParticles(screen)
 
-// in the game loop, after speech.update(...):
+// in the game loop, after screen.follow(...):
 particles.update(secondsPassed)
 
 connectTests({ character, controls, screen, particles })

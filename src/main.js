@@ -8,7 +8,6 @@ import { createCatHouse } from './cat-house.js'
 import { createCatBowls } from './cat-bowls.js'
 import { createCharacter } from './character.js'
 import { createControls } from './controls.js'
-import { createSpeech } from './speech.js'
 import { connectTests } from './engine/testing.js'
 import { createTestSidebar } from './engine/test-sidebar.js'
 import './tests.js'
@@ -34,7 +33,6 @@ const catHouse = createCatHouse(screen)
 const catBowls = createCatBowls(screen)
 const character = createCharacter(screen)
 const controls = createControls(screen)
-const speech = createSpeech(screen, character)
 
 // The game loop runs about 60 times every second.
 // Each time, we move things a tiny bit and draw a new picture.
@@ -45,7 +43,6 @@ startGameLoop((secondsPassed) => {
   house.update(secondsPassed, character.position)
 
   screen.follow(character.position, secondsPassed)
-  speech.update(secondsPassed)
   screen.draw()
 })
 
