@@ -31,6 +31,17 @@ export function createWorld(screen) {
   // The places people can swim, like the sea.
   const placesToSwim = []
 
+  // You can stand right on the edge of a place, half a block over.
+  // But not out at sea (like by the jetty or the yacht), or you'd stand on the water!
+  function edgeToStandOn(place) {
+    for (const water of placesToSwim) {
+      if (isInsideRectangle(place, water, 0)) {
+        return 0
+      }
+    }
+    return 0.5
+  }
+
   return {
     // Let people walk on this too, even though it's past the edge of the field.
     //   world.letPeopleWalkOn(jetty.planks)
@@ -76,7 +87,7 @@ export function createWorld(screen) {
     // (Physics uses this, so things land on the grass and can fall off the edge.)
     groundHeightAt(x, z) {
       for (const place of placesToWalk) {
-        if (isInsideRectangle({ x, z }, place, 0.5)) {
+        if (isInsideRectangle({ x, z }, place, edgeToStandOn(place))) {
           return 0
         }
       }
