@@ -27,6 +27,7 @@ import { createRabbitHutch } from './rabbit-hutch.js'
 import { createRabbit } from './rabbit.js'
 import { createCharacter } from './character.js'
 import { createMonkey } from './monkey.js'
+import { putOnBoxingGloves } from './boxing-gloves.js'
 import { createWardrobe } from './wardrobe.js'
 import { makeFollower } from './follower.js'
 import { makeWanderer } from './wanderer.js'
@@ -112,6 +113,9 @@ const girlControls = createGirlControls()
 // A little monkey sits on the girl's head, and goes everywhere she goes.
 const monkey = createMonkey()
 monkey.sitOnHeadOf(girl.person)
+
+// She wears big red boxing gloves on her hands.
+putOnBoxingGloves(girl, config.girl.gloveColour)
 
 // A Dress up button on the left, to pick clothes for both players.
 createWardrobe([

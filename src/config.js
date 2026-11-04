@@ -33,6 +33,7 @@ export const config = {
     eyeColour: '#222222',
     hairStyle: 'long',
     sleeves: 'long',
+    gloveColour: '#d62828', // her red boxing gloves
     startX: 3, // where she starts, next to our hero
     startZ: 0,
   },

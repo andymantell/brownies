@@ -128,6 +128,8 @@ export function createCharacter(screen, looks = config.character) {
   return {
     position: person.position,
     person,
+    leftArm,
+    rightArm,
 
     // Start a backflip (if we haven't done one on this jump yet).
     doABackflip() {
