@@ -33,16 +33,16 @@ const cloudHeight = 10
 const halfTheField = config.world.size / 2
 
 // How many snowflakes start falling every second.
-const flakesPerSecond = 250
+const flakesPerSecond = 100
 
 // How many seconds a snowflake takes to reach the ground.
 const secondsToFall = 7
 
 // How much deeper the snow gets each time a snowflake lands.
-const deeperEachFlake = 0.03
+const deeperEachFlake = 0.05
 
 // The deepest the snow can get.
-const deepestSnow = 0.5
+const deepestSnow = 0.2
 
 // How deep the snow is in a footprint. 0 squashes it right down to the grass.
 const footprintDepth = 0
@@ -125,20 +125,12 @@ export function createSnow(screen) {
     particles.update(secondsPassed)
   }
 
-  // A snowflake has landed! Make the snow a little deeper where it fell,
-  // and on the squares all around it, so it piles up quickly.
+  // A snowflake has landed! Make the snow a little deeper where it fell.
   function settle(spot) {
-    const step = blanket.blockSize
-    for (let across = -1; across <= 1; across++) {
-      for (let back = -1; back <= 1; back++) {
-        const x = spot.x + across * step
-        const z = spot.z + back * step
-        const isInAFootprint = footprints.has(squareName(x, z))
-        if (!isUnderARoof({ x, z }) && !isInAFootprint) {
-          const deeper = blanket.heightAt(x, z) + deeperEachFlake
-          blanket.setHeightAt(x, z, Math.min(deeper, deepestSnow))
-        }
-      }
+    const isInAFootprint = footprints.has(squareName(spot.x, spot.z))
+    if (!isUnderARoof(spot) && !isInAFootprint) {
+      const deeper = blanket.heightAt(spot.x, spot.z) + deeperEachFlake
+      blanket.setHeightAt(spot.x, spot.z, Math.min(deeper, deepestSnow))
     }
   }
 
