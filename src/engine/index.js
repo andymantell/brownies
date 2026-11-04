@@ -20,6 +20,7 @@ export { findPath } from './pathfinding.js'
 export { createPathWalker } from './path-walker.js'
 export { makeParticles, PARTICLE_STYLES } from './particles.js'
 export { createPhysics } from './physics.js'
+export { makeFlippable } from './flipping.js'
 export { createSolidThings } from './bumping.js'
 export {
   stillDirection,

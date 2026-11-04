@@ -1,5 +1,5 @@
 import { config } from './config.js'
-import { makeBox, makeGroup, makeSwingingBox, angleOf, turnTowards } from './engine/index.js'
+import { makeBox, makeGroup, makeSwingingBox, angleOf, turnTowards, makeFlippable } from './engine/index.js'
 
 // Our little hero, made entirely of boxes.
 
@@ -66,15 +66,45 @@ export function createCharacter(screen) {
 
   screen.add(person)
 
+  // This lets the whole body spin around its tummy, for backflips.
+  const flipper = makeFlippable(person, 1.1)
+  let isFlipping = false
+  let hasFlippedThisJump = false // only one backflip per jump!
+
   let stepTimer = 0 // counts up while walking, to time the arm and leg swings
 
   return {
     position: person.position,
     person,
 
+    // Start a backflip (if we haven't done one on this jump yet).
+    doABackflip() {
+      if (hasFlippedThisJump) {
+        return
+      }
+      isFlipping = true
+      hasFlippedThisJump = true
+    },
+
+    // Called when we land, so we always end up the right way up.
+    landed() {
+      isFlipping = false
+      hasFlippedThisJump = false
+      flipper.rotation.x = 0
+    },
+
     // Called every frame. `direction` says which way to walk (or nowhere).
     update(secondsPassed, direction) {
       const isWalking = direction.length() > 0
+
+      // Spin backwards, one whole turn. (14 is how fast we spin. Try changing it!)
+      if (isFlipping) {
+        flipper.rotation.x -= 14 * secondsPassed
+        if (flipper.rotation.x <= -Math.PI * 2) {
+          flipper.rotation.x = 0
+          isFlipping = false
+        }
+      }
 
       if (isWalking) {
         // Step forwards.

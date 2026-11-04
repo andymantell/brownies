@@ -68,11 +68,17 @@ startGameLoop((secondsPassed) => {
   }
   santa.update(sleigh.position)
 
-  // Space bar to jump, 2 blocks high.
+  // Space bar to jump, 2 blocks high. Press it again in the air to do a backflip!
   if (controls.wantsToJump()) {
-    characterPhysics.jump(2)
+    const jumped = characterPhysics.jump(2)
+    if (!jumped) {
+      character.doABackflip()
+    }
   }
   physics.update(secondsPassed)
+  if (characterPhysics.isOnTheGround()) {
+    character.landed()
+  }
 
   screen.follow(character.position, secondsPassed)
   screen.draw()
