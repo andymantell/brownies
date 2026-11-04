@@ -121,6 +121,14 @@ export const config = {
     ropeColour: '#6b4226',
   },
 
+  volcano: {
+    x: 16, // where the volcano is: far away from the house, garden and pets
+    z: -16,
+    rockColour: '#5a4a42',
+    darkRockColour: '#3b302b',
+    lavaColour: '#ff5a00',
+  },
+
   camera: {
     zoom: 14, // how much of the world fits on screen: bigger number = zoomed further out
     followSpeed: 4, // how quickly the camera catches up with the character

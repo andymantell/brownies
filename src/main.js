@@ -10,6 +10,7 @@ import { createCatBowls } from './cat-bowls.js'
 import { createSanta } from './santa.js'
 import { createSleigh } from './sleigh.js'
 import { createSnow } from './snow.js'
+import { createVolcano } from './volcano.js'
 import { createCharacter } from './character.js'
 import { createControls, createGirlControls } from './controls.js'
 import { createPhysics, groundMadeOf } from './engine/index.js'
@@ -55,6 +56,7 @@ sleigh.hitch(secondLabrador.dog, { x: 0.6, z: 4.4 })
 const snow = createSnow(screen)
 snow.keepOffUnder(house.roof)
 snow.keepOffUnder(catHouse.catHouse)
+const volcano = createVolcano(screen)
 const character = createCharacter(screen)
 const controls = createControls(screen)
 
@@ -74,6 +76,7 @@ solidThings.add(catHouse.catHouse)
 solidThings.add(garden.garden)
 solidThings.add(catBowls.waterBowl)
 solidThings.add(catBowls.foodBowl)
+solidThings.add(volcano.volcano)
 
 // Physics gives the character gravity, so it can jump and land again.
 // It lands on the grass, or on top of solid things (if it jumps high enough).
