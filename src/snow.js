@@ -1,3 +1,4 @@
+import { config } from './config.js'
 import {
   makeParticles,
   makeLotsOfBoxes,
@@ -28,17 +29,17 @@ PARTICLE_STYLES.snow = {
 // How high up the snowflakes start.
 const cloudHeight = 10
 
-// How far away from the character snow can fall.
-const snowyArea = 14
+// Snow falls all over the field, right up to the edges.
+const halfTheField = config.world.size / 2
 
 // How many snowflakes start falling every second.
-const flakesPerSecond = 60
+const flakesPerSecond = 250
 
 // How many seconds a snowflake takes to reach the ground.
 const secondsToFall = 7
 
 // The most bits of snow that can lie on the ground at once.
-const mostSnowOnTheGround = 6000
+const mostSnowOnTheGround = 20000
 
 export function createSnow(screen) {
   const particles = makeParticles(screen)
@@ -68,16 +69,16 @@ export function createSnow(screen) {
     return false
   }
 
-  // Call this every frame. It drops new snowflakes near the character,
+  // Call this every frame. It drops new snowflakes all over the field,
   // and moves the ones that are already falling.
-  function update(secondsPassed, characterPosition) {
+  function update(secondsPassed) {
     flakesToMake += flakesPerSecond * secondsPassed
 
     while (flakesToMake >= 1) {
       const spot = {
-        x: characterPosition.x + randomNumberBetween(-snowyArea, snowyArea),
+        x: randomNumberBetween(-halfTheField, halfTheField),
         y: cloudHeight,
-        z: characterPosition.z + randomNumberBetween(-snowyArea, snowyArea),
+        z: randomNumberBetween(-halfTheField, halfTheField),
       }
       if (!isUnderARoof(spot)) {
         particles.burst('snow', spot)

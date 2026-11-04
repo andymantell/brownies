@@ -118,7 +118,7 @@ startGameLoop((secondsPassed) => {
     character.landed()
   }
 
-  snow.update(secondsPassed, character.position)
+  snow.update(secondsPassed)
 
   // The camera keeps both players in view, zooming out if they walk apart.
   screen.followBoth(character.position, girl.position, secondsPassed)
