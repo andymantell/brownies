@@ -1,0 +1,410 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Hi, I'm Andy!</title>
+    <!--
+      A slide deck to set the scene before we build our game.
+      Press → or Space (or click) for the next slide, ← to go back.
+      Press F to go full screen.
+    -->
+    <style>
+      :root {
+        --sky: #bfe6ff;
+        --sky-deep: #8fd0ff;
+        --grass: #7cc85a;
+        --grass-dark: #4f9a36;
+        --red: #ff6b6b;
+        --skin: #ffd6a5;
+        --navy: #3d5a80;
+        --ink: #1f2d3d;
+        --card: #ffffff;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        height: 100%;
+        overflow: hidden;
+        background: var(--sky);
+        color: var(--ink);
+        font-family: 'Trebuchet MS', 'Segoe UI', system-ui, sans-serif;
+      }
+
+      /* ---------- Every slide fills the screen, and only one shows at a time ---------- */
+
+      .slide {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 3vh;
+        padding: 6vh 6vw 12vh;
+        text-align: center;
+        background: linear-gradient(var(--sky-deep), var(--sky) 60%);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.5s;
+      }
+
+      .slide.showing {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      /* A strip of grass along the bottom of every slide */
+      .slide::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 8vh;
+        background: var(--grass);
+        border-top: 1.2vh solid var(--grass-dark);
+      }
+
+      h1 {
+        margin: 0;
+        font-size: clamp(2.2rem, 7vw, 6rem);
+        line-height: 1.05;
+      }
+
+      h2 {
+        margin: 0;
+        font-size: clamp(1.8rem, 5vw, 4.2rem);
+      }
+
+      p {
+        margin: 0;
+        font-size: clamp(1.1rem, 2.6vw, 2.2rem);
+      }
+
+      .big-emoji {
+        font-size: clamp(3rem, 9vw, 8rem);
+        line-height: 1;
+      }
+
+      .highlight {
+        color: var(--red);
+      }
+
+      /* ---------- Rows of cards with a picture and a few words ---------- */
+
+      .cards {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: stretch;
+        gap: 2vw;
+        max-width: 95vw;
+      }
+
+      .card {
+        background: var(--card);
+        border-radius: 1.2rem;
+        padding: 2vh 1.5vw;
+        width: clamp(8rem, 17vw, 16rem);
+        box-shadow: 0 0.6vh 0 rgba(0, 0, 0, 0.12);
+        font-size: clamp(0.95rem, 1.8vw, 1.6rem);
+        font-weight: bold;
+      }
+
+      .card .big-emoji {
+        display: block;
+        margin-bottom: 1vh;
+        font-size: clamp(2.2rem, 5.5vw, 5rem);
+      }
+
+      .card small {
+        display: block;
+        margin-top: 0.6vh;
+        font-weight: normal;
+        opacity: 0.75;
+      }
+
+      /* Cards pop in one after another when the slide appears */
+      .showing .card {
+        animation: pop-in 0.45s backwards;
+      }
+
+      .showing .card:nth-child(2) { animation-delay: 0.15s; }
+      .showing .card:nth-child(3) { animation-delay: 0.3s; }
+      .showing .card:nth-child(4) { animation-delay: 0.45s; }
+      .showing .card:nth-child(5) { animation-delay: 0.6s; }
+      .showing .card:nth-child(6) { animation-delay: 0.75s; }
+      .showing .card:nth-child(7) { animation-delay: 0.9s; }
+
+      @keyframes pop-in {
+        from {
+          opacity: 0;
+          transform: translateY(2vh) scale(0.8);
+        }
+      }
+
+      /* ---------- Arrows between cards, for slides that show a journey ---------- */
+
+      .flow {
+        flex-wrap: nowrap;
+        align-items: center;
+        gap: 1vw;
+      }
+
+      .flow .card {
+        width: clamp(7rem, 18vw, 15rem);
+      }
+
+      .arrow {
+        font-size: clamp(1.6rem, 4vw, 3.5rem);
+        color: var(--navy);
+        font-weight: bold;
+      }
+
+      /* ---------- The career timeline is a set of steps going up ---------- */
+
+      .steps {
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        gap: 1.2vw;
+      }
+
+      .steps .card {
+        width: clamp(6rem, 13vw, 12rem);
+        height: 30vh;
+      }
+
+      .steps .card:nth-child(2) { margin-bottom: 4vh; }
+      .steps .card:nth-child(3) { margin-bottom: 8vh; }
+      .steps .card:nth-child(4) { margin-bottom: 12vh; }
+      .steps .card:nth-child(5) { margin-bottom: 16vh; }
+      .steps .card:nth-child(6) { margin-bottom: 20vh; }
+
+      .year {
+        display: block;
+        color: var(--red);
+        font-size: 1.15em;
+      }
+
+      /* ---------- Before and after AI, side by side ---------- */
+
+      .versus {
+        display: flex;
+        align-items: center;
+        gap: 3vw;
+      }
+
+      .versus .card {
+        width: clamp(12rem, 32vw, 28rem);
+        font-size: clamp(1.1rem, 2.4vw, 2rem);
+      }
+
+      .versus .label {
+        display: inline-block;
+        margin-bottom: 1vh;
+        padding: 0.2em 0.7em;
+        border-radius: 999px;
+        background: var(--navy);
+        color: white;
+        font-size: 0.75em;
+      }
+
+      /* ---------- Pictures ---------- */
+
+      .box-friend {
+        height: 38vh;
+        animation: bob 2.4s ease-in-out infinite;
+      }
+
+      @keyframes bob {
+        50% {
+          transform: translateY(-2vh);
+        }
+      }
+
+      .game-picture {
+        height: 30vh;
+        border-radius: 1.2rem;
+        border: 0.6vh solid white;
+        box-shadow: 0 0.8vh 0 rgba(0, 0, 0, 0.12);
+      }
+
+      .side-by-side {
+        display: flex;
+        align-items: center;
+        gap: 4vw;
+      }
+
+      /* ---------- Little dots at the bottom showing which slide we're on ---------- */
+
+      .dots {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 2.4vh;
+        z-index: 1;
+        display: flex;
+        justify-content: center;
+        gap: 1vw;
+      }
+
+      .dot {
+        width: 1.6vh;
+        height: 1.6vh;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.5);
+      }
+
+      .dot.current {
+        background: white;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- 1. Hello! -->
+    <section class="slide">
+      <img class="box-friend" src="pictures/box-friend.svg" alt="A little person made of boxes, standing on grass" />
+      <h1>Hi, I'm <span class="highlight">Andy</span>!</h1>
+      <p>I'm a <strong>software engineer</strong>. I make things with computers.</p>
+    </section>
+
+    <!-- 2. What does a software engineer actually do? -->
+    <section class="slide">
+      <h2>What do I do all day?</h2>
+      <p>I write instructions that tell computers what to do. That's called <strong>code</strong>.</p>
+      <div class="cards">
+        <div class="card"><span class="big-emoji">💬</span>Talk to people<small>What do they need?</small></div>
+        <div class="card"><span class="big-emoji">✏️</span>Plan it<small>Draw it, think it through</small></div>
+        <div class="card"><span class="big-emoji">⌨️</span>Build it<small>Write the code</small></div>
+        <div class="card"><span class="big-emoji">🧪</span>Test it<small>Try to break it!</small></div>
+        <div class="card"><span class="big-emoji">🔧</span>Fix it<small>And make it better</small></div>
+      </div>
+    </section>
+
+    <!-- 3. My journey: 22 years of building things -->
+    <section class="slide">
+      <h2>22 years of building things</h2>
+      <div class="steps">
+        <div class="card"><span class="big-emoji">🏫</span><span class="year">School</span>Maths, physics, computers</div>
+        <div class="card"><span class="big-emoji">🧠</span><span class="year">University</span>How brains think</div>
+        <div class="card"><span class="big-emoji">🌱</span><span class="year">2007</span>My first job: junior developer</div>
+        <div class="card"><span class="big-emoji">🏠</span><span class="year">2016</span>Who owns which house?</div>
+        <div class="card"><span class="big-emoji">🏥</span><span class="year">2020</span>Websites for the NHS</div>
+        <div class="card"><span class="big-emoji">⛅</span><span class="year">Now</span>The Met Office!</div>
+      </div>
+      <p>Junior → Senior → Lead. One step at a time.</p>
+    </section>
+
+    <!-- 4. My job at the Met Office -->
+    <section class="slide">
+      <h2>My job at the <span class="highlight">Met Office</span></h2>
+      <div class="cards flow">
+        <div class="card"><span class="big-emoji">🖥️</span>A giant supercomputer<small>works out the weather</small></div>
+        <span class="arrow">→</span>
+        <div class="card"><span class="big-emoji">📊</span>Mountains of numbers<small>wind, rain, sun…</small></div>
+        <span class="arrow">→</span>
+        <div class="card"><span class="big-emoji">⚙️</span>My code tidies them up<small>that's me!</small></div>
+        <span class="arrow">→</span>
+        <div class="card"><span class="big-emoji">📺</span>The weather on TV<small>and radio</small></div>
+      </div>
+      <p>When you see the weather on TV, my code helped! 🌦️</p>
+    </section>
+
+    <!-- 5. How AI changed my job -->
+    <section class="slide">
+      <h2>Then my job changed… 🤖</h2>
+      <div class="versus">
+        <div class="card">
+          <span class="label">Before</span>
+          <span class="big-emoji">🧑‍💻⌨️</span>
+          I typed every line of code myself
+        </div>
+        <span class="arrow">→</span>
+        <div class="card">
+          <span class="label">This year</span>
+          <span class="big-emoji">🧑‍🍳🤖🤖</span>
+          AI helpers write the code. I'm the <strong>head chef</strong>!
+        </div>
+      </div>
+      <p>I decide <strong>what</strong> to build, and check it's <strong>right</strong>.</p>
+    </section>
+
+    <!-- 6. What we're doing today -->
+    <section class="slide">
+      <h2>Today, <span class="highlight">you</span> are the team! 🎮</h2>
+      <div class="side-by-side">
+        <img class="game-picture" src="pictures/our-game.png" alt="Our game so far: a box person standing on grass" />
+        <p>Let's make a game together.<br />It's the same skills as my real job!</p>
+      </div>
+      <div class="cards">
+        <div class="card"><span class="big-emoji">📋</span>Ideas<small>What should our game do?</small></div>
+        <div class="card"><span class="big-emoji">🔍</span>Ask players<small>What do they like?</small></div>
+        <div class="card"><span class="big-emoji">🧪</span>Testing<small>Does it work? Can we break it?</small></div>
+        <div class="card"><span class="big-emoji">👑</span>Being the boss<small>Pick ideas that fit together</small></div>
+      </div>
+    </section>
+
+    <div class="dots"></div>
+
+    <script>
+      const slides = document.querySelectorAll('.slide')
+      const dots = document.querySelector('.dots')
+      let current = 0
+
+      // Make one dot for each slide.
+      for (const slide of slides) {
+        const dot = document.createElement('div')
+        dot.className = 'dot'
+        dots.append(dot)
+      }
+
+      function showSlide(number) {
+        if (number < 0 || number >= slides.length) {
+          return
+        }
+
+        current = number
+
+        slides.forEach((slide, index) => {
+          slide.classList.toggle('showing', index === current)
+        })
+
+        dots.querySelectorAll('.dot').forEach((dot, index) => {
+          dot.classList.toggle('current', index === current)
+        })
+      }
+
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'ArrowRight' || event.key === ' ' || event.key === 'PageDown') {
+          showSlide(current + 1)
+        }
+
+        if (event.key === 'ArrowLeft' || event.key === 'PageUp') {
+          showSlide(current - 1)
+        }
+
+        if (event.key === 'f') {
+          document.documentElement.requestFullscreen()
+        }
+      })
+
+      // Click the right side of the screen to go forwards, the left side to go back.
+      document.addEventListener('click', (event) => {
+        if (event.clientX > window.innerWidth / 3) {
+          showSlide(current + 1)
+        } else {
+          showSlide(current - 1)
+        }
+      })
+
+      showSlide(0)
+    </script>
+  </body>
+</html>

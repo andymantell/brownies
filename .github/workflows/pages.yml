@@ -50,6 +50,7 @@ jobs:
           VERSION="${GITHUB_SHA::8}"
           mkdir -p "_site/$VERSION"
           cp index.html _site/
+          cp -r slides _site/
           cp -r src vendor models "_site/$VERSION/"
           echo "$VERSION" > _site/version.txt
 

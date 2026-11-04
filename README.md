@@ -29,6 +29,7 @@ Then open http://localhost:8000 and refresh after each change. `serve.py` tells 
 | `src/character.js` | The box character and its walk animation |
 | `src/controls.js` | Keyboard and tap-to-move |
 | `src/speech.js` | The things the character says in a speech bubble |
+| `slides/` | The intro slide deck, at `/slides` (press → or click to move on, F for full screen) |
 | `models/` | 3D models made in Blender, as `.glb` files |
 | `src/engine/` | The fiddly behind-the-scenes stuff (three.js, canvas, maths), hidden behind helpers with clear names like `makeBox`, `createKeyboard` and `startGameLoop`. You don't need to read it to change the game. |
 
