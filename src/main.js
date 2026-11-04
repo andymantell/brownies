@@ -77,7 +77,6 @@ const monkey = createMonkey()
 monkey.sitOnHeadOf(girl.person)
 
 // Things the character bumps into, instead of walking through.
-// (Pets that follow you aren't solid, so they can never get in your way.)
 const solidThings = createSolidThings()
 solidThings.add(sleigh.sleigh) // Santa, his sleigh and the dogs pulling it
 for (const part of bath.solidParts) {
@@ -123,6 +122,8 @@ startGameLoop((secondsPassed) => {
   house.keepOutOfWalls(character.position, whereTheCharacterWas)
   solidThings.keepOutOf(character.position, whereTheCharacterWas)
   heroBumpsInto.keepOutOf(character.position, whereTheCharacterWas)
+  catFollower.stopWalkingThrough(character.position, whereTheCharacterWas)
+  huskyFollower.stopWalkingThrough(character.position, whereTheCharacterWas)
   house.update(secondsPassed, character.position)
 
   // The girl walks with W A S D, and bumps into things too.
@@ -132,6 +133,8 @@ startGameLoop((secondsPassed) => {
   house.keepOutOfWalls(girl.position, whereTheGirlWas)
   solidThings.keepOutOf(girl.position, whereTheGirlWas)
   girlBumpsInto.keepOutOf(girl.position, whereTheGirlWas)
+  catFollower.stopWalkingThrough(girl.position, whereTheGirlWas)
+  huskyFollower.stopWalkingThrough(girl.position, whereTheGirlWas)
   sleigh.update(secondsPassed)
   if (sleigh.hasArrived()) {
     santa.say('Ho ho ho!')
@@ -141,6 +144,8 @@ startGameLoop((secondsPassed) => {
   // The cat trots after our hero, bumping into things on the way.
   const whereTheCatWas = { x: cat.position.x, z: cat.position.z }
   catFollower.follow(character.position, secondsPassed)
+  catFollower.moveOutOfTheWayOf(character.position, secondsPassed)
+  catFollower.moveOutOfTheWayOf(girl.position, secondsPassed)
   world.keepOnField(cat.position)
   house.keepOutOfWalls(cat.position, whereTheCatWas)
   solidThings.keepOutOf(cat.position, whereTheCatWas)
@@ -148,6 +153,8 @@ startGameLoop((secondsPassed) => {
   // The husky bounds after our hero as well.
   const whereTheHuskyWas = { x: husky.position.x, z: husky.position.z }
   huskyFollower.follow(character.position, secondsPassed)
+  huskyFollower.moveOutOfTheWayOf(character.position, secondsPassed)
+  huskyFollower.moveOutOfTheWayOf(girl.position, secondsPassed)
   world.keepOnField(husky.position)
   house.keepOutOfWalls(husky.position, whereTheHuskyWas)
   solidThings.keepOutOf(husky.position, whereTheHuskyWas)
