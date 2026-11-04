@@ -129,6 +129,9 @@ export const config = {
     rockColour: '#5a4a42',
     darkRockColour: '#3b302b',
     lavaColour: '#ff5a00',
+    secondsBetweenEruptions: 30, // how often the volcano erupts
+    secondsBeforeFirstEruption: 5, // so we don't have to wait long for the first one
+    eruptionLasts: 3, // how many seconds lava shoots out for
   },
 
   camera: {

@@ -119,6 +119,7 @@ startGameLoop((secondsPassed) => {
   }
 
   snow.update(secondsPassed)
+  volcano.update(secondsPassed)
 
   // The camera keeps both players in view, zooming out if they walk apart.
   screen.followBoth(character.position, girl.position, secondsPassed)
