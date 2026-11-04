@@ -218,6 +218,10 @@ export const config = {
     tailColour: '#ffffff',
     eyeColour: '#111111',
     noseColour: '#ff9eb5',
+    hopHeight: 0.3, // how high she hops
+    hopDistance: 0.4, // how far she goes in one hop
+    hopLasts: 0.35, // how many seconds one hop takes
+    secondsBetweenHops: 0.6, // how long she rests between hops
   },
 
   camera: {

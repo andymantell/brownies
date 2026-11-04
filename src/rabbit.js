@@ -49,5 +49,61 @@ export function createRabbit(screen) {
 
   screen.add(rabbit)
 
-  return { rabbit }
+  // She hops from spot to spot, and has a little rest after each hop.
+  let restTime = settings.secondsBetweenHops
+  let isHopping = false
+  let hopProgress = 0 // 0 at the start of a hop, 1 when she lands
+  let hopFrom = { x: 0, z: 0 }
+  let hopTo = { x: 0, z: 0 }
+
+  return {
+    rabbit,
+
+    // Called every frame, to make her hop about.
+    update(secondsPassed) {
+      if (isHopping) {
+        hopProgress += secondsPassed / settings.hopLasts
+        if (hopProgress >= 1) {
+          hopProgress = 1
+          isHopping = false
+          restTime = settings.secondsBetweenHops
+        }
+
+        // Move a bit closer to where she's hopping to...
+        rabbit.position.x = hopFrom.x + (hopTo.x - hopFrom.x) * hopProgress
+        rabbit.position.z = hopFrom.z + (hopTo.z - hopFrom.z) * hopProgress
+
+        // ...going up into the air, and back down again.
+        rabbit.position.y = 0.1 + Math.sin(hopProgress * Math.PI) * settings.hopHeight
+        return
+      }
+
+      restTime -= secondsPassed
+      if (restTime <= 0) {
+        hopFrom = { x: rabbit.position.x, z: rabbit.position.z }
+        hopTo = pickASpotInTheHutch(hopFrom)
+        hopProgress = 0
+        isHopping = true
+
+        // Turn to face where she's hopping.
+        rabbit.rotation.y = Math.atan2(hopTo.x - hopFrom.x, hopTo.z - hopFrom.z)
+      }
+    },
+  }
+}
+
+// Pick somewhere a little hop away, but still inside the hutch.
+function pickASpotInTheHutch(from) {
+  const direction = Math.random() * Math.PI * 2
+  const distance = config.rabbit.hopDistance
+  let x = from.x + Math.sin(direction) * distance
+  let z = from.z + Math.cos(direction) * distance
+
+  // Keep away from the bars, so she stays inside.
+  const middleX = config.rabbitHutch.x
+  const middleZ = config.rabbitHutch.z
+  x = Math.min(Math.max(x, middleX - 0.85), middleX + 0.85)
+  z = Math.min(Math.max(z, middleZ - 0.45), middleZ + 0.45)
+
+  return { x, z }
 }

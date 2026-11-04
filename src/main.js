@@ -188,6 +188,7 @@ startGameLoop((secondsPassed) => {
   labradorFollower.stopWalkingThrough(character.position, whereTheCharacterWas)
   house.update(secondsPassed, character.position)
   portaloo.update(secondsPassed, character.position)
+  rabbit.update(secondsPassed) // the rabbit hops about in her hutch
 
   // The girl walks with W A S D, and bumps into things too.
   const whereTheGirlWas = { x: girl.position.x, z: girl.position.z }
