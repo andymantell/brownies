@@ -49,6 +49,9 @@ export function createRedPanda(screen) {
   addLeg(redPanda, { x: -0.18, z: -0.35, looks })
   addLeg(redPanda, { x: 0.18, z: -0.35, looks })
 
+  // A big, bushy tail at the back, with dark rings all the way along it.
+  addStripyTail(redPanda, looks)
+
   screen.add(redPanda)
 
   return {
@@ -79,6 +82,28 @@ function addEar(head, { x, looks }) {
   const edge = makeBox({ width: 0.1, height: 0.1, depth: 0.02, colour: looks.faceColour })
   edge.position.set(0, -0.01, 0.05)
   ear.add(edge)
+}
+
+// How many stripes the tail has. The colours take turns: red, dark, red, dark...
+const TAIL_STRIPES = 8
+
+// A long, bushy tail made of stripes, sticking out the back and drooping down.
+function addStripyTail(redPanda, looks) {
+  const tail = makeGroup()
+  tail.position.set(0, 0.7, -0.5) // where the tail joins the body
+  tail.rotation.x = 1.3 // tip the tail back, so it sticks out behind and droops a little
+  redPanda.add(tail)
+
+  for (let stripe = 0; stripe < TAIL_STRIPES; stripe++) {
+    let colour = looks.furColour
+    if (stripe % 2 === 1) {
+      colour = looks.tailRingColour
+    }
+
+    const ring = makeBox({ width: 0.26, height: 0.12, depth: 0.26, colour })
+    ring.position.y = -stripe * 0.12 // each stripe goes a bit further along the tail
+    tail.add(ring)
+  }
 }
 
 // One dark leg, swinging from the hip, with its foot on the ground.
