@@ -14,6 +14,8 @@ import { createVolcano } from './volcano.js'
 import { makeScoreBoard } from './engine/score-board.js'
 import { createSea } from './sea.js'
 import { createBath } from './bath.js'
+import { createHorse } from './horse.js'
+import { createLadybird } from './ladybird.js'
 import { createPortaloo } from './portaloo.js'
 import { createCharacter } from './character.js'
 import { createMonkey } from './monkey.js'
@@ -68,6 +70,11 @@ volcano.keepLavaOffUnder(house.roof) // hide in the house to stay safe from the 
 volcano.keepLavaOffUnder(catHouse.catHouse)
 const scoreBoard = makeScoreBoard('Lava punched')
 const bath = createBath(screen)
+const horse = createHorse(screen)
+
+// A giant ladybird rides on the horse's back.
+const ladybird = createLadybird()
+ladybird.rideOn(horse.horse)
 const portaloo = createPortaloo(screen)
 const character = createCharacter(screen)
 const controls = createControls(screen)

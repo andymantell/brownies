@@ -84,6 +84,16 @@ export const config = {
     staysThisClose: 2.5, // a bit further back than the cat, so they don't squash together
   },
 
+  horse: {
+    x: 3, // where the horse starts
+    z: 8,
+    coatColour: '#8b5a2b',
+    maneColour: '#3b2416',
+    noseColour: '#5e3a1a',
+    eyeColour: '#111111',
+    hoofColour: '#2b2b2b',
+  },
+
   garden: {
     x: 5, // where the flower garden is
     z: -2,
