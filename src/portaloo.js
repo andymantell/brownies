@@ -1,8 +1,10 @@
 import { config } from './config.js'
-import { makeBox, makeGroup } from './engine/index.js'
+import { makeBox, makeGroup, createKeyboard } from './engine/index.js'
+import { createToilet } from './toilet.js'
 
 // A portaloo: a tall plastic toilet box, standing next to the bath.
-// It has walls, a doorway at the front, and a flat roof on top.
+// It has walls, a doorway at the front, a flat roof on top,
+// and a toilet inside that flushes when you press F!
 
 const WIDTH = 1.6 // from side to side
 const DEPTH = 1.6 // from front to back
@@ -48,9 +50,32 @@ export function createPortaloo(screen) {
   roof.position.y = WALL_HEIGHT + 0.075
   portaloo.add(roof)
 
+  // The same flushing toilet as the one in the house, against the back wall.
+  const toilet = createToilet()
+  toilet.toilet.position.z = -DEPTH / 2 + 0.55
+  portaloo.add(toilet.toilet)
+
   screen.add(portaloo)
 
-  return { portaloo, walls }
+  // The portaloo listens to the keyboard, for the F key that flushes the toilet.
+  const keyboard = createKeyboard()
+
+  return {
+    portaloo,
+    walls,
+
+    // Called every frame. Press F next to the portaloo to flush its toilet!
+    update(secondsPassed, characterPosition) {
+      const distance = Math.hypot(
+        characterPosition.x - config.portaloo.x,
+        characterPosition.z - config.portaloo.z,
+      )
+      if (keyboard.wasJustPressed('f') && distance < 2) {
+        toilet.flush()
+      }
+      toilet.update(secondsPassed)
+    },
+  }
 }
 
 // One wall, standing on the ground.
