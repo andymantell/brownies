@@ -136,6 +136,10 @@ const heroBumpsInto = createSolidThings()
 heroBumpsInto.add(girl.person)
 const girlBumpsInto = createSolidThings()
 girlBumpsInto.add(character.person)
+
+// Both players bump into the red panda, too.
+heroBumpsInto.add(redPanda.redPanda)
+girlBumpsInto.add(redPanda.redPanda)
 solidThings.add(catHouse.catHouse)
 solidThings.add(garden.garden)
 solidThings.add(catBowls.waterBowl)
