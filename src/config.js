@@ -19,6 +19,12 @@ export const config = {
     eyeColour: '#222222',
   },
 
+  house: {
+    x: -6, // where the house is
+    z: -2,
+    wallColour: '#e8d8b8',
+  },
+
   camera: {
     zoom: 14, // how much of the world fits on screen: bigger number = zoomed further out
     followSpeed: 4, // how quickly the camera catches up with the character
