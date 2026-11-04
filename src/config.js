@@ -55,6 +55,8 @@ export const config = {
     furColour: '#8a8d91',
     eyeColour: '#9be36b',
     noseColour: '#ff9eb5',
+    followSpeed: 3.5, // how fast the cat trots after the hero
+    staysThisClose: 1.5, // the cat stops when it's this close
   },
 
   labrador: {

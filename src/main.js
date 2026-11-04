@@ -13,6 +13,7 @@ import { createSnow } from './snow.js'
 import { createVolcano } from './volcano.js'
 import { createCharacter } from './character.js'
 import { createMonkey } from './monkey.js'
+import { makeFollower } from './follower.js'
 import { createControls, createGirlControls } from './controls.js'
 import { createPhysics, groundMadeOf } from './engine/index.js'
 import { connectTests } from './engine/testing.js'
@@ -72,8 +73,8 @@ const monkey = createMonkey()
 monkey.sitOnHeadOf(girl.person)
 
 // Things the character bumps into, instead of walking through.
+// (Pets that follow you aren't solid, so they can never get in your way.)
 const solidThings = createSolidThings()
-solidThings.add(cat.cat)
 solidThings.add(sleigh.sleigh) // Santa, his sleigh and the dogs pulling it
 
 // The two players bump into each other, too.
@@ -93,6 +94,12 @@ solidThings.add(volcano.volcano)
 // It lands on the grass, or on top of solid things (if it jumps high enough).
 const physics = createPhysics(groundMadeOf(world, solidThings))
 const characterPhysics = physics.add(character.person, { height: 2.2 })
+
+// The cat follows our hero around.
+const catFollower = makeFollower(cat.cat, {
+  speed: config.cat.followSpeed,
+  staysThisClose: config.cat.staysThisClose,
+})
 
 // The game loop runs about 60 times every second.
 // Each time, we move things a tiny bit and draw a new picture.
@@ -118,6 +125,13 @@ startGameLoop((secondsPassed) => {
     santa.say('Ho ho ho!')
   }
   santa.update(sleigh.position)
+
+  // The cat trots after our hero, bumping into things on the way.
+  const whereTheCatWas = { x: cat.position.x, z: cat.position.z }
+  catFollower.follow(character.position, secondsPassed)
+  world.keepOnField(cat.position)
+  house.keepOutOfWalls(cat.position, whereTheCatWas)
+  solidThings.keepOutOf(cat.position, whereTheCatWas)
 
   // Space bar to jump, 2 blocks high. Press it again in the air to do a backflip!
   if (controls.wantsToJump()) {
