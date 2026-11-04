@@ -1,6 +1,6 @@
 # Spare parts
 
-These are ready-made pieces that are **not plugged into the game** right now. The game doesn't load anything in this folder. They use helpers that are still in `src/engine/`: `createBlockWorld`, `buildIsland`, `findPath`, `createPathWalker`, plus the block-breaking crumbs.
+These are ready-made pieces that are **not plugged into the game** right now. The game doesn't load anything in this folder. They use helpers that are still in `src/engine/`: `createBlockWorld`, `buildIsland`, `findPath`, `createPathWalker`, `createPhysics`, plus the block-breaking crumbs.
 
 | File | What it is |
 | --- | --- |
@@ -9,6 +9,7 @@ These are ready-made pieces that are **not plugged into the game** right now. Th
 | `duck.js` | A demo duck that uses pathfinding to follow you around, with white dots showing its route |
 | `block-tests.js` | Tests for walls, climbing a step, breaking a block and pathfinding |
 | `particle-tests.js` | Tests for particle effects (the helper itself is `src/engine/particles.js`) |
+| `physics-tests.js` | Tests for falling, bouncing, jumping, walls and falling off the edge |
 
 ## Plugging the block world back in
 
@@ -98,3 +99,68 @@ particles.burst('crumbs', spot, 'brown') // a colour of your own instead of the 
 ```
 
 Once `window.game` has `particles`, you can try them from the browser console too: `game.particles.burst('confetti', game.character.position)`.
+
+## Physics: falling, bouncing, jumping, throwing
+
+The physics helper is `src/engine/physics.js`. It gives anything gravity and a speed, so it can fall, bounce, slide to a stop, bump into walls and land on the ground. It works on the flat grassy field and on the block world.
+
+To run its tests, add this to `src/main.js`, just after `import './tests.js'`:
+
+```js
+import './spare-parts/physics-tests.js'
+```
+
+### Make something fall and bounce
+
+**`src/main.js`**
+
+```js
+import { createScreen, startGameLoop, createPhysics, makeBox } from './engine/index.js'
+
+const physics = createPhysics(world) // or createPhysics(world.blocks) in the block world
+
+const ball = makeBox({ width: 0.5, height: 0.5, depth: 0.5, colour: '#ffcc00' })
+ball.position.set(3, 6, 0) // up in the sky
+screen.add(ball)
+const ballPhysics = physics.add(ball, { bounciness: 0.7 })
+
+// in the game loop:
+physics.update(secondsPassed)
+
+// to throw it (3 across, 6 up, 0 back):
+ballPhysics.throw(3, 6, 0)
+```
+
+The settings for `physics.add()` are all optional:
+
+- `bounciness`: 0 lands with a thud, 1 bounces back as high as it fell
+- `grip`: how quickly it stops sliding on the ground (0 is like ice)
+- `radius`: how far its sides stick out, for bumping into walls
+- `height`: how tall it is, for bumping its head
+
+### Make the character jump
+
+**`src/main.js`**
+
+```js
+const characterPhysics = physics.add(character.person, { height: 2.2 })
+
+// in the game loop, before physics.update(secondsPassed):
+if (controls.wantsToJump()) {
+  characterPhysics.jump(2) // 2 blocks high
+}
+```
+
+**`src/controls.js`**, in the returned object:
+
+```js
+wantsToJump() {
+  return keyboard.wasJustPressed(' ')
+},
+```
+
+The character still walks the way it always has. Physics only does the up and down. In the block world, take out the `settleOntoGround()` lines in `character.js`, because physics does that job now. (Space is also the break-a-block key in the block world, so pick a different key for one of them.)
+
+### If they want really realistic physics
+
+Our helper is simple on purpose: things don't spin, roll or knock each other over. For piles of boxes that topple, things that roll down hills or chain reactions, a physics library called Rapier (rapier.rs) does that. It would sit behind the same `createPhysics()` so the game code doesn't change. It isn't in the project yet.

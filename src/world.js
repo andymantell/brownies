@@ -22,5 +22,17 @@ export function createWorld(screen) {
     keepOnField(position) {
       keepInsideSquare(position, size / 2 - 0.5)
     },
+
+    // How high is the ground here? It's 0 on the field, and there's none past the edge.
+    // (Physics uses this, so things land on the grass and can fall off the edge.)
+    groundHeightAt(x, z) {
+      const half = size / 2
+      const isOnTheField = Math.abs(x) <= half && Math.abs(z) <= half
+
+      if (isOnTheField) {
+        return 0
+      }
+      return -Infinity
+    },
   }
 }

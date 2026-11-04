@@ -19,6 +19,7 @@ export { buildIsland } from './terrain.js'
 export { findPath } from './pathfinding.js'
 export { createPathWalker } from './path-walker.js'
 export { makeParticles, PARTICLE_STYLES } from './particles.js'
+export { createPhysics } from './physics.js'
 export {
   stillDirection,
   directionFromTo,
