@@ -48,11 +48,15 @@ export function createCharacter(screen, looks = config.character) {
   rightSideHair.position.set(0.36, 0.17, -0.03)
   head.add(rightSideHair)
 
+  // All the bits of hair, so we can dye them a new colour.
+  const hairPieces = [hairOnTop, fringe, hairAtTheBack, leftSideHair, rightSideHair]
+
   // Long hair hangs down the back, past the shoulders.
   if (colours.hasLongHair) {
     const longHair = makeBox({ width: 0.76, height: 0.5, depth: 0.12, colour: colours.hairColour })
     longHair.position.set(0, -0.4, -0.36)
     head.add(longHair)
+    hairPieces.push(longHair)
   }
 
   // Arms and legs swing from the top, like shoulders and hips.
@@ -117,6 +121,13 @@ export function createCharacter(screen, looks = config.character) {
     wearTrousers(colour) {
       repaint(leftLeg, colour)
       repaint(rightLeg, colour)
+    },
+
+    // Dye all the hair a new colour.
+    dyeHair(colour) {
+      for (const piece of hairPieces) {
+        repaint(piece, colour)
+      }
     },
 
     // Called every frame. `direction` says which way to walk (or nowhere).
