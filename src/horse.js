@@ -97,7 +97,7 @@ export function createHorse(screen) {
       }
 
       // Keep the bubble floating above the ladybird's head.
-      bubble.stayAbove(horse.position, 3)
+      bubble.stayAbove(horse.position, 4.2)
     },
   }
 }
