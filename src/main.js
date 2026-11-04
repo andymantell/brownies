@@ -90,7 +90,6 @@ const heroBumpsInto = createSolidThings()
 heroBumpsInto.add(girl.person)
 const girlBumpsInto = createSolidThings()
 girlBumpsInto.add(character.person)
-solidThings.add(labrador.dog)
 solidThings.add(catHouse.catHouse)
 solidThings.add(garden.garden)
 solidThings.add(catBowls.waterBowl)
@@ -114,6 +113,12 @@ const huskyFollower = makeFollower(husky.dog, {
   staysThisClose: config.husky.staysThisClose,
 })
 
+// The labrador follows the girl.
+const labradorFollower = makeFollower(labrador.dog, {
+  speed: config.labrador.followSpeed,
+  staysThisClose: config.labrador.staysThisClose,
+})
+
 // The game loop runs about 60 times every second.
 // Each time, we move things a tiny bit and draw a new picture.
 startGameLoop((secondsPassed) => {
@@ -126,6 +131,7 @@ startGameLoop((secondsPassed) => {
   heroBumpsInto.keepOutOf(character.position, whereTheCharacterWas)
   catFollower.stopWalkingThrough(character.position, whereTheCharacterWas)
   huskyFollower.stopWalkingThrough(character.position, whereTheCharacterWas)
+  labradorFollower.stopWalkingThrough(character.position, whereTheCharacterWas)
   house.update(secondsPassed, character.position)
 
   // The girl walks with W A S D, and bumps into things too.
@@ -137,6 +143,7 @@ startGameLoop((secondsPassed) => {
   girlBumpsInto.keepOutOf(girl.position, whereTheGirlWas)
   catFollower.stopWalkingThrough(girl.position, whereTheGirlWas)
   huskyFollower.stopWalkingThrough(girl.position, whereTheGirlWas)
+  labradorFollower.stopWalkingThrough(girl.position, whereTheGirlWas)
   sleigh.update(secondsPassed)
   if (sleigh.hasArrived()) {
     santa.say('Ho ho ho!')
@@ -160,6 +167,15 @@ startGameLoop((secondsPassed) => {
   world.keepOnField(husky.position)
   house.keepOutOfWalls(husky.position, whereTheHuskyWas)
   solidThings.keepOutOf(husky.position, whereTheHuskyWas)
+
+  // The labrador lollops after the girl.
+  const whereTheLabradorWas = { x: labrador.position.x, z: labrador.position.z }
+  labradorFollower.follow(girl.position, secondsPassed)
+  labradorFollower.moveOutOfTheWayOf(character.position, secondsPassed)
+  labradorFollower.moveOutOfTheWayOf(girl.position, secondsPassed)
+  world.keepOnField(labrador.position)
+  house.keepOutOfWalls(labrador.position, whereTheLabradorWas)
+  solidThings.keepOutOf(labrador.position, whereTheLabradorWas)
 
   // Space bar to jump, 2 blocks high. Press it again in the air to do a backflip!
   if (controls.wantsToJump()) {

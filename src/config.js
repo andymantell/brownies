@@ -67,6 +67,8 @@ export const config = {
     earColour: '#d4a85a',
     eyeColour: '#3b2416',
     noseColour: '#2b1d14',
+    followSpeed: 3.5, // how fast the labrador runs after the girl
+    staysThisClose: 1.5, // the labrador stops when it's this close
   },
 
   husky: {
