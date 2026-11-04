@@ -78,6 +78,8 @@ export const config = {
     eyeColour: '#3fa9f5', // bright blue eyes
     noseColour: '#222222',
     pointyEars: true,
+    followSpeed: 4, // how fast the husky runs after the hero
+    staysThisClose: 2.5, // a bit further back than the cat, so they don't squash together
   },
 
   garden: {

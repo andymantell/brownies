@@ -83,7 +83,6 @@ heroBumpsInto.add(girl.person)
 const girlBumpsInto = createSolidThings()
 girlBumpsInto.add(character.person)
 solidThings.add(labrador.dog)
-solidThings.add(husky.dog)
 solidThings.add(catHouse.catHouse)
 solidThings.add(garden.garden)
 solidThings.add(catBowls.waterBowl)
@@ -99,6 +98,12 @@ const characterPhysics = physics.add(character.person, { height: 2.2 })
 const catFollower = makeFollower(cat.cat, {
   speed: config.cat.followSpeed,
   staysThisClose: config.cat.staysThisClose,
+})
+
+// The husky follows our hero too.
+const huskyFollower = makeFollower(husky.dog, {
+  speed: config.husky.followSpeed,
+  staysThisClose: config.husky.staysThisClose,
 })
 
 // The game loop runs about 60 times every second.
@@ -132,6 +137,13 @@ startGameLoop((secondsPassed) => {
   world.keepOnField(cat.position)
   house.keepOutOfWalls(cat.position, whereTheCatWas)
   solidThings.keepOutOf(cat.position, whereTheCatWas)
+
+  // The husky bounds after our hero as well.
+  const whereTheHuskyWas = { x: husky.position.x, z: husky.position.z }
+  huskyFollower.follow(character.position, secondsPassed)
+  world.keepOnField(husky.position)
+  house.keepOutOfWalls(husky.position, whereTheHuskyWas)
+  solidThings.keepOutOf(husky.position, whereTheHuskyWas)
 
   // Space bar to jump, 2 blocks high. Press it again in the air to do a backflip!
   if (controls.wantsToJump()) {
