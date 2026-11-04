@@ -18,7 +18,7 @@ export const config = {
     legColour: '#3d5a80',
     armColour: '#ff6b6b',
     eyeColour: '#222222',
-    hasLongHair: true,
+    hairStyle: 'long', // 'short', 'long' or 'bunches'
   },
 
   // The second player: a girl, made of boxes too. She walks with W A S D.
@@ -30,7 +30,7 @@ export const config = {
     legColour: '#5c4d7d',
     armColour: '#b388eb',
     eyeColour: '#222222',
-    hasLongHair: true,
+    hairStyle: 'long',
     startX: 3, // where she starts, next to our hero
     startZ: 0,
   },
@@ -40,6 +40,7 @@ export const config = {
     shirtColours: ['#ff6b6b', '#b388eb', '#5b8def', '#2a9d8f', '#7cc85a', '#f2c94c', '#ff9f1c', '#ff5fa2', '#ffffff', '#222222'],
     trousersColours: ['#3d5a80', '#5c4d7d', '#1b2a49', '#6b4226', '#2a9d8f', '#ff5fa2', '#9b5de5', '#888888', '#222222'],
     hairColours: ['#b5835a', '#f2c94c', '#3b2416', '#222222', '#c0502a', '#dddddd', '#ff5fa2', '#5b8def', '#9b5de5', '#7cc85a'],
+    hairStyles: ['short', 'long', 'bunches'],
   },
 
   house: {

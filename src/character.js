@@ -48,16 +48,30 @@ export function createCharacter(screen, looks = config.character) {
   rightSideHair.position.set(0.36, 0.17, -0.03)
   head.add(rightSideHair)
 
-  // All the bits of hair, so we can dye them a new colour.
-  const hairPieces = [hairOnTop, fringe, hairAtTheBack, leftSideHair, rightSideHair]
-
   // Long hair hangs down the back, past the shoulders.
-  if (colours.hasLongHair) {
-    const longHair = makeBox({ width: 0.76, height: 0.5, depth: 0.12, colour: colours.hairColour })
-    longHair.position.set(0, -0.4, -0.36)
-    head.add(longHair)
-    hairPieces.push(longHair)
+  const longHair = makeBox({ width: 0.76, height: 0.5, depth: 0.12, colour: colours.hairColour })
+  longHair.position.set(0, -0.4, -0.36)
+  head.add(longHair)
+
+  // Bunches stick out from each side of the head.
+  const leftBunch = makeBox({ width: 0.18, height: 0.4, depth: 0.18, colour: colours.hairColour })
+  leftBunch.position.set(-0.47, -0.05, -0.15)
+  head.add(leftBunch)
+
+  const rightBunch = makeBox({ width: 0.18, height: 0.4, depth: 0.18, colour: colours.hairColour })
+  rightBunch.position.set(0.47, -0.05, -0.15)
+  head.add(rightBunch)
+
+  // All the bits of hair, so we can dye them a new colour.
+  const hairPieces = [hairOnTop, fringe, hairAtTheBack, leftSideHair, rightSideHair, longHair, leftBunch, rightBunch]
+
+  // Only show the bits of hair that this hairstyle needs: 'short', 'long' or 'bunches'.
+  function styleHair(style) {
+    longHair.visible = style === 'long'
+    leftBunch.visible = style === 'bunches'
+    rightBunch.visible = style === 'bunches'
   }
+  styleHair(colours.hairStyle)
 
   // Arms and legs swing from the top, like shoulders and hips.
   const leftLeg = makeSwingingBox({ width: 0.3, height: 0.7, depth: 0.3, colour: colours.legColour })
@@ -129,6 +143,9 @@ export function createCharacter(screen, looks = config.character) {
         repaint(piece, colour)
       }
     },
+
+    // Change the hairstyle: 'short', 'long' or 'bunches'.
+    styleHair,
 
     // Called every frame. `direction` says which way to walk (or nowhere).
     update(secondsPassed, direction) {

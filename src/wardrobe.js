@@ -29,5 +29,9 @@ export function createWardrobe(players) {
     panel.addColourChoices('Hair colour', config.wardrobe.hairColours, looks.hairColour, (colour) => {
       person.dyeHair(colour)
     })
+
+    panel.addWordChoices('Hairstyle', config.wardrobe.hairStyles, looks.hairStyle, (style) => {
+      person.styleHair(style)
+    })
   }
 }
