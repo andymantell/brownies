@@ -15,6 +15,16 @@ export function makeBox({ width = 1, height = 1, depth = 1, colour = 'white' }) 
   return box
 }
 
+// Change the colour of a box (or every box in a group).
+//   repaint(body, 'hotpink')
+export function repaint(thing, colour) {
+  thing.traverse((part) => {
+    if (part.isMesh) {
+      part.material.color.set(colour)
+    }
+  })
+}
+
 // An empty holder. Put boxes in it with `.add(box)` and they all move together.
 export function makeGroup() {
   return new THREE.Group()

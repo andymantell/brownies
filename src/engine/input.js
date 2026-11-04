@@ -11,6 +11,21 @@ export const SCREEN = {
   right: new THREE.Vector3(1, 0, -1).normalize(),
 }
 
+// While the keys are switched off (like when a panel is open), pressing keys does nothing.
+let keysAreSwitchedOff = false
+const everyKeyboard = []
+
+export function switchKeysOff() {
+  keysAreSwitchedOff = true
+  for (const keyboard of everyKeyboard) {
+    keyboard.forgetAllKeys() // so nobody keeps walking
+  }
+}
+
+export function switchKeysOn() {
+  keysAreSwitchedOff = false
+}
+
 // Keeps track of which keys are being held down.
 //   const keyboard = createKeyboard()
 //   if (keyboard.isHeld('ArrowUp', 'w')) { ... }
@@ -20,6 +35,9 @@ export function createKeyboard() {
   const keysJustPressed = new Set() // pressed, but we haven't asked about them yet
 
   window.addEventListener('keydown', (event) => {
+    if (keysAreSwitchedOff) {
+      return
+    }
     keysHeldDown.add(event.key.toLowerCase())
 
     // Holding a key down makes it "repeat". We only count the first press.
@@ -37,11 +55,14 @@ export function createKeyboard() {
     keysHeldDown.delete(event.key.toLowerCase())
   })
 
-  // Forget all the keys if you switch to another window.
-  window.addEventListener('blur', () => {
+  function forgetAllKeys() {
     keysHeldDown.clear()
     keysJustPressed.clear()
-  })
+  }
+  everyKeyboard.push({ forgetAllKeys })
+
+  // Forget all the keys if you switch to another window.
+  window.addEventListener('blur', forgetAllKeys)
 
   return {
     isHeld(...keys) {

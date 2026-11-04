@@ -1,5 +1,5 @@
 import { config } from './config.js'
-import { makeBox, makeGroup, makeSwingingBox, angleOf, turnTowards, makeFlippable } from './engine/index.js'
+import { makeBox, makeGroup, makeSwingingBox, angleOf, turnTowards, makeFlippable, repaint } from './engine/index.js'
 
 // Our little hero, made entirely of boxes.
 // Pass in different looks (like config.girl) to make someone else.
@@ -104,6 +104,13 @@ export function createCharacter(screen, looks = config.character) {
       isFlipping = false
       hasFlippedThisJump = false
       flipper.rotation.x = 0
+    },
+
+    // Put on a different coloured shirt.
+    wearShirt(colour) {
+      repaint(body, colour)
+      repaint(leftArm, colour)
+      repaint(rightArm, colour)
     },
 
     // Called every frame. `direction` says which way to walk (or nowhere).

@@ -35,6 +35,11 @@ export const config = {
     startZ: 0,
   },
 
+  // The Dress up panel: all the things you can pick from.
+  wardrobe: {
+    shirtColours: ['#ff6b6b', '#b388eb', '#5b8def', '#2a9d8f', '#7cc85a', '#f2c94c', '#ff9f1c', '#ff5fa2', '#ffffff', '#222222'],
+  },
+
   house: {
     x: -14, // where the house is
     z: -2,

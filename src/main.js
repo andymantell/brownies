@@ -27,6 +27,7 @@ import { createRabbitHutch } from './rabbit-hutch.js'
 import { createRabbit } from './rabbit.js'
 import { createCharacter } from './character.js'
 import { createMonkey } from './monkey.js'
+import { createWardrobe } from './wardrobe.js'
 import { makeFollower } from './follower.js'
 import { makeWanderer } from './wanderer.js'
 import { createControls, createGirlControls } from './controls.js'
@@ -111,6 +112,12 @@ const girlControls = createGirlControls()
 // A little monkey sits on the girl's head, and goes everywhere she goes.
 const monkey = createMonkey()
 monkey.sitOnHeadOf(girl.person)
+
+// A Dress up button on the left, to pick clothes for both players.
+createWardrobe([
+  { name: 'Arrow keys girl', person: character, looks: config.character },
+  { name: 'W A S D girl (with the monkey)', person: girl, looks: config.girl },
+])
 
 // Things the character bumps into, instead of walking through.
 const solidThings = createSolidThings()
