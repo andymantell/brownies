@@ -9,7 +9,7 @@ import { angleOf, directionFromTo } from './maths.js'
 // and then checks that the right thing happened.
 
 const allTests = []
-let game = null // the character, controls, screen and world, once connectTests() has been called
+let game = null // the character, controls, screen, world and particles, once connectTests() has been called
 let currentChecks = null // where check() writes its results while a test is running
 let keysPressedByTest = new Set()
 let fingerIsDown = false // is a pretend finger held down on the grass?
@@ -113,6 +113,21 @@ export function findRoute(from, to) {
   return findPath(game.world.blocks, fromSpot, to)
 }
 
+// Make a burst of particles in one of the styles (see engine/particles.js), at a spot on the ground.
+export function makeEffect(styleName, x, z) {
+  game.particles.burst(styleName, { x, y: groundHeightAt(x, z), z })
+}
+
+// How many particle pieces are flying about right now?
+export function howManyParticles() {
+  return game.particles.howManyAreFlying()
+}
+
+// Where are the particle pieces? Gives back a list of { x, y, z }.
+export function whereAreTheParticles() {
+  return game.particles.whereAreThePieces()
+}
+
 // How many steps (metres) apart are two spots?
 export function stepsBetween(spotA, spotB) {
   return Math.hypot(spotA.x - spotB.x, spotA.z - spotB.z)
@@ -121,8 +136,8 @@ export function stepsBetween(spotA, spotB) {
 // ---- Behind the scenes: running the tests ----
 
 // Give the tests the bits of the game they need to poke at.
-export function connectTests({ character, controls, screen, world }) {
-  game = { character, controls, screen, world }
+export function connectTests({ character, controls, screen, world, particles }) {
+  game = { character, controls, screen, world, particles }
 }
 
 export function getAllTests() {

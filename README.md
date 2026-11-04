@@ -46,6 +46,8 @@ game.character.person.scale.set(3, 3, 3)
 
 `src/spare-parts/` holds a block world with hills and trees, breakable blocks, a pathfinding duck and their tests. They're **not plugged in** right now. Its `README.md` says how to switch them back on. The engine helpers they use (`createBlockWorld`, `buildIsland`, `findPath`, `createPathWalker`) are still in `src/engine/`.
 
+There's also a particle helper, `makeParticles()`, with sparkles, smoke, splashes, confetti and crumbs, ready for when it's needed. The same `README.md` says how to plug it in.
+
 ## Making models in Blender
 
 Scripts in `tools/blender/` build a model in [Blender](https://www.blender.org/) and export it as a `.glb` file into `models/`. `make-toadstool.py` is a worked example to copy. Blender doesn't need to be open. On this laptop it isn't on the PATH, so use its full path, from this folder:
