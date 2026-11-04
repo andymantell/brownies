@@ -35,6 +35,16 @@ export const config = {
     noseColour: '#ff9eb5',
   },
 
+  labrador: {
+    x: -2, // where the labrador is
+    z: 5,
+    furColour: '#e8c170',
+    snoutColour: '#e8c170',
+    earColour: '#d4a85a',
+    eyeColour: '#3b2416',
+    noseColour: '#2b1d14',
+  },
+
   garden: {
     x: 5, // where the flower garden is
     z: -2,

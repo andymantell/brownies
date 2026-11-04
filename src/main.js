@@ -3,6 +3,7 @@ import { createScreen, startGameLoop } from './engine/index.js'
 import { createWorld } from './world.js'
 import { createHouse } from './house.js'
 import { createCat } from './cat.js'
+import { createDog } from './dog.js'
 import { createGarden } from './garden.js'
 import { createCatHouse } from './cat-house.js'
 import { createCatBowls } from './cat-bowls.js'
@@ -28,6 +29,7 @@ const screen = createScreen(document.getElementById('game'), {
 const world = createWorld(screen)
 const house = createHouse(screen)
 const cat = createCat(screen)
+const labrador = createDog(screen, config.labrador)
 const garden = createGarden(screen)
 const catHouse = createCatHouse(screen)
 const catBowls = createCatBowls(screen)
@@ -54,4 +56,4 @@ createTestSidebar()
 
 // Lets you play with the game from the browser console. Try:
 //   game.character.person.scale.set(3, 3, 3)
-window.game = { screen, world, house, cat, catHouse, catBowls, garden, character, config }
+window.game = { screen, world, house, cat, labrador, catHouse, catBowls, garden, character, config }
