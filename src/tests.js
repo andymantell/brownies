@@ -115,7 +115,7 @@ test(
     check('The door is shut to start with', !isTheDoorOpen())
 
     // Stand just outside the door. (The door is in the middle of the front wall.)
-    const door = { x: config.house.x, z: config.house.z + 2.5 }
+    const door = { x: config.house.x, z: config.house.z + config.house.depth / 2 }
     putCharacterAt(door.x, door.z + 1)
     await wait(1)
     check('The door is open', isTheDoorOpen())
@@ -132,7 +132,7 @@ test(
   'Trying to walk straight through the side of the house should stop you at the wall.',
   async () => {
     // Stand next to the house's side wall, and tap a spot inside the house.
-    const sideWall = config.house.x + 3
+    const sideWall = config.house.x + config.house.width / 2
     putCharacterAt(sideWall + 2, config.house.z)
     tapGround(config.house.x, config.house.z)
     await wait(2)
@@ -146,7 +146,7 @@ test(
   'Can walk inside through the door',
   'Tapping a spot inside the house should make the character walk in through the door.',
   async () => {
-    const door = { x: config.house.x, z: config.house.z + 2.5 }
+    const door = { x: config.house.x, z: config.house.z + config.house.depth / 2 }
     putCharacterAt(door.x, door.z + 2)
 
     const insideTheHouse = { x: config.house.x, z: config.house.z }

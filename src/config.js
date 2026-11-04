@@ -20,8 +20,11 @@ export const config = {
   },
 
   house: {
-    x: -6, // where the house is
+    x: -14, // where the house is
     z: -2,
+    width: 12, // from side to side
+    depth: 9, // from front to back
+    wallHeight: 3.5,
     wallColour: '#e8d8b8',
     roofColour: '#222222',
     doorColour: '#8b5a2b',

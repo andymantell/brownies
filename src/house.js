@@ -6,9 +6,9 @@ import { makeBox, makeGroup, turnTowards, isInsideRectangle, makeSeeThrough } fr
 // Seen from above, the house is a rectangle. The front wall faces the camera,
 // and it has a gap in the middle for the door.
 
-const WIDTH = 6 // from side to side
-const DEPTH = 5 // from front to back
-const WALL_HEIGHT = 3
+const WIDTH = config.house.width // from side to side
+const DEPTH = config.house.depth // from front to back
+const WALL_HEIGHT = config.house.wallHeight
 const WALL_THICKNESS = 0.3
 const DOOR_WIDTH = 1.4
 const DOOR_HEIGHT = 2.4
@@ -161,11 +161,14 @@ function makeRoof() {
 
   const overhang = 0.4 // how far the roof sticks out past the walls
   const layerHeight = 0.4
-  const howManyLayers = 5
+  const fullDepth = DEPTH + overhang * 2 // how deep the bottom layer is
+  const stepIn = 1.2 // how much narrower each layer is than the one below it
+
+  // Keep adding layers until there's no room left at the top.
+  const howManyLayers = Math.floor(fullDepth / stepIn)
 
   for (let layer = 0; layer < howManyLayers; layer++) {
-    // Each layer is a bit narrower than the one below it.
-    const depth = DEPTH + overhang * 2 - layer * 1.2
+    const depth = fullDepth - layer * stepIn
 
     const step = makeBox({ width: WIDTH + overhang * 2, height: layerHeight, depth, colour })
     step.position.y = WALL_HEIGHT + layerHeight / 2 + layer * layerHeight
