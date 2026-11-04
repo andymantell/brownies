@@ -3,6 +3,7 @@
 // speed on fast and slow computers.
 
 let gameClock = 0 // how many seconds the game has been running for
+const extraJobs = [] // other things to do every frame (see doEveryFrame below)
 
 export function startGameLoop(everyFrame) {
   let lastTime = performance.now()
@@ -14,10 +15,18 @@ export function startGameLoop(everyFrame) {
     gameClock += secondsPassed
 
     everyFrame(secondsPassed)
+    for (const job of extraJobs) {
+      job(secondsPassed)
+    }
     requestAnimationFrame(nextFrame)
   }
 
   requestAnimationFrame(nextFrame)
+}
+
+// Add something else to do every frame, like making legs walk.
+export function doEveryFrame(job) {
+  extraJobs.push(job)
 }
 
 // Wait until the game itself has run for this many seconds.

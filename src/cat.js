@@ -1,8 +1,8 @@
 import { config } from './config.js'
-import { makeBox, makeGroup } from './engine/index.js'
+import { makeBox, makeGroup, makeSwingingBox, makeLegsWalk } from './engine/index.js'
 
 // A little grey cat, made out of boxes.
-// For now it just sits in the world. Later it could wander about!
+// Its legs walk whenever it moves.
 
 export function createCat(screen) {
   const colours = config.cat
@@ -41,11 +41,14 @@ export function createCat(screen) {
   nose.position.set(0, -0.06, 0.23)
   head.add(nose)
 
-  // Four legs, one at each corner of the body.
-  addLeg(cat, { x: -0.17, z: 0.35, colour: colours.furColour })
-  addLeg(cat, { x: 0.17, z: 0.35, colour: colours.furColour })
-  addLeg(cat, { x: -0.17, z: -0.35, colour: colours.furColour })
-  addLeg(cat, { x: 0.17, z: -0.35, colour: colours.furColour })
+  // Four legs, one at each corner of the body. They walk whenever the cat moves.
+  makeLegsWalk(cat, {
+    frontLeft: addLeg(cat, { x: -0.17, z: 0.35, colour: colours.furColour }),
+    frontRight: addLeg(cat, { x: 0.17, z: 0.35, colour: colours.furColour }),
+    backLeft: addLeg(cat, { x: -0.17, z: -0.35, colour: colours.furColour }),
+    backRight: addLeg(cat, { x: 0.17, z: -0.35, colour: colours.furColour }),
+    legLength: LEG_LENGTH,
+  })
 
   // A long tail sticking up at the back.
   const tail = makeBox({ width: 0.1, height: 0.7, depth: 0.1, colour: colours.furColour })
@@ -61,9 +64,12 @@ export function createCat(screen) {
   }
 }
 
-// One leg, standing on the ground.
+const LEG_LENGTH = 0.35
+
+// One leg, swinging from the hip, with its foot on the ground.
 function addLeg(cat, { x, z, colour }) {
-  const leg = makeBox({ width: 0.12, height: 0.35, depth: 0.12, colour })
-  leg.position.set(x, 0.175, z)
+  const leg = makeSwingingBox({ width: 0.12, height: LEG_LENGTH, depth: 0.12, colour })
+  leg.position.set(x, LEG_LENGTH, z) // the hip, at the top of the leg
   cat.add(leg)
+  return leg
 }
