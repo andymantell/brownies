@@ -189,4 +189,14 @@ export const config = {
     colour: '#2f8fd8',
     deepColour: '#1d5f9e', // the darker water underneath the waves
   },
+
+  // A wooden jetty, going out from the grass over the sea.
+  jetty: {
+    startX: 28, // where it starts, on the grass near the edge
+    z: 8,
+    length: 12, // how far out to sea it goes
+    width: 2,
+    woodColour: '#b07a45',
+    postColour: '#6b4226',
+  },
 }
