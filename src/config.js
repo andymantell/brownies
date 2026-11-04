@@ -13,6 +13,7 @@ export const config = {
     speed: 5, // walking speed
     bodyColour: '#ff6b6b',
     headColour: '#ffd6a5',
+    hairColour: '#6b4226',
     legColour: '#3d5a80',
     armColour: '#ff6b6b',
     eyeColour: '#222222',

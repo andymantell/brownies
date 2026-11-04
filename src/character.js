@@ -26,6 +26,27 @@ export function createCharacter(screen) {
   rightEye.position.set(0.16, 0.05, 0.36)
   head.add(rightEye)
 
+  // Short brown hair: a flat top, a fringe at the front, and bits over the ears and at the back.
+  const hairOnTop = makeBox({ width: 0.76, height: 0.16, depth: 0.76, colour: colours.hairColour })
+  hairOnTop.position.set(0, 0.36, 0)
+  head.add(hairOnTop)
+
+  const fringe = makeBox({ width: 0.76, height: 0.1, depth: 0.06, colour: colours.hairColour })
+  fringe.position.set(0, 0.25, 0.36)
+  head.add(fringe)
+
+  const hairAtTheBack = makeBox({ width: 0.76, height: 0.45, depth: 0.06, colour: colours.hairColour })
+  hairAtTheBack.position.set(0, 0.1, -0.36)
+  head.add(hairAtTheBack)
+
+  const leftSideHair = makeBox({ width: 0.06, height: 0.3, depth: 0.76, colour: colours.hairColour })
+  leftSideHair.position.set(-0.36, 0.17, -0.03)
+  head.add(leftSideHair)
+
+  const rightSideHair = makeBox({ width: 0.06, height: 0.3, depth: 0.76, colour: colours.hairColour })
+  rightSideHair.position.set(0.36, 0.17, -0.03)
+  head.add(rightSideHair)
+
   // Arms and legs swing from the top, like shoulders and hips.
   const leftLeg = makeSwingingBox({ width: 0.3, height: 0.7, depth: 0.3, colour: colours.legColour })
   leftLeg.position.set(-0.2, 0.7, 0)

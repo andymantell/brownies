@@ -111,7 +111,7 @@
         background: var(--card);
         border-radius: 1.2rem;
         padding: 2vh 1.5vw;
-        width: clamp(8rem, 17vw, 16rem);
+        width: clamp(8rem, 15vw, 16rem);
         box-shadow: 0 0.6vh 0 rgba(0, 0, 0, 0.12);
         font-size: clamp(0.95rem, 1.8vw, 1.6rem);
         font-weight: bold;
@@ -265,6 +265,122 @@
       .dot.current {
         background: white;
       }
+
+      /* ---------- Phones held upright: one card per row, picture on the left ---------- */
+
+      @media (max-width: 700px) {
+        .slide {
+          justify-content: safe center;
+          gap: 2vh;
+          padding: 4vh 16px 12vh;
+          overflow-y: auto;
+        }
+
+        .cards,
+        .steps,
+        .flow {
+          display: flex;
+          flex-direction: column;
+          align-items: stretch;
+          gap: 8px;
+          width: 100%;
+        }
+
+        .cards .card,
+        .steps .card {
+          display: grid;
+          grid-template-columns: 3rem 1fr;
+          align-items: center;
+          column-gap: 10px;
+          width: 100%;
+          height: auto;
+          margin: 0;
+          padding: 8px 12px;
+          text-align: left;
+        }
+
+        .cards .card .big-emoji,
+        .steps .card .big-emoji {
+          grid-row: 1 / span 3;
+          margin: 0;
+          font-size: 2.4rem;
+        }
+
+        .steps .card:nth-child(n) {
+          margin-bottom: 0;
+        }
+
+        .year {
+          font-size: 1em;
+        }
+
+        .versus {
+          flex-direction: column;
+          gap: 4px;
+          width: 100%;
+        }
+
+        .versus .card {
+          width: 100%;
+        }
+
+        /* Arrows point down when things are stacked */
+        .arrow {
+          transform: rotate(90deg);
+          font-size: 1.4rem;
+          line-height: 1;
+          text-align: center;
+        }
+
+        .side-by-side {
+          flex-direction: column;
+          gap: 2vh;
+        }
+
+        .box-friend {
+          height: 30vh;
+        }
+
+        .game-picture {
+          height: 18vh;
+        }
+      }
+
+      /* ---------- Phones held sideways: everything a bit smaller ---------- */
+
+      @media (max-height: 500px) and (min-width: 701px) {
+        .slide {
+          gap: 2vh;
+          padding: 3vh 4vw 11vh;
+        }
+
+        .cards {
+          flex-wrap: nowrap;
+          gap: 1.5vw;
+        }
+
+        .card {
+          padding: 1.5vh 1vw;
+        }
+
+        .card .big-emoji {
+          font-size: 2rem;
+        }
+
+        .steps .card {
+          height: 36vh;
+        }
+
+        .steps .card:nth-child(2) { margin-bottom: 3vh; }
+        .steps .card:nth-child(3) { margin-bottom: 6vh; }
+        .steps .card:nth-child(4) { margin-bottom: 9vh; }
+        .steps .card:nth-child(5) { margin-bottom: 12vh; }
+        .steps .card:nth-child(6) { margin-bottom: 15vh; }
+
+        .game-picture {
+          height: 24vh;
+        }
+      }
     </style>
   </head>
   <body>
@@ -400,6 +516,25 @@
         if (event.clientX > window.innerWidth / 3) {
           showSlide(current + 1)
         } else {
+          showSlide(current - 1)
+        }
+      })
+
+      // Swipe left or right on a phone or tablet.
+      let swipeStartX = 0
+
+      document.addEventListener('touchstart', (event) => {
+        swipeStartX = event.touches[0].clientX
+      })
+
+      document.addEventListener('touchend', (event) => {
+        const swipeDistance = event.changedTouches[0].clientX - swipeStartX
+
+        if (swipeDistance < -50) {
+          showSlide(current + 1)
+        }
+
+        if (swipeDistance > 50) {
           showSlide(current - 1)
         }
       })
