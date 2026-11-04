@@ -41,7 +41,11 @@ export function createWorld(screen) {
     // Let people swim in this, like the sea.
     //   world.letPeopleSwimIn(sea.water)
     letPeopleSwimIn(thing) {
-      placesToSwim.push(areaUnder(thing))
+      const water = areaUnder(thing)
+      // Make it a tiny bit bigger, so it reaches right up to the edge of the grass.
+      water.width += 1
+      water.depth += 1
+      placesToSwim.push(water)
     },
 
     // Stop someone walking off the edge of the field (or off the jetty, into the sea).
@@ -78,10 +82,21 @@ export function createWorld(screen) {
       }
       for (const place of placesToSwim) {
         if (isInsideRectangle({ x, z }, place, 0)) {
-          return config.sea.level - config.swimming.depth
+          return config.sea.level - config.swimming.depth + bobbing()
         }
       }
       return -Infinity
     },
+
+    // Is this person swimming? They are if their feet are under the water.
+    isSwimming(position) {
+      return position.y < config.sea.level
+    },
   }
+}
+
+// Swimmers bob gently up and down in the water.
+function bobbing() {
+  const seconds = Date.now() / 1000
+  return Math.sin(seconds * 3) * config.swimming.bobHeight
 }

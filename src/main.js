@@ -167,6 +167,9 @@ const horseWanderer = makeWanderer(horse.horse, { speed: config.horse.walkSpeed 
 startGameLoop((secondsPassed) => {
   const whereTheCharacterWas = { x: character.position.x, z: character.position.z }
   const direction = controls.getDirection(character.position)
+  if (world.isSwimming(character.position)) {
+    direction.multiplyScalar(config.swimming.speed) // swimming is slower than walking
+  }
   character.update(secondsPassed, direction)
   world.keepOnField(character.position, { canSwim: true })
   house.keepOutOfWalls(character.position, whereTheCharacterWas)
@@ -180,7 +183,11 @@ startGameLoop((secondsPassed) => {
 
   // The girl walks with W A S D, and bumps into things too.
   const whereTheGirlWas = { x: girl.position.x, z: girl.position.z }
-  girl.update(secondsPassed, girlControls.getDirection())
+  const girlDirection = girlControls.getDirection()
+  if (world.isSwimming(girl.position)) {
+    girlDirection.multiplyScalar(config.swimming.speed)
+  }
+  girl.update(secondsPassed, girlDirection)
   world.keepOnField(girl.position, { canSwim: true })
   house.keepOutOfWalls(girl.position, whereTheGirlWas)
   solidThings.keepOutOf(girl.position, whereTheGirlWas)
