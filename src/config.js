@@ -166,4 +166,11 @@ export const config = {
     colour: '#fff4e0',
     strength: 2.2,
   },
+
+  // The sea, along the right-hand edge of the field.
+  sea: {
+    width: 24, // how far out the sea goes
+    level: -0.4, // how high the water is: a bit lower than the grass
+    colour: '#2f8fd8',
+  },
 }
