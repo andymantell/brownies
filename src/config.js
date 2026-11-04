@@ -148,6 +148,13 @@ export const config = {
     feetColour: '#f4c430',
   },
 
+  portaloo: {
+    x: -9.5, // where the portaloo is: right next to the bath
+    z: 10,
+    wallColour: '#2f80ed',
+    roofColour: '#e0e0e0',
+  },
+
   camera: {
     zoom: 14, // how much of the world fits on screen: bigger number = zoomed further out
     followSpeed: 4, // how quickly the camera catches up with the character

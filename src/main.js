@@ -12,6 +12,7 @@ import { createSleigh } from './sleigh.js'
 import { createSnow } from './snow.js'
 import { createVolcano } from './volcano.js'
 import { createBath } from './bath.js'
+import { createPortaloo } from './portaloo.js'
 import { createCharacter } from './character.js'
 import { createMonkey } from './monkey.js'
 import { makeFollower } from './follower.js'
@@ -63,6 +64,7 @@ const volcano = createVolcano(screen)
 volcano.keepLavaOffUnder(house.roof) // hide in the house to stay safe from the lava!
 volcano.keepLavaOffUnder(catHouse.catHouse)
 const bath = createBath(screen)
+const portaloo = createPortaloo(screen)
 const character = createCharacter(screen)
 const controls = createControls(screen)
 
