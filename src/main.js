@@ -53,6 +53,8 @@ const secondLabrador = createDog(screen, config.labrador)
 sleigh.hitch(secondLabrador.dog, { x: 0.6, z: 4.4 })
 
 const snow = createSnow(screen)
+snow.keepOffUnder(house.roof)
+snow.keepOffUnder(catHouse.catHouse)
 const character = createCharacter(screen)
 const controls = createControls(screen)
 
