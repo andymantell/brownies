@@ -100,7 +100,8 @@ export const config = {
     z: 4,
     size: 6, // how big the soil patch is, from side to side
     soilColour: '#7a4b2a',
-    petalColour: '#ff5fa2',
+    flowersInARow: 6, // 6 rows of 6 flowers
+    petalColours: ['#ff5fa2', '#ff4d4d', '#ffffff', '#9b5de5', '#ff9f1c'], // pink, red, white, purple, orange
   },
 
   catHouse: {

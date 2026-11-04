@@ -11,8 +11,22 @@ export function createGarden(screen) {
   const soil = makeSoil(config.garden.size)
   garden.add(soil)
 
-  const flower = makeFlower(config.garden.petalColour)
-  garden.add(flower)
+  // Rows and rows of flowers. Each one gets the next colour from the list.
+  const flowersInARow = config.garden.flowersInARow
+  const gap = config.garden.size / flowersInARow
+  const colours = config.garden.petalColours
+  let flowerNumber = 0
+
+  for (let row = 0; row < flowersInARow; row = row + 1) {
+    for (let column = 0; column < flowersInARow; column = column + 1) {
+      const colour = colours[flowerNumber % colours.length]
+      const flower = makeFlower(colour)
+      flower.position.x = (column + 0.5) * gap - config.garden.size / 2
+      flower.position.z = (row + 0.5) * gap - config.garden.size / 2
+      garden.add(flower)
+      flowerNumber = flowerNumber + 1
+    }
+  }
 
   screen.add(garden)
 
