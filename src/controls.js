@@ -7,7 +7,7 @@ import {
   directionFromTo,
 } from './engine/index.js'
 
-// Works out which way the player wants to walk: from the keyboard, or by
+// Works out which way the player wants to walk: from the arrow keys, or by
 // tapping the grass (or holding a finger down and sliding it around).
 
 export function createControls(screen) {
@@ -45,16 +45,16 @@ export function createControls(screen) {
     getDirection(characterPosition) {
       const direction = stillDirection()
 
-      if (keyboard.isHeld('ArrowUp', 'w')) {
+      if (keyboard.isHeld('ArrowUp')) {
         direction.add(SCREEN.up)
       }
-      if (keyboard.isHeld('ArrowDown', 's')) {
+      if (keyboard.isHeld('ArrowDown')) {
         direction.add(SCREEN.down)
       }
-      if (keyboard.isHeld('ArrowLeft', 'a')) {
+      if (keyboard.isHeld('ArrowLeft')) {
         direction.add(SCREEN.left)
       }
-      if (keyboard.isHeld('ArrowRight', 'd')) {
+      if (keyboard.isHeld('ArrowRight')) {
         direction.add(SCREEN.right)
       }
 
@@ -86,6 +86,36 @@ export function createControls(screen) {
         return towardsSpot
       }
 
+      return direction // stand still
+    },
+  }
+}
+
+// The second player (the girl) walks with the W A S D keys.
+export function createGirlControls() {
+  const keyboard = createKeyboard()
+
+  return {
+    // Which way should the girl walk right now?
+    getDirection() {
+      const direction = stillDirection()
+
+      if (keyboard.isHeld('w')) {
+        direction.add(SCREEN.up)
+      }
+      if (keyboard.isHeld('s')) {
+        direction.add(SCREEN.down)
+      }
+      if (keyboard.isHeld('a')) {
+        direction.add(SCREEN.left)
+      }
+      if (keyboard.isHeld('d')) {
+        direction.add(SCREEN.right)
+      }
+
+      if (direction.length() > 0) {
+        return direction.normalize() // so walking diagonally isn't faster
+      }
       return direction // stand still
     },
   }

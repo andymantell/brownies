@@ -19,6 +19,20 @@ export const config = {
     eyeColour: '#222222',
   },
 
+  // The second player: a girl, made of boxes too. She walks with W A S D.
+  girl: {
+    speed: 5,
+    bodyColour: '#b388eb',
+    headColour: '#f1c27d',
+    hairColour: '#f2c94c',
+    legColour: '#5c4d7d',
+    armColour: '#b388eb',
+    eyeColour: '#222222',
+    hasLongHair: true,
+    startX: 3, // where she starts, next to our hero
+    startZ: 0,
+  },
+
   house: {
     x: -14, // where the house is
     z: -2,

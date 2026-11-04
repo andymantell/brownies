@@ -11,7 +11,7 @@ import { createSanta } from './santa.js'
 import { createSleigh } from './sleigh.js'
 import { createSnow } from './snow.js'
 import { createCharacter } from './character.js'
-import { createControls } from './controls.js'
+import { createControls, createGirlControls } from './controls.js'
 import { createPhysics, groundMadeOf } from './engine/index.js'
 import { connectTests } from './engine/testing.js'
 import { createTestSidebar } from './engine/test-sidebar.js'
@@ -56,6 +56,12 @@ const snow = createSnow(screen)
 const character = createCharacter(screen)
 const controls = createControls(screen)
 
+// The second player: a girl, standing next to our hero.
+const girl = createCharacter(screen, config.girl)
+girl.position.x = config.girl.startX
+girl.position.z = config.girl.startZ
+const girlControls = createGirlControls()
+
 // Things the character bumps into, instead of walking through.
 const solidThings = createSolidThings()
 solidThings.add(cat.cat)
@@ -82,6 +88,13 @@ startGameLoop((secondsPassed) => {
   house.keepOutOfWalls(character.position, whereTheCharacterWas)
   solidThings.keepOutOf(character.position, whereTheCharacterWas)
   house.update(secondsPassed, character.position)
+
+  // The girl walks with W A S D, and bumps into things too.
+  const whereTheGirlWas = { x: girl.position.x, z: girl.position.z }
+  girl.update(secondsPassed, girlControls.getDirection())
+  world.keepOnField(girl.position)
+  house.keepOutOfWalls(girl.position, whereTheGirlWas)
+  solidThings.keepOutOf(girl.position, whereTheGirlWas)
   sleigh.update(secondsPassed)
   if (sleigh.hasArrived()) {
     santa.say('Ho ho ho!')
@@ -112,4 +125,4 @@ createTestSidebar()
 
 // Lets you play with the game from the browser console. Try:
 //   game.character.person.scale.set(3, 3, 3)
-window.game = { screen, world, house, cat, labrador, husky, catHouse, catBowls, garden, character, config }
+window.game = { screen, world, house, cat, labrador, husky, catHouse, catBowls, garden, character, girl, config }

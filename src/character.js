@@ -2,9 +2,10 @@ import { config } from './config.js'
 import { makeBox, makeGroup, makeSwingingBox, angleOf, turnTowards, makeFlippable } from './engine/index.js'
 
 // Our little hero, made entirely of boxes.
+// Pass in different looks (like config.girl) to make someone else.
 
-export function createCharacter(screen) {
-  const colours = config.character
+export function createCharacter(screen, looks = config.character) {
+  const colours = looks
 
   // A group holds all the body parts together, so they move as one.
   const person = makeGroup()
@@ -46,6 +47,13 @@ export function createCharacter(screen) {
   const rightSideHair = makeBox({ width: 0.06, height: 0.3, depth: 0.76, colour: colours.hairColour })
   rightSideHair.position.set(0.36, 0.17, -0.03)
   head.add(rightSideHair)
+
+  // Long hair hangs down the back, past the shoulders.
+  if (colours.hasLongHair) {
+    const longHair = makeBox({ width: 0.76, height: 0.5, depth: 0.12, colour: colours.hairColour })
+    longHair.position.set(0, -0.4, -0.36)
+    head.add(longHair)
+  }
 
   // Arms and legs swing from the top, like shoulders and hips.
   const leftLeg = makeSwingingBox({ width: 0.3, height: 0.7, depth: 0.3, colour: colours.legColour })
@@ -108,7 +116,7 @@ export function createCharacter(screen) {
 
       if (isWalking) {
         // Step forwards.
-        const distance = config.character.speed * secondsPassed
+        const distance = colours.speed * secondsPassed
         person.position.x += direction.x * distance
         person.position.z += direction.z * distance
 
@@ -117,7 +125,7 @@ export function createCharacter(screen) {
         const turnSpeed = secondsPassed * 12
         person.rotation.y = turnTowards(person.rotation.y, wantedAngle, turnSpeed)
 
-        stepTimer += secondsPassed * config.character.speed * 2
+        stepTimer += secondsPassed * colours.speed * 2
       } else {
         stepTimer = 0 // stand up straight
       }
