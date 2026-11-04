@@ -41,9 +41,34 @@ export function createHouse(screen) {
   aboveTheDoor.position.set(0, (WALL_HEIGHT + DOOR_HEIGHT) / 2, DEPTH / 2)
   house.add(aboveTheDoor)
 
+  const roof = makeRoof()
+  house.add(roof)
+
   screen.add(house)
 
-  return { house }
+  return { house, roof }
+}
+
+// A pointy roof, made of layers of boxes that get thinner as they go up,
+// like a stack of steps.
+function makeRoof() {
+  const roof = makeGroup()
+  const colour = config.house.roofColour
+
+  const overhang = 0.4 // how far the roof sticks out past the walls
+  const layerHeight = 0.4
+  const howManyLayers = 5
+
+  for (let layer = 0; layer < howManyLayers; layer++) {
+    // Each layer is a bit narrower than the one below it.
+    const depth = DEPTH + overhang * 2 - layer * 1.2
+
+    const step = makeBox({ width: WIDTH + overhang * 2, height: layerHeight, depth, colour })
+    step.position.y = WALL_HEIGHT + layerHeight / 2 + layer * layerHeight
+    roof.add(step)
+  }
+
+  return roof
 }
 
 // One wall, standing on the ground.
