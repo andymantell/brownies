@@ -45,6 +45,17 @@ export const config = {
     noseColour: '#2b1d14',
   },
 
+  husky: {
+    x: 0.5, // where the husky is
+    z: 6,
+    furColour: '#7d8590',
+    snoutColour: '#f4f4f4', // huskies have a white face
+    earColour: '#5f6670',
+    eyeColour: '#3fa9f5', // bright blue eyes
+    noseColour: '#222222',
+    pointyEars: true,
+  },
+
   garden: {
     x: 5, // where the flower garden is
     z: -2,

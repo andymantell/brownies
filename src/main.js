@@ -31,6 +31,7 @@ const house = createHouse(screen)
 const cat = createCat(screen)
 const labrador = createDog(screen, config.labrador)
 const husky = createDog(screen, config.husky)
+const husky = createDog(screen, config.husky)
 const garden = createGarden(screen)
 const catHouse = createCatHouse(screen)
 const catBowls = createCatBowls(screen)
@@ -62,4 +63,4 @@ createTestSidebar()
 
 // Lets you play with the game from the browser console. Try:
 //   game.character.person.scale.set(3, 3, 3)
-window.game = { screen, world, house, cat, labrador, husky, catHouse, catBowls, garden, character, config }
+window.game = { screen, world, house, cat, labrador, husky, husky, catHouse, catBowls, garden, character, config }

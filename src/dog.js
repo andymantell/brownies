@@ -34,14 +34,11 @@ export function createDog(screen, looks) {
   rightEye.position.set(0.13, 0.08, 0.26)
   head.add(rightEye)
 
-  // Two floppy ears hanging down the sides of the head.
-  const leftEar = makeBox({ width: 0.08, height: 0.3, depth: 0.2, colour: looks.earColour })
-  leftEar.position.set(-0.31, -0.02, 0)
-  head.add(leftEar)
-
-  const rightEar = makeBox({ width: 0.08, height: 0.3, depth: 0.2, colour: looks.earColour })
-  rightEar.position.set(0.31, -0.02, 0)
-  head.add(rightEar)
+  if (looks.pointyEars) {
+    addPointyEars(head, looks.earColour)
+  } else {
+    addFloppyEars(head, looks.earColour)
+  }
 
   // Four legs, one at each corner of the body.
   addLeg(dog, { x: -0.2, z: 0.42, colour: looks.furColour })
@@ -61,6 +58,28 @@ export function createDog(screen, looks) {
     position: dog.position,
     dog,
   }
+}
+
+// Two floppy ears hanging down the sides of the head, like a labrador.
+function addFloppyEars(head, colour) {
+  const leftEar = makeBox({ width: 0.08, height: 0.3, depth: 0.2, colour })
+  leftEar.position.set(-0.31, -0.02, 0)
+  head.add(leftEar)
+
+  const rightEar = makeBox({ width: 0.08, height: 0.3, depth: 0.2, colour })
+  rightEar.position.set(0.31, -0.02, 0)
+  head.add(rightEar)
+}
+
+// Two pointy ears standing up on top of the head, like a husky.
+function addPointyEars(head, colour) {
+  const leftEar = makeBox({ width: 0.14, height: 0.22, depth: 0.08, colour })
+  leftEar.position.set(-0.17, 0.35, -0.05)
+  head.add(leftEar)
+
+  const rightEar = makeBox({ width: 0.14, height: 0.22, depth: 0.08, colour })
+  rightEar.position.set(0.17, 0.35, -0.05)
+  head.add(rightEar)
 }
 
 // One leg, standing on the ground.
