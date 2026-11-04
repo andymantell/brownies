@@ -33,6 +33,9 @@ const nuggetDepth = 0.28
 // The most nuggets there can be on the ground at once, so the laptop doesn't get tired.
 const mostNuggetsOnTheGround = 400
 
+// How many seconds a nugget takes to shrink away to nothing at the end.
+const secondsToShrinkAway = 1.5
+
 // How big each square of ground is. Nuggets that land in the same square pile up.
 const squareSize = 0.5
 
@@ -126,6 +129,8 @@ export function createNuggets(screen) {
       nugget.secondsLeft -= secondsPassed
       if (nugget.secondsLeft <= 0) {
         takeAway(nugget)
+      } else if (nugget.secondsLeft < secondsToShrinkAway) {
+        pile.shrinkOne(nugget.number, nugget.secondsLeft / secondsToShrinkAway)
       }
     }
 
@@ -163,7 +168,7 @@ export function createNuggets(screen) {
     })
   }
 
-  // A nugget has been on the ground long enough, so it goes away.
+  // A nugget has shrunk away to nothing, so it's gone.
   // Any nuggets on top of it drop down to fill the gap.
   function takeAway(gone) {
     pile.removeOne(gone.number)
