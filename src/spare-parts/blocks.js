@@ -6,7 +6,7 @@
 //   grassyEdges: true, to paint a strip of the top colour down the sides (like grass)
 //   unbreakable: true, so nobody can dig it up
 //
-// Add your own! Then use them in world.js, like this:
+// Add your own! Then use them in spare-parts/world.js, like this:
 //   blocks.put(0, 0, 0, 'cheese')
 
 export const blockTypes = {

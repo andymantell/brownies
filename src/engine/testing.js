@@ -85,7 +85,7 @@ export function howHighIsCharacter() {
 
 // Pick the character up and put them down somewhere else, standing on the ground.
 export function putCharacterAt(x, z) {
-  const ground = game.world.blocks.topOfColumn(x, z)
+  const ground = groundHeightAt(x, z)
   game.character.position.set(x, ground, z)
 }
 
@@ -109,7 +109,7 @@ export function isThereABlockAt(x, y, z) {
 // Use pathfinding to find a route between two spots on the ground.
 // Gives back a list of squares, each { x, y, z }.
 export function findRoute(from, to) {
-  const fromSpot = { x: from.x, y: game.world.blocks.topOfColumn(from.x, from.z), z: from.z }
+  const fromSpot = { x: from.x, y: groundHeightAt(from.x, from.z), z: from.z }
   return findPath(game.world.blocks, fromSpot, to)
 }
 
@@ -160,6 +160,14 @@ function resetGame() {
   putCharacterAt(0, 0)
 }
 
+// How high is the ground here? It's 0 everywhere, unless the world is made of blocks.
+function groundHeightAt(x, z) {
+  if (!game.world || !game.world.blocks) {
+    return 0
+  }
+  return Math.max(game.world.blocks.topOfColumn(x, z), 0)
+}
+
 function takeAwayTestBlocks() {
   for (const spot of blocksPutByTest) {
     game.world.blocks.remove(spot.x, spot.y, spot.z)
@@ -183,7 +191,7 @@ function sendFingerEvent(type, x, z) {
   fingerSpot.z = z
 
   // Work out where that spot is on the screen, in pixels (on top of the ground there).
-  const ground = Math.max(game.world.blocks.topOfColumn(x, z), 0)
+  const ground = groundHeightAt(x, z)
   const onScreen = new THREE.Vector3(x, ground, z).project(game.screen.camera)
   const pixelsAcross = ((onScreen.x + 1) / 2) * window.innerWidth
   const pixelsDown = ((1 - onScreen.y) / 2) * window.innerHeight

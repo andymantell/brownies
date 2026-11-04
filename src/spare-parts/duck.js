@@ -7,11 +7,12 @@ import {
   turnTowards,
   directionFromTo,
   randomNumberBetween,
-} from './engine/index.js'
+} from '../engine/index.js'
 
 // 🦆 A little blocky duck that follows you around.
 // It uses pathfinding to waddle around trees and hills to get to you.
 // When you're far away, it wanders about on its own.
+// This is a spare part: it isn't plugged into the game yet. See README.md in this folder.
 
 const DUCK_SPEED = 3
 const FOLLOWS_YOU_FROM = 12 // how close you need to be before it follows you

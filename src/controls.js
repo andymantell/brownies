@@ -8,9 +8,9 @@ import {
 } from './engine/index.js'
 
 // Works out which way the player wants to walk: from the keyboard, or by
-// tapping the ground (or holding a finger down and sliding it around).
+// tapping the grass (or holding a finger down and sliding it around).
 
-export function createControls(screen, world) {
+export function createControls(screen) {
   const keyboard = createKeyboard()
 
   // Tapping the grass picks a spot to walk to, and shows a ring there.
@@ -18,7 +18,7 @@ export function createControls(screen, world) {
   const marker = makeTapMarker()
   screen.add(marker.ring)
 
-  const finger = createFinger(screen, world.blocks, (spot) => {
+  const finger = createFinger(screen, (spot) => {
     walkTo(spot)
   })
 
@@ -35,11 +35,6 @@ export function createControls(screen, world) {
   return {
     // Forget about any tapped spot, so the character stops.
     stopWalking: forgetTappedSpot,
-
-    // Has someone pressed the space bar to break a block?
-    wantsToBreakBlock() {
-      return keyboard.wasJustPressed(' ')
-    },
 
     // Which way should the character walk right now?
     getDirection(characterPosition) {

@@ -3,7 +3,7 @@ import { makeBox, makeGroup, makeSwingingBox, angleOf, turnTowards } from './eng
 
 // Our little hero, made entirely of boxes.
 
-export function createCharacter(screen, world) {
+export function createCharacter(screen) {
   const colours = config.character
 
   // A group holds all the body parts together, so they move as one.
@@ -72,21 +72,15 @@ export function createCharacter(screen, world) {
     position: person.position,
     person,
 
-    // Which way the character is facing, as an angle.
-    facingAngle() {
-      return person.rotation.y
-    },
-
     // Called every frame. `direction` says which way to walk (or nowhere).
     update(secondsPassed, direction) {
       const isWalking = direction.length() > 0
 
       if (isWalking) {
-        // Step forwards (unless a block is in the way).
+        // Step forwards.
         const distance = config.character.speed * secondsPassed
-        const stepAcross = direction.x * distance
-        const stepBack = direction.z * distance
-        world.blocks.moveAlong(person.position, stepAcross, stepBack, secondsPassed)
+        person.position.x += direction.x * distance
+        person.position.z += direction.z * distance
 
         // Turn to face the way we're walking.
         const wantedAngle = angleOf(direction)
@@ -96,7 +90,6 @@ export function createCharacter(screen, world) {
         stepTimer += secondsPassed * config.character.speed * 2
       } else {
         stepTimer = 0 // stand up straight
-        world.blocks.settleOntoGround(person.position, secondsPassed) // fall if the ground is gone
       }
 
       // Swing arms and legs backwards and forwards.

@@ -59,10 +59,12 @@ export function createKeyboard() {
 
 // Keeps track of a finger (or a mouse button) held down on the ground.
 // `whenPressed(spot)` runs as soon as the finger goes down, with the spot it touched.
-// `blocks` is the block world, so we can tell which block the finger is on.
-//   const finger = createFinger(screen, blocks, (spot) => { ... })
+// `blocks` is optional: pass a block world to find which block the finger is on.
+// Without it, the finger finds a spot on flat ground.
+//   const finger = createFinger(screen, (spot) => { ... })
+//   const finger = createFinger(screen, (spot) => { ... }, blocks)
 //   if (finger.isDown()) { const spot = finger.spotOnGround() }
-export function createFinger(screen, blocks, whenPressed) {
+export function createFinger(screen, whenPressed, blocks = null) {
   let isDown = false
   let fingerId = null // which finger, if there's more than one on the screen
   const whereOnScreen = { x: 0, y: 0 }
@@ -127,7 +129,10 @@ function findSpotOnGround(whereOnScreen, camera, blocks) {
   const laser = new THREE.Raycaster()
   laser.setFromCamera(screenPosition, camera)
 
-  const hit = blocks.findBlockAlongLaser(laser)
+  let hit = null
+  if (blocks) {
+    hit = blocks.findBlockAlongLaser(laser)
+  }
   if (hit) {
     // Stand on top of the block we hit, as near as we can to where the laser touched it.
     const nearlyHalf = 0.49
@@ -138,7 +143,7 @@ function findSpotOnGround(whereOnScreen, camera, blocks) {
     )
   }
 
-  // Missed all the blocks (off the edge of the world)? Use the flat ground level instead.
+  // No blocks, or missed them all (off the edge of the world)? Use the flat ground instead.
   const flatGround = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0)
   return laser.ray.intersectPlane(flatGround, new THREE.Vector3())
 }
