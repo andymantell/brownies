@@ -64,30 +64,10 @@ export function createVolcano(screen) {
   const volcano = makeGroup()
   volcano.position.set(config.volcano.x, 0, config.volcano.z)
 
-  // Stack up the layers of rock, each one a bit narrower than the one below.
-  for (let layer = 0; layer < HOW_MANY_LAYERS; layer++) {
-    const howFarUp = layer / (HOW_MANY_LAYERS - 1)
-    const width = BOTTOM_WIDTH - (BOTTOM_WIDTH - TOP_WIDTH) * howFarUp
-
-    let colour = config.volcano.rockColour
-    if (layer % 2 === 1) {
-      colour = config.volcano.darkRockColour
-    }
-
-    const rock = makeBox({ width, height: LAYER_HEIGHT, depth: width, colour })
-    rock.position.y = LAYER_HEIGHT / 2 + layer * LAYER_HEIGHT
-    volcano.add(rock)
+  // The volcano can be switched off in config.js. Then there's no mountain and no lava.
+  if (config.volcano.isOn) {
+    buildTheMountain(volcano)
   }
-
-  // The lava pool, sitting in the top of the volcano.
-  const lava = makeBox({
-    width: TOP_WIDTH - 1,
-    height: 0.2,
-    depth: TOP_WIDTH - 1,
-    colour: config.volcano.lavaColour,
-  })
-  lava.position.y = HOW_MANY_LAYERS * LAYER_HEIGHT
-  volcano.add(lava)
 
   screen.add(volcano)
 
@@ -172,6 +152,10 @@ export function createVolcano(screen) {
 
   // Call this every frame. It counts down to the next eruption.
   function update(secondsPassed) {
+    if (!config.volcano.isOn) {
+      return
+    }
+
     secondsUntilEruption -= secondsPassed
     if (secondsUntilEruption <= 0) {
       erupt()
@@ -248,4 +232,32 @@ export function createVolcano(screen) {
   }
 
   return { volcano, top, update, erupt, isErupting, isHitByLava, punchAwayLavaNear, keepLavaOffUnder }
+}
+
+// Build the mountain out of layers of rock, with a pool of lava in the top.
+function buildTheMountain(volcano) {
+  // Stack up the layers of rock, each one a bit narrower than the one below.
+  for (let layer = 0; layer < HOW_MANY_LAYERS; layer++) {
+    const howFarUp = layer / (HOW_MANY_LAYERS - 1)
+    const width = BOTTOM_WIDTH - (BOTTOM_WIDTH - TOP_WIDTH) * howFarUp
+
+    let colour = config.volcano.rockColour
+    if (layer % 2 === 1) {
+      colour = config.volcano.darkRockColour
+    }
+
+    const rock = makeBox({ width, height: LAYER_HEIGHT, depth: width, colour })
+    rock.position.y = LAYER_HEIGHT / 2 + layer * LAYER_HEIGHT
+    volcano.add(rock)
+  }
+
+  // The lava pool, sitting in the top of the volcano.
+  const lava = makeBox({
+    width: TOP_WIDTH - 1,
+    height: 0.2,
+    depth: TOP_WIDTH - 1,
+    colour: config.volcano.lavaColour,
+  })
+  lava.position.y = HOW_MANY_LAYERS * LAYER_HEIGHT
+  volcano.add(lava)
 }

@@ -32,6 +32,11 @@ export function makeScoreBoard(label) {
       show()
     },
 
+    // Tuck the score board away, when there's nothing to score.
+    hide() {
+      board.style.display = 'none'
+    },
+
     // What's the score right now?
     score() {
       return score

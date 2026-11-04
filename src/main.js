@@ -14,8 +14,6 @@ import { createVolcano } from './volcano.js'
 import { makeScoreBoard } from './engine/score-board.js'
 import { createSea } from './sea.js'
 import { createBath } from './bath.js'
-import { createHorse } from './horse.js'
-import { createLadybird } from './ladybird.js'
 import { createPortaloo } from './portaloo.js'
 import { createCharacter } from './character.js'
 import { createMonkey } from './monkey.js'
@@ -69,12 +67,10 @@ const sea = createSea(screen)
 volcano.keepLavaOffUnder(house.roof) // hide in the house to stay safe from the lava!
 volcano.keepLavaOffUnder(catHouse.catHouse)
 const scoreBoard = makeScoreBoard('Lava punched')
+if (!config.volcano.isOn) {
+  scoreBoard.hide()
+}
 const bath = createBath(screen)
-const horse = createHorse(screen)
-
-// A giant ladybird rides on the horse's back.
-const ladybird = createLadybird()
-ladybird.rideOn(horse.horse)
 const portaloo = createPortaloo(screen)
 const character = createCharacter(screen)
 const controls = createControls(screen)
@@ -116,21 +112,18 @@ const characterPhysics = physics.add(character.person, { height: 2.2 })
 const catFollower = makeFollower(cat.cat, {
   speed: config.cat.followSpeed,
   staysThisClose: config.cat.staysThisClose,
-  house, // so it knows to go round by the door
 })
 
 // The husky follows our hero too.
 const huskyFollower = makeFollower(husky.dog, {
   speed: config.husky.followSpeed,
   staysThisClose: config.husky.staysThisClose,
-  house, // so it knows to go round by the door
 })
 
 // The labrador follows the girl.
 const labradorFollower = makeFollower(labrador.dog, {
   speed: config.labrador.followSpeed,
   staysThisClose: config.labrador.staysThisClose,
-  house, // so it knows to go round by the door
 })
 
 // The game loop runs about 60 times every second.
