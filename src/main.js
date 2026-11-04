@@ -13,6 +13,7 @@ import { createSnow } from './snow.js'
 import { createVolcano } from './volcano.js'
 import { makeScoreBoard } from './engine/score-board.js'
 import { createSea } from './sea.js'
+import { createJetty } from './jetty.js'
 import { createBath } from './bath.js'
 import { createHorse } from './horse.js'
 import { createLadybird } from './ladybird.js'
@@ -67,6 +68,7 @@ snow.keepOffUnder(house.roof)
 snow.keepOffUnder(catHouse.catHouse)
 const volcano = createVolcano(screen)
 const sea = createSea(screen)
+const jetty = createJetty(screen)
 volcano.keepLavaOffUnder(house.roof) // hide in the house to stay safe from the lava!
 volcano.keepLavaOffUnder(catHouse.catHouse)
 const scoreBoard = makeScoreBoard('Lava punched')
