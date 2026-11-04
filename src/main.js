@@ -71,6 +71,7 @@ snow.keepOffUnder(house.roof)
 snow.keepOffUnder(catHouse.catHouse)
 const volcano = createVolcano(screen)
 const sea = createSea(screen)
+world.letPeopleSwimIn(sea.water) // so you can jump in the sea and swim!
 const jetty = createJetty(screen)
 world.letPeopleWalkOn(jetty.planks) // so you can walk out to sea along the jetty
 const yacht = createYacht(screen)
@@ -167,7 +168,7 @@ startGameLoop((secondsPassed) => {
   const whereTheCharacterWas = { x: character.position.x, z: character.position.z }
   const direction = controls.getDirection(character.position)
   character.update(secondsPassed, direction)
-  world.keepOnField(character.position)
+  world.keepOnField(character.position, { canSwim: true })
   house.keepOutOfWalls(character.position, whereTheCharacterWas)
   solidThings.keepOutOf(character.position, whereTheCharacterWas)
   heroBumpsInto.keepOutOf(character.position, whereTheCharacterWas)
@@ -180,7 +181,7 @@ startGameLoop((secondsPassed) => {
   // The girl walks with W A S D, and bumps into things too.
   const whereTheGirlWas = { x: girl.position.x, z: girl.position.z }
   girl.update(secondsPassed, girlControls.getDirection())
-  world.keepOnField(girl.position)
+  world.keepOnField(girl.position, { canSwim: true })
   house.keepOutOfWalls(girl.position, whereTheGirlWas)
   solidThings.keepOutOf(girl.position, whereTheGirlWas)
   girlBumpsInto.keepOutOf(girl.position, whereTheGirlWas)

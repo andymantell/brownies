@@ -234,4 +234,11 @@ export const config = {
     legColour: '#888888',
     bounceHeight: 6, // how many blocks high you bounce
   },
+
+  // Swimming in the sea: walk or jump off the land, then climb back out.
+  swimming: {
+    depth: 1.5, // how far down into the water you sink
+    speed: 0.5, // how fast you swim: 0.5 is half as fast as walking
+    bobHeight: 0.08, // how far you bob up and down in the water
+  },
 }
