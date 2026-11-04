@@ -126,6 +126,37 @@ test(
   },
 )
 
+test(
+  "Can't walk through the walls",
+  'Trying to walk straight through the side of the house should stop you at the wall.',
+  async () => {
+    // Stand next to the house's side wall, and tap a spot inside the house.
+    const sideWall = config.house.x + 3
+    putCharacterAt(sideWall + 2, config.house.z)
+    tapGround(config.house.x, config.house.z)
+    await wait(2)
+
+    const end = whereIsCharacter()
+    check('The character stopped outside the wall', end.x > sideWall)
+  },
+)
+
+test(
+  'Can walk inside through the door',
+  'Tapping a spot inside the house should make the character walk in through the door.',
+  async () => {
+    const door = { x: config.house.x, z: config.house.z + 2.5 }
+    putCharacterAt(door.x, door.z + 2)
+
+    const insideTheHouse = { x: config.house.x, z: config.house.z }
+    tapGround(insideTheHouse.x, insideTheHouse.z)
+    await wait(2)
+
+    const end = whereIsCharacter()
+    check('The character is inside the house', stepsBetween(end, insideTheHouse) < 0.5)
+  },
+)
+
 // Is a spot inside the field? (The field goes from -half to +half in both directions.)
 function isOnTheField(spot) {
   const half = config.world.size / 2

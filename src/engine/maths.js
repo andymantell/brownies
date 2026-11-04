@@ -53,6 +53,18 @@ export function keepInsideSquare(position, halfWidth) {
   position.z = keepBetween(position.z, -halfWidth, halfWidth)
 }
 
+// Is a spot inside a rectangle on the ground, like a wall seen from above?
+// The rectangle is { x, z, width, depth }, where x and z are its middle.
+// `radius` is how far the thing sticks out from its middle, so its sides count too.
+export function isInsideRectangle(spot, rectangle, radius) {
+  const reachAcross = rectangle.width / 2 + radius
+  const reachBack = rectangle.depth / 2 + radius
+  const across = Math.abs(spot.x - rectangle.x)
+  const back = Math.abs(spot.z - rectangle.z)
+
+  return across < reachAcross && back < reachBack
+}
+
 // If a number is too small or too big, move it back to the nearest edge.
 function keepBetween(number, smallest, biggest) {
   const notTooSmall = Math.max(number, smallest)

@@ -27,6 +27,7 @@ export {
   spotInFront,
   turnTowards,
   keepInsideSquare,
+  isInsideRectangle,
   randomNumberBetween,
   pickAtRandom,
 } from './maths.js'

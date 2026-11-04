@@ -1,5 +1,5 @@
 import { config } from './config.js'
-import { makeBox, makeGroup, turnTowards } from './engine/index.js'
+import { makeBox, makeGroup, turnTowards, isInsideRectangle } from './engine/index.js'
 
 // A little house for our character, built out of boxes.
 //
@@ -20,16 +20,19 @@ export function createHouse(screen) {
   const house = makeGroup()
   house.position.set(config.house.x, 0, config.house.z)
 
+  // We remember where every wall is, so we can stop people walking through them.
+  const walls = []
+
   // The back wall, and the two side walls.
-  addWall(house, { x: 0, z: -DEPTH / 2, width: WIDTH, depth: WALL_THICKNESS, colour })
-  addWall(house, { x: -WIDTH / 2, z: 0, width: WALL_THICKNESS, depth: DEPTH, colour })
-  addWall(house, { x: WIDTH / 2, z: 0, width: WALL_THICKNESS, depth: DEPTH, colour })
+  addWall(house, walls, { x: 0, z: -DEPTH / 2, width: WIDTH, depth: WALL_THICKNESS, colour })
+  addWall(house, walls, { x: -WIDTH / 2, z: 0, width: WALL_THICKNESS, depth: DEPTH, colour })
+  addWall(house, walls, { x: WIDTH / 2, z: 0, width: WALL_THICKNESS, depth: DEPTH, colour })
 
   // The front wall is in two halves, with a gap for the door in the middle...
   const halfWidth = (WIDTH - DOOR_WIDTH) / 2
   const halfMiddle = DOOR_WIDTH / 2 + halfWidth / 2
-  addWall(house, { x: -halfMiddle, z: DEPTH / 2, width: halfWidth, depth: WALL_THICKNESS, colour })
-  addWall(house, { x: halfMiddle, z: DEPTH / 2, width: halfWidth, depth: WALL_THICKNESS, colour })
+  addWall(house, walls, { x: -halfMiddle, z: DEPTH / 2, width: halfWidth, depth: WALL_THICKNESS, colour })
+  addWall(house, walls, { x: halfMiddle, z: DEPTH / 2, width: halfWidth, depth: WALL_THICKNESS, colour })
 
   // ...and a bit of wall over the top of the door.
   const aboveTheDoor = makeBox({
@@ -49,6 +52,17 @@ export function createHouse(screen) {
   house.add(roof)
 
   screen.add(house)
+
+  // Is this spot inside any of the walls?
+  function isInAWall(spot) {
+    const howFatThePersonIs = 0.35
+    for (const wall of walls) {
+      if (isInsideRectangle(spot, wall, howFatThePersonIs)) {
+        return true
+      }
+    }
+    return false
+  }
 
   // Where the door is in the world (the middle of the doorway).
   const doorway = { x: config.house.x, z: config.house.z + DEPTH / 2 }
@@ -70,6 +84,26 @@ export function createHouse(screen) {
 
       const swingSpeed = secondsPassed * 6
       door.rotation.y = turnTowards(door.rotation.y, wantedAngle, swingSpeed)
+    },
+
+    // If someone has walked into a wall, put them back where they were.
+    // We try just the across step, then just the back step, so they can slide along the wall.
+    keepOutOfWalls(position, whereTheyWere) {
+      if (!isInAWall(position)) {
+        return
+      }
+
+      const onlySteppedAcross = { x: position.x, z: whereTheyWere.z }
+      const onlySteppedBack = { x: whereTheyWere.x, z: position.z }
+
+      if (!isInAWall(onlySteppedAcross)) {
+        position.z = whereTheyWere.z
+      } else if (!isInAWall(onlySteppedBack)) {
+        position.x = whereTheyWere.x
+      } else {
+        position.x = whereTheyWere.x
+        position.z = whereTheyWere.z
+      }
     },
 
     isDoorOpen() {
@@ -117,8 +151,11 @@ function makeRoof() {
 }
 
 // One wall, standing on the ground.
-function addWall(house, { x, z, width, depth, colour }) {
+function addWall(house, walls, { x, z, width, depth, colour }) {
   const wall = makeBox({ width, height: WALL_HEIGHT, depth, colour })
   wall.position.set(x, WALL_HEIGHT / 2, z)
   house.add(wall)
+
+  // Remember where it is in the world (the house's spot, plus where the wall is in the house).
+  walls.push({ x: config.house.x + x, z: config.house.z + z, width, depth })
 }

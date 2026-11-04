@@ -37,9 +37,11 @@ const controls = createControls(screen)
 // The game loop runs about 60 times every second.
 // Each time, we move things a tiny bit and draw a new picture.
 startGameLoop((secondsPassed) => {
+  const whereTheCharacterWas = { x: character.position.x, z: character.position.z }
   const direction = controls.getDirection(character.position)
   character.update(secondsPassed, direction)
   world.keepOnField(character.position)
+  house.keepOutOfWalls(character.position, whereTheCharacterWas)
   house.update(secondsPassed, character.position)
 
   screen.follow(character.position, secondsPassed)
