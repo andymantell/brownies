@@ -41,6 +41,13 @@ export const config = {
     petalColour: '#ff5fa2',
   },
 
+  catHouse: {
+    x: 6, // where the cat house is
+    z: 3,
+    wallColour: '#c8e0f4',
+    roofColour: '#d9534f',
+  },
+
   camera: {
     zoom: 14, // how much of the world fits on screen: bigger number = zoomed further out
     followSpeed: 4, // how quickly the camera catches up with the character
