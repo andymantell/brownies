@@ -18,6 +18,19 @@ import * as THREE from 'three'
 //
 // The block world (createBlockWorld) already has both.
 
+// Lets physics land on more than one kind of ground, like the grass AND the top of a box.
+//   const physics = createPhysics(groundMadeOf(world, solidThings))
+export function groundMadeOf(...grounds) {
+  return {
+    groundHeightAt(x, z, height) {
+      const heights = grounds.map((ground) => {
+        return ground.groundHeightAt(x, z, height)
+      })
+      return Math.max(...heights)
+    },
+  }
+}
+
 const GRAVITY = 20 // how strongly things are pulled down
 const FALLEN_OFF_THE_WORLD = -50 // below this height, things are gone for good
 const STILL_ENOUGH = 0.5 // a bounce slower than this just stops, instead of jiggling forever

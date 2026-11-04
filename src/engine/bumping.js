@@ -10,15 +10,14 @@ const HOW_FAT_THE_PERSON_IS = 0.35
 
 export function createSolidThings() {
   const things = []
+  let feetHeight = 0 // how high the person's feet are, so they can jump on top of things
 
-  // Is this spot inside anything solid?
+  // Is this spot inside anything solid? (Things below your feet don't count.)
   function isBlocked(x, z) {
-    const radius = HOW_FAT_THE_PERSON_IS
     for (const thing of things) {
       const box = outlineOf(thing)
-      const insideAcross = x > box.min.x - radius && x < box.max.x + radius
-      const insideBack = z > box.min.z - radius && z < box.max.z + radius
-      if (insideAcross && insideBack) {
+      const isBelowFeet = box.max.y < feetHeight + 0.05
+      if (isInside(box, x, z) && !isBelowFeet) {
         return true
       }
     }
@@ -35,6 +34,7 @@ export function createSolidThings() {
     // We try keeping just the sideways step, then just the forwards step,
     // so you slide along walls instead of getting stuck.
     keepOutOf(position, before) {
+      feetHeight = position.y
       if (!isBlocked(position.x, position.z)) {
         return
       }
@@ -53,7 +53,29 @@ export function createSolidThings() {
       position.x = before.x
       position.z = before.z
     },
+
+    // How high is the top of the solid thing under this spot? So you can stand on it.
+    // Only things you're above count (or nearly above, so you can step up a tiny bit).
+    groundHeightAt(x, z, height) {
+      let highestTop = -Infinity
+      for (const thing of things) {
+        const box = outlineOf(thing)
+        const canStandOnIt = box.max.y < height + 0.25
+        if (isInside(box, x, z) && canStandOnIt) {
+          highestTop = Math.max(highestTop, box.max.y)
+        }
+      }
+      return highestTop
+    },
   }
+}
+
+// Is this spot inside a thing's outline? (Counting how fat the person is.)
+function isInside(box, x, z) {
+  const radius = HOW_FAT_THE_PERSON_IS
+  const insideAcross = x > box.min.x - radius && x < box.max.x + radius
+  const insideBack = z > box.min.z - radius && z < box.max.z + radius
+  return insideAcross && insideBack
 }
 
 // The invisible box that fits snugly around a thing, wherever it is now.

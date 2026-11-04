@@ -12,7 +12,7 @@ import { createSleigh } from './sleigh.js'
 import { createSnow } from './snow.js'
 import { createCharacter } from './character.js'
 import { createControls } from './controls.js'
-import { createPhysics } from './engine/index.js'
+import { createPhysics, groundMadeOf } from './engine/index.js'
 import { connectTests } from './engine/testing.js'
 import { createTestSidebar } from './engine/test-sidebar.js'
 import './tests.js'
@@ -56,10 +56,6 @@ const snow = createSnow(screen)
 const character = createCharacter(screen)
 const controls = createControls(screen)
 
-// Physics gives the character gravity, so it can jump and land again.
-const physics = createPhysics(world)
-const characterPhysics = physics.add(character.person, { height: 2.2 })
-
 // Things the character bumps into, instead of walking through.
 const solidThings = createSolidThings()
 solidThings.add(cat.cat)
@@ -69,6 +65,11 @@ solidThings.add(catHouse.catHouse)
 solidThings.add(garden.garden)
 solidThings.add(catBowls.waterBowl)
 solidThings.add(catBowls.foodBowl)
+
+// Physics gives the character gravity, so it can jump and land again.
+// It lands on the grass, or on top of solid things (if it jumps high enough).
+const physics = createPhysics(groundMadeOf(world, solidThings))
+const characterPhysics = physics.add(character.person, { height: 2.2 })
 
 // The game loop runs about 60 times every second.
 // Each time, we move things a tiny bit and draw a new picture.
