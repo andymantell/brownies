@@ -11,6 +11,7 @@ import { createSanta } from './santa.js'
 import { createSleigh } from './sleigh.js'
 import { createSnow } from './snow.js'
 import { createVolcano } from './volcano.js'
+import { makeScoreBoard } from './engine/score-board.js'
 import { createSea } from './sea.js'
 import { createBath } from './bath.js'
 import { createPortaloo } from './portaloo.js'
@@ -65,6 +66,7 @@ const volcano = createVolcano(screen)
 const sea = createSea(screen)
 volcano.keepLavaOffUnder(house.roof) // hide in the house to stay safe from the lava!
 volcano.keepLavaOffUnder(catHouse.catHouse)
+const scoreBoard = makeScoreBoard('Lava punched')
 const bath = createBath(screen)
 const portaloo = createPortaloo(screen)
 const character = createCharacter(screen)
@@ -195,8 +197,10 @@ startGameLoop((secondsPassed) => {
   volcano.update(secondsPassed)
 
   // Doing a backflip punches away any lava that's about to land on you!
+  // You get a point for every drop you punch.
   if (character.isDoingABackflip()) {
-    volcano.punchAwayLavaNear(character.position)
+    const howManyPunched = volcano.punchAwayLavaNear(character.position)
+    scoreBoard.addPoints(howManyPunched)
   }
 
   // If lava lands on a player, they get sent back to the house to start again.
