@@ -1,4 +1,4 @@
-import { makeBox, makeGroup } from './engine/index.js'
+import { makeBox, makeGroup, makeSwingingBox, makeLegsWalk } from './engine/index.js'
 
 // A friendly dog, made out of boxes.
 // The same recipe makes any kind of dog: we just give it different colours.
@@ -40,11 +40,14 @@ export function createDog(screen, looks) {
     addFloppyEars(head, looks.earColour)
   }
 
-  // Four legs, one at each corner of the body.
-  addLeg(dog, { x: -0.2, z: 0.42, colour: looks.furColour })
-  addLeg(dog, { x: 0.2, z: 0.42, colour: looks.furColour })
-  addLeg(dog, { x: -0.2, z: -0.42, colour: looks.furColour })
-  addLeg(dog, { x: 0.2, z: -0.42, colour: looks.furColour })
+  // Four legs, one at each corner of the body. They walk whenever the dog moves.
+  makeLegsWalk(dog, {
+    frontLeft: addLeg(dog, { x: -0.2, z: 0.42, colour: looks.furColour }),
+    frontRight: addLeg(dog, { x: 0.2, z: 0.42, colour: looks.furColour }),
+    backLeft: addLeg(dog, { x: -0.2, z: -0.42, colour: looks.furColour }),
+    backRight: addLeg(dog, { x: 0.2, z: -0.42, colour: looks.furColour }),
+    legLength: LEG_LENGTH,
+  })
 
   // A waggy tail sticking out at the back.
   const tail = makeBox({ width: 0.12, height: 0.12, depth: 0.5, colour: looks.furColour })
@@ -82,9 +85,12 @@ function addPointyEars(head, colour) {
   head.add(rightEar)
 }
 
-// One leg, standing on the ground.
+const LEG_LENGTH = 0.45
+
+// One leg, swinging from the hip, with its foot on the ground.
 function addLeg(dog, { x, z, colour }) {
-  const leg = makeBox({ width: 0.15, height: 0.45, depth: 0.15, colour })
-  leg.position.set(x, 0.225, z)
+  const leg = makeSwingingBox({ width: 0.15, height: LEG_LENGTH, depth: 0.15, colour })
+  leg.position.set(x, LEG_LENGTH, z) // the hip, at the top of the leg
   dog.add(leg)
+  return leg
 }
