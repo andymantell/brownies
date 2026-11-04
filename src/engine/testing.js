@@ -9,7 +9,7 @@ import { angleOf, directionFromTo } from './maths.js'
 // and then checks that the right thing happened.
 
 const allTests = []
-let game = null // the character, controls, screen, world and particles, once connectTests() has been called
+let game = null // the character, controls, screen, world, particles and house, once connectTests() has been called
 let currentChecks = null // where check() writes its results while a test is running
 let keysPressedByTest = new Set()
 let fingerIsDown = false // is a pretend finger held down on the grass?
@@ -89,6 +89,11 @@ export function putCharacterAt(x, z) {
   game.character.position.set(x, ground, z)
 }
 
+// Is the house's door open?
+export function isTheDoorOpen() {
+  return game.house.isDoorOpen()
+}
+
 // Turn the character to face a spot.
 export function turnCharacterTowards(x, z) {
   const towards = directionFromTo(game.character.position, { x, z })
@@ -141,8 +146,8 @@ export function stepsBetween(spotA, spotB) {
 // ---- Behind the scenes: running the tests ----
 
 // Give the tests the bits of the game they need to poke at.
-export function connectTests({ character, controls, screen, world, particles }) {
-  game = { character, controls, screen, world, particles }
+export function connectTests({ character, controls, screen, world, particles, house }) {
+  game = { character, controls, screen, world, particles, house }
 }
 
 export function getAllTests() {

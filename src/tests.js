@@ -11,6 +11,7 @@ import {
   whereIsCharacter,
   putCharacterAt,
   stepsBetween,
+  isTheDoorOpen,
 } from './engine/testing.js'
 
 // 🧪 Our tests!
@@ -103,6 +104,25 @@ test(
 
     const end = whereIsCharacter()
     check('The character is still on the field', isOnTheField(end))
+  },
+)
+
+test(
+  'The door opens when you walk up to it',
+  'The house door should be shut when you are far away, and open when you stand next to it.',
+  async () => {
+    check('The door is shut to start with', !isTheDoorOpen())
+
+    // Stand just outside the door. (The door is in the middle of the front wall.)
+    const door = { x: config.house.x, z: config.house.z + 2.5 }
+    putCharacterAt(door.x, door.z + 1)
+    await wait(1)
+    check('The door is open', isTheDoorOpen())
+
+    // Walk away again.
+    putCharacterAt(0, 0)
+    await wait(1)
+    check('The door has shut again', !isTheDoorOpen())
   },
 )
 

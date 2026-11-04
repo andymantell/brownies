@@ -38,6 +38,7 @@ startGameLoop((secondsPassed) => {
   const direction = controls.getDirection(character.position)
   character.update(secondsPassed, direction)
   world.keepOnField(character.position)
+  house.update(secondsPassed, character.position)
 
   screen.follow(character.position, secondsPassed)
   speech.update(secondsPassed)
@@ -45,7 +46,7 @@ startGameLoop((secondsPassed) => {
 })
 
 // Hook up the tests, and the sidebar that runs them (see tests.js).
-connectTests({ character, controls, screen })
+connectTests({ character, controls, screen, house })
 createTestSidebar()
 
 // Lets you play with the game from the browser console. Try:

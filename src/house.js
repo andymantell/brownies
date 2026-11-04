@@ -1,5 +1,5 @@
 import { config } from './config.js'
-import { makeBox, makeGroup } from './engine/index.js'
+import { makeBox, makeGroup, turnTowards } from './engine/index.js'
 
 // A little house for our character, built out of boxes.
 //
@@ -41,12 +41,57 @@ export function createHouse(screen) {
   aboveTheDoor.position.set(0, (WALL_HEIGHT + DOOR_HEIGHT) / 2, DEPTH / 2)
   house.add(aboveTheDoor)
 
+  const door = makeDoor()
+  door.position.set(-DOOR_WIDTH / 2, 0, DEPTH / 2)
+  house.add(door)
+
   const roof = makeRoof()
   house.add(roof)
 
   screen.add(house)
 
-  return { house, roof }
+  // Where the door is in the world (the middle of the doorway).
+  const doorway = { x: config.house.x, z: config.house.z + DEPTH / 2 }
+
+  return {
+    house,
+    roof,
+    door,
+
+    // Called every frame. Opens the door when the character is close to it.
+    update(secondsPassed, characterPosition) {
+      const distanceToDoor = Math.hypot(characterPosition.x - doorway.x, characterPosition.z - doorway.z)
+      const isCloseToDoor = distanceToDoor < 2
+
+      let wantedAngle = 0 // shut
+      if (isCloseToDoor) {
+        wantedAngle = 1.7 // swung open, into the house
+      }
+
+      const swingSpeed = secondsPassed * 6
+      door.rotation.y = turnTowards(door.rotation.y, wantedAngle, swingSpeed)
+    },
+
+    isDoorOpen() {
+      return door.rotation.y > 1
+    },
+  }
+}
+
+// A wooden door with a little gold knob.
+// It turns on a hinge at its left-hand edge, like a real door.
+function makeDoor() {
+  const hinge = makeGroup()
+
+  const door = makeBox({ width: DOOR_WIDTH, height: DOOR_HEIGHT, depth: 0.15, colour: config.house.doorColour })
+  door.position.set(DOOR_WIDTH / 2, DOOR_HEIGHT / 2, 0)
+  hinge.add(door)
+
+  const knob = makeBox({ width: 0.15, height: 0.15, depth: 0.15, colour: 'gold' })
+  knob.position.set(DOOR_WIDTH - 0.25, DOOR_HEIGHT / 2, 0.12)
+  hinge.add(knob)
+
+  return hinge
 }
 
 // A pointy roof, made of layers of boxes that get thinner as they go up,

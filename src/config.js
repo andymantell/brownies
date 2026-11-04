@@ -24,6 +24,7 @@ export const config = {
     z: -2,
     wallColour: '#e8d8b8',
     roofColour: '#222222',
+    doorColour: '#8b5a2b',
   },
 
   cat: {
