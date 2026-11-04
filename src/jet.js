@@ -1,16 +1,20 @@
 import { config } from './config.js'
-import { makeBox, makeGroup } from './engine/index.js'
+import { makeBox, makeGroup, createKeyboard, spotInFront } from './engine/index.js'
 
 // A blocky passenger jet, parked on the grass.
 // It has a long body with windows, two big wings with engines underneath,
 // a tail fin at the back, and little wheels to stand on.
 // The nose points forwards (along z), so it can turn to face where it flies.
+//
+// Stand by the door and press E to get in. Press E again to get out.
 
 const LENGTH = 14 // from the nose to the tail
 const BODY_SIZE = 2.4 // how wide and tall the body is
 const BODY_HEIGHT = 2.6 // how high the middle of the body is off the ground
 const WING_SPAN = 15 // from one wing tip to the other
 const WING_HEIGHT = 1.65 // low enough to jump up onto!
+const DOOR_FORWARD = 5 // how far forward of the middle the door is
+const DOOR_REACH = 3 // how close you need to be to the door to get in
 
 export function createJet(screen) {
   const colours = config.jet
@@ -36,6 +40,17 @@ export function createJet(screen) {
   // A row of little windows along each side, for the passengers.
   addWindows(jet, -BODY_SIZE / 2 - 0.03, colours.windowColour)
   addWindows(jet, BODY_SIZE / 2 + 0.03, colours.windowColour)
+
+  // The door, at the front on one side.
+  const door = makeBox({ width: 0.06, height: 1.6, depth: 0.9, colour: colours.doorColour })
+  door.position.set(BODY_SIZE / 2 + 0.04, BODY_HEIGHT - 0.1, DOOR_FORWARD)
+  jet.add(door)
+
+  // The pilot's hat, peeking out of the windscreen. It only shows when someone is flying.
+  const pilotHat = makeBox({ width: 0.7, height: 0.3, depth: 0.7, colour: colours.pilotHatColour })
+  pilotHat.position.set(0, BODY_HEIGHT + BODY_SIZE / 2 + 0.1, LENGTH / 2 - 0.5)
+  pilotHat.visible = false
+  jet.add(pilotHat)
 
   // A blue stripe along each side, under the windows.
   addStripe(jet, -BODY_SIZE / 2 - 0.03, colours.stripeColour)
@@ -70,7 +85,67 @@ export function createJet(screen) {
   // The parts you bump into. The wings are low, so you can jump up and stand on them.
   const solidParts = [body, wings, tailWings]
 
-  return { jet, position: jet.position, solidParts }
+  const keyboard = createKeyboard()
+  let pilot = null // who is flying the jet (null means nobody)
+
+  // The spot on the grass just outside the door.
+  function spotByTheDoor() {
+    const besideTheDoor = spotInFront(jet.position, jet.rotation.y, DOOR_FORWARD)
+    return spotInFront(besideTheDoor, jet.rotation.y + Math.PI / 2, BODY_SIZE / 2 + 1)
+  }
+
+  // Whoever is standing nearest the door gets in, and becomes the pilot.
+  function letInWhoeverIsByTheDoor(players) {
+    const door = spotByTheDoor()
+    let nearestDistance = DOOR_REACH
+    for (const player of players) {
+      const distance = Math.hypot(player.position.x - door.x, player.position.z - door.z)
+      if (distance < nearestDistance) {
+        pilot = player
+        nearestDistance = distance
+      }
+    }
+    if (pilot) {
+      pilot.person.visible = false // they're inside the jet now
+      pilotHat.visible = true
+    }
+  }
+
+  // The pilot climbs out, and stands by the door.
+  function letThePilotOut() {
+    const door = spotByTheDoor()
+    pilot.position.set(door.x, 0, door.z)
+    pilot.person.visible = true
+    pilotHat.visible = false
+    pilot = null
+  }
+
+  return {
+    jet,
+    position: jet.position,
+    solidParts,
+
+    // Is this player the pilot?
+    pilotIs(player) {
+      return pilot === player
+    },
+
+    // Call this every frame, with everyone who could be the pilot.
+    update(secondsPassed, players) {
+      if (keyboard.wasJustPressed('e')) {
+        if (pilot) {
+          letThePilotOut()
+        } else {
+          letInWhoeverIsByTheDoor(players)
+        }
+      }
+
+      // The pilot sits in the jet, and goes wherever it goes.
+      if (pilot) {
+        pilot.position.set(jet.position.x, jet.position.y, jet.position.z)
+      }
+    },
+  }
 }
 
 // Part of the pointy nose at the front.

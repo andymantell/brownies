@@ -182,6 +182,8 @@ export const config = {
     windowColour: '#2b3a4a',
     engineColour: '#b8c0c8',
     wheelColour: '#222222',
+    doorColour: '#9aa5b1',
+    pilotHatColour: '#1b2a49',
   },
 
   camera: {

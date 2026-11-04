@@ -258,6 +258,15 @@ startGameLoop((secondsPassed) => {
   }
 
   physics.update(secondsPassed)
+
+  // The jet. Stand by its door and press E to get in, and E again to get out.
+  jet.update(secondsPassed, [character, girl])
+  if (jet.pilotIs(character)) {
+    characterPhysics.stop() // the pilot sits still in their seat, instead of falling
+  }
+  if (jet.pilotIs(girl)) {
+    girlPhysics.stop()
+  }
   if (characterPhysics.isOnTheGround()) {
     character.landed()
   }
