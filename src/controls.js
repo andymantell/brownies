@@ -36,6 +36,11 @@ export function createControls(screen) {
     // Forget about any tapped spot, so the character stops.
     stopWalking: forgetTappedSpot,
 
+    // Did the player just press the space bar to jump?
+    wantsToJump() {
+      return keyboard.wasJustPressed(' ')
+    },
+
     // Which way should the character walk right now?
     getDirection(characterPosition) {
       const direction = stillDirection()

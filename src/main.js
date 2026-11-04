@@ -11,6 +11,7 @@ import { createSanta } from './santa.js'
 import { createSleigh } from './sleigh.js'
 import { createCharacter } from './character.js'
 import { createControls } from './controls.js'
+import { createPhysics } from './engine/index.js'
 import { connectTests } from './engine/testing.js'
 import { createTestSidebar } from './engine/test-sidebar.js'
 import './tests.js'
@@ -43,6 +44,10 @@ sleigh.carry(santa.santa)
 const character = createCharacter(screen)
 const controls = createControls(screen)
 
+// Physics gives the character gravity, so it can jump and land again.
+const physics = createPhysics(world)
+const characterPhysics = physics.add(character.person, { height: 2.2 })
+
 // Things the character bumps into, instead of walking through.
 const solidThings = createSolidThings()
 solidThings.add(cat.cat)
@@ -57,6 +62,12 @@ startGameLoop((secondsPassed) => {
   house.keepOutOfWalls(character.position, whereTheCharacterWas)
   solidThings.keepOutOf(character.position, whereTheCharacterWas)
   house.update(secondsPassed, character.position)
+
+  // Space bar to jump, 2 blocks high.
+  if (controls.wantsToJump()) {
+    characterPhysics.jump(2)
+  }
+  physics.update(secondsPassed)
 
   screen.follow(character.position, secondsPassed)
   screen.draw()
