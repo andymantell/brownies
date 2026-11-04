@@ -9,6 +9,7 @@ import { createCatHouse } from './cat-house.js'
 import { createCatBowls } from './cat-bowls.js'
 import { createSanta } from './santa.js'
 import { createSleigh } from './sleigh.js'
+import { createSnow } from './snow.js'
 import { createCharacter } from './character.js'
 import { createControls } from './controls.js'
 import { createPhysics } from './engine/index.js'
@@ -52,6 +53,7 @@ sleigh.hitch(secondHusky.dog, { x: -0.6, z: 4.4 })
 const secondLabrador = createDog(screen, config.labrador)
 sleigh.hitch(secondLabrador.dog, { x: 0.6, z: 4.4 })
 
+const snow = createSnow(screen)
 const character = createCharacter(screen)
 const controls = createControls(screen)
 
@@ -90,6 +92,8 @@ startGameLoop((secondsPassed) => {
   if (characterPhysics.isOnTheGround()) {
     character.landed()
   }
+
+  snow.update(secondsPassed, character.position)
 
   screen.follow(character.position, secondsPassed)
   screen.draw()
