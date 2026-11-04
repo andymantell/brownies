@@ -243,6 +243,18 @@
         gap: 4vw;
       }
 
+      /* ---------- The QR code on the last slide ---------- */
+
+      .qr-card {
+        width: auto;
+      }
+
+      .qr-code {
+        display: block;
+        height: 34vh;
+        margin: 0 auto 1vh;
+      }
+
       /* ---------- Little dots at the bottom showing which slide we're on ---------- */
 
       .dots {
@@ -345,6 +357,10 @@
 
         .game-picture {
           height: 18vh;
+        }
+
+        .qr-code {
+          height: 26vh;
         }
       }
 
@@ -468,6 +484,22 @@
         <div class="card"><span class="big-emoji">🔍</span>Ask players<small>What do they like?</small></div>
         <div class="card"><span class="big-emoji">🧪</span>Testing<small>Does it work? Can we break it?</small></div>
         <div class="card"><span class="big-emoji">👑</span>Being the boss<small>Pick ideas that fit together</small></div>
+      </div>
+    </section>
+
+    <!-- 7. Try it at home -->
+    <section class="slide">
+      <h2>Try it at <span class="highlight">home</span>! 🏡</h2>
+      <div class="side-by-side">
+        <div class="card qr-card">
+          <img class="qr-code" src="pictures/game-qr-code.svg" alt="QR code for our game" />
+          Play our game!
+          <small>Show your grown-ups what we made</small>
+        </div>
+        <div class="cards">
+          <div class="card"><span class="big-emoji">🤖</span>Ask an AI to make a game<small>With a grown-up typing. Try: "a game where a duck collects stars"</small></div>
+          <div class="card"><span class="big-emoji">🐱</span>Bonus: Scratch<small>Build it yourself with blocks at scratch.mit.edu</small></div>
+        </div>
       </div>
     </section>
 
