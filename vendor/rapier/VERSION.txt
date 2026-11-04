@@ -1,0 +1,1 @@
+@dimforge/rapier3d-compat 0.21.0 (https://rapier.rs), Apache-2.0. Only dist/rapier.mjs is copied; it has the WebAssembly built in.

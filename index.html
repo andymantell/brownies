@@ -31,7 +31,7 @@
       version.txt is always fetched fresh, so a new deploy means brand new URLs and the
       browser can't use an old cached copy. Locally version.txt is empty, so files load
       from ./src as normal (use serve.py to stop the browser caching them).
-      Three.js lives in /vendor so the game still works on dodgy wifi.
+      Three.js (and Rapier, for realistic physics) live in /vendor so the game still works on dodgy wifi.
     -->
     <script>
       async function loadGame() {
@@ -55,6 +55,7 @@
           imports: {
             'three': `${base}vendor/three/three.module.min.js`,
             'three/addons/': `${base}vendor/three/addons/`,
+            'rapier': `${base}vendor/rapier/rapier.mjs`,
           },
         })
         document.head.append(importMap)

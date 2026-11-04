@@ -10,6 +10,8 @@ These are ready-made pieces that are **not plugged into the game** right now. Th
 | `block-tests.js` | Tests for walls, climbing a step, breaking a block and pathfinding |
 | `particle-tests.js` | Tests for particle effects (the helper itself is `src/engine/particles.js`) |
 | `physics-tests.js` | Tests for falling, bouncing, jumping, walls and falling off the edge |
+| `tower-of-boxes.js` | A tower of coloured boxes for realistic physics to knock over |
+| `realistic-physics-tests.js` | Tests for realistic physics: landing, stacking, toppling, pushing and rolling off |
 
 ## Plugging the block world back in
 
@@ -170,4 +172,35 @@ The character still walks the way it always has. Physics only does the up and do
 
 ### If they want really realistic physics
 
-Our helper is simple on purpose: things don't spin, roll or knock each other over. For piles of boxes that topple, things that roll down hills or chain reactions, a physics library called Rapier (rapier.rs) does that. It would sit behind the same `createPhysics()` so the game code doesn't change. It isn't in the project yet.
+Our simple helper doesn't make things spin, roll or knock each other over, and things pass through each other. For toppling towers, rolling balls and chain reactions, use `src/engine/realistic-physics.js`. It uses a physics library called Rapier (rapier.rs). A copy of Rapier is in `vendor/rapier/`, so it works without the internet.
+
+It isn't in `engine/index.js`, because Rapier is a big download (about 4 MB). The game only loads it if you import it.
+
+**`src/main.js`**
+
+```js
+import { createRealisticPhysics } from './engine/realistic-physics.js'
+import { buildTowerOfBoxes } from './spare-parts/tower-of-boxes.js'
+
+const physics = await createRealisticPhysics()
+physics.addFloor(config.world.size)
+physics.addPusher(character.person) // so the character knocks things over by walking into them
+buildTowerOfBoxes(screen, physics, { x: 3, z: -3, howHigh: 7 })
+
+// in the game loop:
+physics.update(secondsPassed)
+```
+
+To add your own things:
+
+```js
+physics.addBox(crate, { width: 1, height: 1, depth: 1 })
+const ballPhysics = physics.addBall(ball, { radius: 0.4, heaviness: 8 })
+ballPhysics.throw(0, 3, -16) // across, up, back
+```
+
+The settings are `bounciness`, `slipperiness` (0 is grippy, 1 is ice), `heaviness` (1 is like wood, 8 is like iron) and `fixed: true` for things that never move, like walls.
+
+To run its tests, add `import './spare-parts/realistic-physics-tests.js'` just after `import './tests.js'`.
+
+Use one kind of physics at a time for the same thing. In the block world, Rapier doesn't know about the blocks on its own, so add each block it should bump into with `physics.addBox(..., { fixed: true })`.
