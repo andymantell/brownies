@@ -29,12 +29,13 @@ export function createBath(screen) {
   bottom.position.y = FOOT_HEIGHT + SIDE_THICKNESS / 2
   bath.add(bottom)
 
-  // The four sides. We keep them in a list so they can be solid.
-  const sides = []
-  sides.push(addSide(bath, { x: 0, z: -WIDTH / 2, width: LENGTH, depth: SIDE_THICKNESS, colour }))
-  sides.push(addSide(bath, { x: 0, z: WIDTH / 2, width: LENGTH, depth: SIDE_THICKNESS, colour }))
-  sides.push(addSide(bath, { x: -LENGTH / 2, z: 0, width: SIDE_THICKNESS, depth: WIDTH, colour }))
-  sides.push(addSide(bath, { x: LENGTH / 2, z: 0, width: SIDE_THICKNESS, depth: WIDTH, colour }))
+  // The bottom and the four sides are solid. We keep them in a list,
+  // so you bump into the sides, but can jump in and stand on the bottom.
+  const solidParts = [bottom]
+  solidParts.push(addSide(bath, { x: 0, z: -WIDTH / 2, width: LENGTH, depth: SIDE_THICKNESS, colour }))
+  solidParts.push(addSide(bath, { x: 0, z: WIDTH / 2, width: LENGTH, depth: SIDE_THICKNESS, colour }))
+  solidParts.push(addSide(bath, { x: -LENGTH / 2, z: 0, width: SIDE_THICKNESS, depth: WIDTH, colour }))
+  solidParts.push(addSide(bath, { x: LENGTH / 2, z: 0, width: SIDE_THICKNESS, depth: WIDTH, colour }))
 
   // The water, filling up the inside.
   const water = makeBox({
@@ -48,7 +49,7 @@ export function createBath(screen) {
 
   screen.add(bath)
 
-  return { bath, sides }
+  return { bath, solidParts }
 }
 
 // One side of the bath, standing on the feet.

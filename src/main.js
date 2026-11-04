@@ -80,6 +80,9 @@ monkey.sitOnHeadOf(girl.person)
 // (Pets that follow you aren't solid, so they can never get in your way.)
 const solidThings = createSolidThings()
 solidThings.add(sleigh.sleigh) // Santa, his sleigh and the dogs pulling it
+for (const part of bath.solidParts) {
+  solidThings.add(part) // the bath: jump onto the edge, or right into the water!
+}
 
 // The two players bump into each other, too.
 const heroBumpsInto = createSolidThings()
