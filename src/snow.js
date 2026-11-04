@@ -1,7 +1,7 @@
 import { config } from './config.js'
 import {
   makeParticles,
-  makeLotsOfBoxes,
+  makeGridOfBlocks,
   areaUnder,
   isInsideRectangle,
   PARTICLE_STYLES,
@@ -38,19 +38,20 @@ const flakesPerSecond = 250
 // How many seconds a snowflake takes to reach the ground.
 const secondsToFall = 7
 
-// The most bits of snow that can lie on the ground at once.
-const mostSnowOnTheGround = 20000
+// How much deeper the snow gets each time a snowflake lands.
+const deeperEachFlake = 0.03
+
+// The deepest the snow can get.
+const deepestSnow = 0.5
 
 export function createSnow(screen) {
   const particles = makeParticles(screen)
   let flakesToMake = 0
 
-  // Snow that has landed stays on the ground, so it slowly turns white.
-  const snowOnTheGround = makeLotsOfBoxes(screen, {
-    howMany: mostSnowOnTheGround,
-    width: 0.3,
-    height: 0.04,
-    depth: 0.3,
+  // A blanket of snow on the ground, made of little blocks that get deeper.
+  const blanket = makeGridOfBlocks(screen, {
+    size: config.world.size,
+    blockSize: 0.5,
     colour: '#ffffff',
   })
 
@@ -90,7 +91,7 @@ export function createSnow(screen) {
     for (const flake of fallingFlakes) {
       flake.secondsUntilItLands -= secondsPassed
       if (flake.secondsUntilItLands <= 0) {
-        snowOnTheGround.addOne({ x: flake.spot.x, y: 0.02, z: flake.spot.z })
+        settle(flake.spot)
       }
     }
 
@@ -99,6 +100,22 @@ export function createSnow(screen) {
     })
 
     particles.update(secondsPassed)
+  }
+
+  // A snowflake has landed! Make the snow a little deeper where it fell,
+  // and on the squares all around it, so it piles up quickly.
+  function settle(spot) {
+    const step = blanket.blockSize
+    for (let across = -1; across <= 1; across++) {
+      for (let back = -1; back <= 1; back++) {
+        const x = spot.x + across * step
+        const z = spot.z + back * step
+        if (!isUnderARoof({ x, z })) {
+          const deeper = blanket.heightAt(x, z) + deeperEachFlake
+          blanket.setHeightAt(x, z, Math.min(deeper, deepestSnow))
+        }
+      }
+    }
   }
 
   // Keep the snow off the ground under this thing, like a roof:
