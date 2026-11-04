@@ -215,6 +215,7 @@ startGameLoop((secondsPassed) => {
     horse.position.z = whereTheHorseWas.z
   }
   horseWanderer.turnIfBumped(whereTheHorseWas, secondsPassed)
+  horse.update(secondsPassed) // NEIGH!
 
   // Space bar to jump, 2 blocks high. Press it again in the air to do a backflip!
   if (controls.wantsToJump()) {

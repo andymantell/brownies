@@ -1,7 +1,11 @@
 import { config } from './config.js'
-import { makeBox, makeGroup } from './engine/index.js'
+import { makeBox, makeGroup, makeSpeechBubble, randomNumberBetween } from './engine/index.js'
 
 // A big friendly horse, made out of boxes.
+// Every now and then it shouts NEIGH!
+
+// How long the NEIGH stays on screen, in seconds.
+const SECONDS_OF_NEIGHING = 1.5
 
 export function createHorse(screen) {
   const looks = config.horse
@@ -68,9 +72,33 @@ export function createHorse(screen) {
 
   screen.add(horse)
 
+  // A speech bubble, so the horse can shout.
+  const bubble = makeSpeechBubble(screen)
+  let secondsUntilNextNeigh = randomNumberBetween(3, 8)
+  let secondsLeftOfNeighing = 0
+
   return {
     position: horse.position,
     horse,
+
+    // Called every frame. Every now and then, the horse shouts NEIGH!
+    update(secondsPassed) {
+      secondsUntilNextNeigh -= secondsPassed
+      if (secondsUntilNextNeigh < 0) {
+        bubble.say('NEIGH!')
+        secondsLeftOfNeighing = SECONDS_OF_NEIGHING
+        secondsUntilNextNeigh = randomNumberBetween(4, 10)
+      }
+
+      // After a little while, stop neighing.
+      secondsLeftOfNeighing -= secondsPassed
+      if (secondsLeftOfNeighing < 0) {
+        bubble.hide()
+      }
+
+      // Keep the bubble floating above the ladybird's head.
+      bubble.stayAbove(horse.position, 3)
+    },
   }
 }
 
