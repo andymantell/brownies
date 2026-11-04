@@ -48,6 +48,24 @@ export function createSnowman(screen) {
     snowman.add(button)
   }
 
+  // A cosy scarf, wrapped round his neck, with one end hanging down.
+  const scarfColour = config.snowman.scarfColour
+  const scarf = makeBox({ width: 1.0, height: 0.18, depth: 1.0, colour: scarfColour })
+  scarf.position.y = 2.25
+  snowman.add(scarf)
+  const scarfEnd = makeBox({ width: 0.22, height: 0.6, depth: 0.08, colour: scarfColour })
+  scarfEnd.position.set(0.3, 1.95, 0.63)
+  snowman.add(scarfEnd)
+
+  // A tall black top hat: a flat brim, with a tall block on top.
+  const hatColour = config.snowman.hatColour
+  const brim = makeBox({ width: 1.2, height: 0.08, depth: 1.2, colour: hatColour })
+  brim.position.y = 3.04
+  snowman.add(brim)
+  const topOfHat = makeBox({ width: 0.75, height: 0.7, depth: 0.75, colour: hatColour })
+  topOfHat.position.y = 3.43
+  snowman.add(topOfHat)
+
   screen.add(snowman)
 
   return {

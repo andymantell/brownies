@@ -179,6 +179,8 @@ export const config = {
     snowColour: '#f7fbff',
     coalColour: '#1e1e1e', // his eyes and buttons
     carrotColour: '#ff8c1a', // his nose
+    scarfColour: '#d62828',
+    hatColour: '#222222',
   },
 
   // A big passenger jet, parked on the grass. Get in and fly it!
