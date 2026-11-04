@@ -90,6 +90,32 @@ export function createCharacter(screen, looks = config.character) {
   rightArm.position.set(0.52, 1.55, 0)
   person.add(rightArm)
 
+  // Sleeves at the tops of the arms, the same colour as the shirt.
+  const leftSleeve = makeBox({ width: 0.26, height: 0.3, depth: 0.26, colour: colours.bodyColour })
+  leftSleeve.position.y = -0.15
+  leftArm.add(leftSleeve)
+
+  const rightSleeve = makeBox({ width: 0.26, height: 0.3, depth: 0.26, colour: colours.bodyColour })
+  rightSleeve.position.y = -0.15
+  rightArm.add(rightSleeve)
+
+  let shirtColour = colours.bodyColour
+  let sleeves = colours.sleeves // 'long' or 'short'
+
+  // Long sleeves cover the whole arm. Short sleeves show your skin underneath.
+  function paintArms() {
+    if (sleeves === 'long') {
+      repaint(leftArm, shirtColour)
+      repaint(rightArm, shirtColour)
+    } else {
+      repaint(leftArm, colours.headColour)
+      repaint(rightArm, colours.headColour)
+    }
+    repaint(leftSleeve, shirtColour)
+    repaint(rightSleeve, shirtColour)
+  }
+  paintArms()
+
   screen.add(person)
 
   // This lets the whole body spin around its tummy, for backflips.
@@ -126,9 +152,15 @@ export function createCharacter(screen, looks = config.character) {
 
     // Put on a different coloured shirt.
     wearShirt(colour) {
+      shirtColour = colour
       repaint(body, colour)
-      repaint(leftArm, colour)
-      repaint(rightArm, colour)
+      paintArms()
+    },
+
+    // Change the sleeves: 'long' or 'short'.
+    wearSleeves(length) {
+      sleeves = length
+      paintArms()
     },
 
     // Put on different coloured trousers.

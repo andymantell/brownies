@@ -22,6 +22,10 @@ export function createWardrobe(players) {
       person.wearShirt(colour)
     })
 
+    panel.addWordChoices('Sleeves', config.wardrobe.sleeves, looks.sleeves, (length) => {
+      person.wearSleeves(length)
+    })
+
     panel.addColourChoices('Trousers', config.wardrobe.trousersColours, looks.legColour, (colour) => {
       person.wearTrousers(colour)
     })
