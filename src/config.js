@@ -207,6 +207,14 @@ export const config = {
     strawColour: '#e8d27a',
   },
 
+  // The rabbit who lives in the hutch.
+  rabbit: {
+    furColour: '#a0785a', // a soft brown
+    tailColour: '#ffffff',
+    eyeColour: '#111111',
+    noseColour: '#ff9eb5',
+  },
+
   camera: {
     zoom: 14, // how much of the world fits on screen: bigger number = zoomed further out
     followSpeed: 4, // how quickly the camera catches up with the character

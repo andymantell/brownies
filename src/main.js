@@ -23,6 +23,7 @@ import { createPortaloo } from './portaloo.js'
 import { createSnowman } from './snowman.js'
 import { createJet } from './jet.js'
 import { createRabbitHutch } from './rabbit-hutch.js'
+import { createRabbit } from './rabbit.js'
 import { createCharacter } from './character.js'
 import { createMonkey } from './monkey.js'
 import { makeFollower } from './follower.js'
@@ -95,6 +96,7 @@ const portaloo = createPortaloo(screen)
 const snowman = createSnowman(screen)
 const jet = createJet(screen)
 const rabbitHutch = createRabbitHutch(screen)
+const rabbit = createRabbit(screen)
 const character = createCharacter(screen)
 const controls = createControls(screen)
 
