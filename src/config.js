@@ -48,6 +48,13 @@ export const config = {
     roofColour: '#d9534f',
   },
 
+  catBowls: {
+    waterX: 5.4, // where the bowl of water is
+    waterZ: 4.6,
+    bowlColour: '#f2f2f2',
+    waterColour: '#4aa3df',
+  },
+
   camera: {
     zoom: 14, // how much of the world fits on screen: bigger number = zoomed further out
     followSpeed: 4, // how quickly the camera catches up with the character
