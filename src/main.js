@@ -60,6 +60,8 @@ const snow = createSnow(screen)
 snow.keepOffUnder(house.roof)
 snow.keepOffUnder(catHouse.catHouse)
 const volcano = createVolcano(screen)
+volcano.keepLavaOffUnder(house.roof) // hide in the house to stay safe from the lava!
+volcano.keepLavaOffUnder(catHouse.catHouse)
 const bath = createBath(screen)
 const character = createCharacter(screen)
 const controls = createControls(screen)

@@ -1,5 +1,13 @@
 import { config } from './config.js'
-import { makeBox, makeGroup, makeParticles, PARTICLE_STYLES, randomNumberBetween } from './engine/index.js'
+import {
+  makeBox,
+  makeGroup,
+  makeParticles,
+  PARTICLE_STYLES,
+  randomNumberBetween,
+  areaUnder,
+  isInsideRectangle,
+} from './engine/index.js'
 
 // 🌋 A big blocky volcano, made of layers of rock that get smaller as they go up.
 // There's a pool of hot lava in the top, and every so often it erupts!
@@ -97,6 +105,18 @@ export function createVolcano(screen) {
   // Lava drops that are still falling.
   let fallingDrops = []
 
+  // The ground under roofs, where lava can't fall. You're safe in there!
+  const roofs = []
+
+  function isUnderARoof(spot) {
+    for (const roof of roofs) {
+      if (isInsideRectangle(spot, roof, 0.2)) {
+        return true
+      }
+    }
+    return false
+  }
+
   // Start an eruption: lava keeps shooting out of the top for a few seconds.
   function erupt() {
     fountain = particles.keepGoing('eruption', top, 0.05)
@@ -111,6 +131,9 @@ export function createVolcano(screen) {
       x: randomNumberBetween(-halfTheField, halfTheField),
       y: SKY_HEIGHT,
       z: randomNumberBetween(-halfTheField, halfTheField),
+    }
+    if (isUnderARoof(spot)) {
+      return
     }
     particles.burst('lavaDrop', spot)
     fallingDrops.push(spot)
@@ -179,10 +202,16 @@ export function createVolcano(screen) {
     return false
   }
 
+  // Keep the lava off the ground under this thing, like a roof:
+  //   volcano.keepLavaOffUnder(house.roof)
+  function keepLavaOffUnder(thing) {
+    roofs.push(areaUnder(thing))
+  }
+
   // Is the volcano erupting right now?
   function isErupting() {
     return fountain !== null
   }
 
-  return { volcano, top, update, erupt, isErupting, isHitByLava }
+  return { volcano, top, update, erupt, isErupting, isHitByLava, keepLavaOffUnder }
 }
