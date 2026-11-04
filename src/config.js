@@ -92,6 +92,7 @@ export const config = {
     noseColour: '#5e3a1a',
     eyeColour: '#111111',
     hoofColour: '#2b2b2b',
+    walkSpeed: 2, // how fast the horse wanders about
   },
 
   garden: {

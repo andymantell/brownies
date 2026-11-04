@@ -20,6 +20,7 @@ import { createPortaloo } from './portaloo.js'
 import { createCharacter } from './character.js'
 import { createMonkey } from './monkey.js'
 import { makeFollower } from './follower.js'
+import { makeWanderer } from './wanderer.js'
 import { createControls, createGirlControls } from './controls.js'
 import { createPhysics, groundMadeOf } from './engine/index.js'
 import { connectTests } from './engine/testing.js'
@@ -139,6 +140,9 @@ const labradorFollower = makeFollower(labrador.dog, {
   house, // so it knows to go round by the door
 })
 
+// The horse wanders about on its own.
+const horseWanderer = makeWanderer(horse.horse, { speed: config.horse.walkSpeed })
+
 // The game loop runs about 60 times every second.
 // Each time, we move things a tiny bit and draw a new picture.
 startGameLoop((secondsPassed) => {
@@ -196,6 +200,18 @@ startGameLoop((secondsPassed) => {
   world.keepOnField(labrador.position)
   house.keepOutOfWalls(labrador.position, whereTheLabradorWas)
   solidThings.keepOutOf(labrador.position, whereTheLabradorWas)
+
+  // The horse wanders about, bumping into things. It stays out of the house.
+  const whereTheHorseWas = { x: horse.position.x, z: horse.position.z }
+  horseWanderer.wander(secondsPassed)
+  world.keepOnField(horse.position)
+  house.keepOutOfWalls(horse.position, whereTheHorseWas)
+  solidThings.keepOutOf(horse.position, whereTheHorseWas)
+  if (house.isInside(horse.position)) {
+    horse.position.x = whereTheHorseWas.x
+    horse.position.z = whereTheHorseWas.z
+  }
+  horseWanderer.turnIfBumped(whereTheHorseWas, secondsPassed)
 
   // Space bar to jump, 2 blocks high. Press it again in the air to do a backflip!
   if (controls.wantsToJump()) {
