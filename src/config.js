@@ -30,6 +30,7 @@ export const config = {
     doorColour: '#8b5a2b',
     bedColour: '#a0522d', // the wooden bed frame
     blanketColour: '#5b8def',
+    sofaColour: '#2a9d8f',
   },
 
   cat: {

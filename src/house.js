@@ -52,6 +52,11 @@ export function createHouse(screen) {
   const bed = makeBed()
   addFurniture(house, walls, bed, { x: -WIDTH / 2 + 1.3, z: -DEPTH / 2 + 1.9, width: 2, depth: 3.2 })
 
+  // A sofa on the right, turned to face the right-hand wall (where the TV will go).
+  const sofa = makeSofa()
+  sofa.rotation.y = Math.PI / 2 // a quarter turn
+  addFurniture(house, walls, sofa, { x: WIDTH / 2 - 4, z: -1, width: 1.1, depth: 2.6 })
+
   const roof = makeRoof()
   house.add(roof)
 
@@ -184,6 +189,31 @@ function makeBed() {
   bed.add(blanket)
 
   return bed
+}
+
+// A comfy sofa: a seat, a back and two arm rests.
+// It's built facing the front, and we turn it round afterwards.
+function makeSofa() {
+  const sofa = makeGroup()
+  const colour = config.house.sofaColour
+
+  const seat = makeBox({ width: 2.6, height: 0.5, depth: 1.1, colour })
+  seat.position.y = 0.25
+  sofa.add(seat)
+
+  const back = makeBox({ width: 2.6, height: 0.8, depth: 0.3, colour })
+  back.position.set(0, 0.9, -0.4)
+  sofa.add(back)
+
+  const leftArm = makeBox({ width: 0.3, height: 0.8, depth: 1.1, colour })
+  leftArm.position.set(-1.15, 0.4, 0)
+  sofa.add(leftArm)
+
+  const rightArm = makeBox({ width: 0.3, height: 0.8, depth: 1.1, colour })
+  rightArm.position.set(1.15, 0.4, 0)
+  sofa.add(rightArm)
+
+  return sofa
 }
 
 // A pointy roof, made of layers of boxes that get thinner as they go up,
