@@ -8,6 +8,7 @@ import { createGarden } from './garden.js'
 import { createCatHouse } from './cat-house.js'
 import { createCatBowls } from './cat-bowls.js'
 import { createSanta } from './santa.js'
+import { createSleigh } from './sleigh.js'
 import { createCharacter } from './character.js'
 import { createControls } from './controls.js'
 import { connectTests } from './engine/testing.js'
@@ -37,6 +38,8 @@ const garden = createGarden(screen)
 const catHouse = createCatHouse(screen)
 const catBowls = createCatBowls(screen)
 const santa = createSanta(screen)
+const sleigh = createSleigh(screen)
+sleigh.carry(santa.santa)
 const character = createCharacter(screen)
 const controls = createControls(screen)
 

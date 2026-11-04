@@ -91,6 +91,13 @@ export const config = {
     noseColour: '#ff8a8a',
   },
 
+  sleigh: {
+    x: 0, // where Santa's sleigh is
+    z: -6,
+    woodColour: '#b3122e',
+    trimColour: '#f4c430',
+  },
+
   camera: {
     zoom: 14, // how much of the world fits on screen: bigger number = zoomed further out
     followSpeed: 4, // how quickly the camera catches up with the character
