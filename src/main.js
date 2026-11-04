@@ -15,6 +15,7 @@ import { makeScoreBoard } from './engine/score-board.js'
 import { createSea } from './sea.js'
 import { createJetty } from './jetty.js'
 import { createYacht } from './yacht.js'
+import { createTrampoline } from './trampoline.js'
 import { createBath } from './bath.js'
 import { createHorse } from './horse.js'
 import { createLadybird } from './ladybird.js'
@@ -73,6 +74,7 @@ const jetty = createJetty(screen)
 world.letPeopleWalkOn(jetty.planks) // so you can walk out to sea along the jetty
 const yacht = createYacht(screen)
 world.letPeopleWalkOn(yacht.hull) // so you can walk about on the deck
+const trampoline = createTrampoline(screen)
 volcano.keepLavaOffUnder(house.roof) // hide in the house to stay safe from the lava!
 volcano.keepLavaOffUnder(catHouse.catHouse)
 const scoreBoard = makeScoreBoard('Lava punched')
@@ -105,6 +107,7 @@ solidThings.add(sleigh.sleigh) // Santa, his sleigh and the dogs pulling it
 solidThings.add(yacht.hull) // jump up onto the deck of the yacht!
 solidThings.add(yacht.cabin)
 solidThings.add(yacht.mast)
+solidThings.add(trampoline.trampoline) // jump up onto the trampoline
 for (const part of bath.solidParts) {
   solidThings.add(part) // the bath: jump onto the edge, or right into the water!
 }

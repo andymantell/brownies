@@ -211,4 +211,14 @@ export const config = {
     mastColour: '#8b5a2b',
     sailColour: '#fffaf0',
   },
+
+  // A trampoline, on the front of the yacht's deck.
+  trampoline: {
+    x: 42.3, // where it is: near the pointy front of the yacht
+    y: 1, // standing on the deck
+    z: 5,
+    matColour: '#222222',
+    frameColour: '#2f80ed',
+    legColour: '#888888',
+  },
 }
