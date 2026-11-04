@@ -48,6 +48,10 @@ export function createHouse(screen) {
   door.position.set(-DOOR_WIDTH / 2, 0, DEPTH / 2)
   house.add(door)
 
+  // A bed in the back left corner.
+  const bed = makeBed()
+  addFurniture(house, walls, bed, { x: -WIDTH / 2 + 1.3, z: -DEPTH / 2 + 1.9, width: 2, depth: 3.2 })
+
   const roof = makeRoof()
   house.add(roof)
 
@@ -153,6 +157,35 @@ function makeDoor() {
   return hinge
 }
 
+// A cosy bed: a wooden frame, a white mattress, a pillow and a blanket.
+// The pillow end is at the back.
+function makeBed() {
+  const bed = makeGroup()
+  const wood = config.house.bedColour
+
+  const frame = makeBox({ width: 2, height: 0.5, depth: 3.2, colour: wood })
+  frame.position.y = 0.25
+  bed.add(frame)
+
+  const headboard = makeBox({ width: 2, height: 1.3, depth: 0.2, colour: wood })
+  headboard.position.set(0, 0.65, -1.5)
+  bed.add(headboard)
+
+  const mattress = makeBox({ width: 1.8, height: 0.3, depth: 2.9, colour: 'white' })
+  mattress.position.set(0, 0.65, 0.05)
+  bed.add(mattress)
+
+  const pillow = makeBox({ width: 1.2, height: 0.2, depth: 0.5, colour: '#f4f4f4' })
+  pillow.position.set(0, 0.9, -1.05)
+  bed.add(pillow)
+
+  const blanket = makeBox({ width: 1.9, height: 0.1, depth: 2, colour: config.house.blanketColour })
+  blanket.position.set(0, 0.85, 0.5)
+  bed.add(blanket)
+
+  return bed
+}
+
 // A pointy roof, made of layers of boxes that get thinner as they go up,
 // like a stack of steps.
 function makeRoof() {
@@ -176,6 +209,14 @@ function makeRoof() {
   }
 
   return roof
+}
+
+// Put a piece of furniture in the house.
+// We remember where it is, so people bump into it instead of walking through.
+function addFurniture(house, walls, thing, { x, z, width, depth }) {
+  thing.position.set(x, 0, z)
+  house.add(thing)
+  walls.push({ x: config.house.x + x, z: config.house.z + z, width, depth })
 }
 
 // One wall, standing on the ground.

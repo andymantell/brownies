@@ -28,6 +28,8 @@ export const config = {
     wallColour: '#e8d8b8',
     roofColour: '#222222',
     doorColour: '#8b5a2b',
+    bedColour: '#a0522d', // the wooden bed frame
+    blanketColour: '#5b8def',
   },
 
   cat: {
