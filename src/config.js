@@ -51,8 +51,11 @@ export const config = {
   catBowls: {
     waterX: 5.4, // where the bowl of water is
     waterZ: 4.6,
+    foodX: 6.6, // where the bowl of food is
+    foodZ: 4.6,
     bowlColour: '#f2f2f2',
     waterColour: '#4aa3df',
+    biscuitColour: '#8b5a2b',
   },
 
   camera: {

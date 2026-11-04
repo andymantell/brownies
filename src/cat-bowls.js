@@ -28,7 +28,28 @@ export function createCatBowls(screen) {
 
   screen.add(waterBowl)
 
-  return { waterBowl }
+  // The bowl of food, full of crunchy cat biscuits.
+  const foodBowl = makeBowl(settings.bowlColour)
+  foodBowl.position.set(settings.foodX, 0, settings.foodZ)
+
+  // Each biscuit is a tiny box. These numbers say where each one goes in the bowl.
+  const biscuitSpots = [
+    { x: -0.1, z: -0.1 },
+    { x: 0.1, z: -0.08 },
+    { x: 0, z: 0.02 },
+    { x: -0.08, z: 0.11 },
+    { x: 0.11, z: 0.1 },
+  ]
+
+  for (const spot of biscuitSpots) {
+    const biscuit = makeBox({ width: 0.1, height: 0.06, depth: 0.1, colour: settings.biscuitColour })
+    biscuit.position.set(spot.x, BASE_HEIGHT + 0.03, spot.z)
+    foodBowl.add(biscuit)
+  }
+
+  screen.add(foodBowl)
+
+  return { waterBowl, foodBowl }
 }
 
 // An empty bowl: a flat base, with a short side all the way round.
