@@ -35,7 +35,6 @@ const house = createHouse(screen)
 const cat = createCat(screen)
 const labrador = createDog(screen, config.labrador)
 const husky = createDog(screen, config.husky)
-const husky = createDog(screen, config.husky)
 const garden = createGarden(screen)
 const catHouse = createCatHouse(screen)
 const catBowls = createCatBowls(screen)
@@ -64,6 +63,12 @@ const characterPhysics = physics.add(character.person, { height: 2.2 })
 // Things the character bumps into, instead of walking through.
 const solidThings = createSolidThings()
 solidThings.add(cat.cat)
+solidThings.add(labrador.dog)
+solidThings.add(husky.dog)
+solidThings.add(catHouse.catHouse)
+solidThings.add(garden.garden)
+solidThings.add(catBowls.waterBowl)
+solidThings.add(catBowls.foodBowl)
 
 // The game loop runs about 60 times every second.
 // Each time, we move things a tiny bit and draw a new picture.
@@ -105,4 +110,4 @@ createTestSidebar()
 
 // Lets you play with the game from the browser console. Try:
 //   game.character.person.scale.set(3, 3, 3)
-window.game = { screen, world, house, cat, labrador, husky, husky, catHouse, catBowls, garden, character, config }
+window.game = { screen, world, house, cat, labrador, husky, catHouse, catBowls, garden, character, config }

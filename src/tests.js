@@ -55,7 +55,7 @@ test(
   'Walks to where you tap',
   'Tapping the grass should make the character walk to that spot and stop there.',
   async () => {
-    const spot = { x: -3, z: 5 } // a clear bit of grass, away from the cat and the house
+    const spot = { x: 6, z: -5 } // a clear bit of grass, away from the animals and the houses
 
     tapGround(spot.x, spot.z)
     await wait(2)
@@ -79,7 +79,7 @@ test(
     check('The character walked towards the finger', afterPressing.x > 1)
 
     // Slide the finger, still holding it down.
-    slideFingerTo(2, 4)
+    slideFingerTo(1, 4) // (not too near the cat, or we would bump into it)
     await wait(0.5)
     const afterSliding = whereIsCharacter()
     check('The character followed the finger', afterSliding.z > afterPressing.z + 1)
@@ -170,6 +170,21 @@ test(
 
     const end = whereIsCharacter()
     check('The character stopped before reaching the cat', stepsBetween(end, cat) > 0.5)
+  },
+)
+
+test(
+  'Bumps into the cat house',
+  'Walking at the cat house should stop the character, instead of walking through it.',
+  async () => {
+    // Stand a little way from the cat house, then try to walk to the middle of it.
+    const catHouse = { x: config.catHouse.x, z: config.catHouse.z }
+    putCharacterAt(catHouse.x, catHouse.z - 3)
+    tapGround(catHouse.x, catHouse.z)
+    await wait(2)
+
+    const end = whereIsCharacter()
+    check('The character stopped before reaching the middle', stepsBetween(end, catHouse) > 0.5)
   },
 )
 

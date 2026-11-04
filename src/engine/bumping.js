@@ -38,6 +38,10 @@ export function createSolidThings() {
       if (!isBlocked(position.x, position.z)) {
         return
       }
+      // Already stuck inside something (maybe it moved onto us)? Let them walk out.
+      if (isBlocked(before.x, before.z)) {
+        return
+      }
       if (!isBlocked(position.x, before.z)) {
         position.z = before.z
         return
