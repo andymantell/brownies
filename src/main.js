@@ -22,6 +22,7 @@ import { createLadybird } from './ladybird.js'
 import { createPortaloo } from './portaloo.js'
 import { createSnowman } from './snowman.js'
 import { createJet } from './jet.js'
+import { createRabbitHutch } from './rabbit-hutch.js'
 import { createCharacter } from './character.js'
 import { createMonkey } from './monkey.js'
 import { makeFollower } from './follower.js'
@@ -93,6 +94,7 @@ ladybird.rideOn(horse.horse)
 const portaloo = createPortaloo(screen)
 const snowman = createSnowman(screen)
 const jet = createJet(screen)
+const rabbitHutch = createRabbitHutch(screen)
 const character = createCharacter(screen)
 const controls = createControls(screen)
 
@@ -123,6 +125,7 @@ solidThings.add(snowman.snowman) // jump up onto the snowman's head!
 for (const part of jet.solidParts) {
   solidThings.add(part) // the jet: jump up onto its wings!
 }
+solidThings.add(rabbitHutch.hutch) // the rabbit's hutch, inside the house
 
 // The two players bump into each other, too.
 const heroBumpsInto = createSolidThings()

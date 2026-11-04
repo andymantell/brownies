@@ -197,6 +197,16 @@ export const config = {
     pilotHatColour: '#1b2a49',
   },
 
+  // A hutch for the rabbit, inside the house: in the front right corner,
+  // away from the bed, the sofa, the TV, the toilet and the door.
+  rabbitHutch: {
+    x: -9.7, // where the hutch is
+    z: 0.8,
+    woodColour: '#8b5a2b',
+    barColour: '#c0c0c0',
+    strawColour: '#e8d27a',
+  },
+
   camera: {
     zoom: 14, // how much of the world fits on screen: bigger number = zoomed further out
     followSpeed: 4, // how quickly the camera catches up with the character
