@@ -116,18 +116,21 @@ const characterPhysics = physics.add(character.person, { height: 2.2 })
 const catFollower = makeFollower(cat.cat, {
   speed: config.cat.followSpeed,
   staysThisClose: config.cat.staysThisClose,
+  house, // so it knows to go round by the door
 })
 
 // The husky follows our hero too.
 const huskyFollower = makeFollower(husky.dog, {
   speed: config.husky.followSpeed,
   staysThisClose: config.husky.staysThisClose,
+  house, // so it knows to go round by the door
 })
 
 // The labrador follows the girl.
 const labradorFollower = makeFollower(labrador.dog, {
   speed: config.labrador.followSpeed,
   staysThisClose: config.labrador.staysThisClose,
+  house, // so it knows to go round by the door
 })
 
 // The game loop runs about 60 times every second.

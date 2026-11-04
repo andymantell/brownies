@@ -3,7 +3,7 @@ import { directionFromTo, angleOf, turnTowards } from './engine/index.js'
 // Makes a pet follow someone around, like a loyal friend.
 // It walks towards them, and stops when it's close enough.
 //
-//   const catFollower = makeFollower(cat.cat, { speed: 3, staysThisClose: 1.5 })
+//   const catFollower = makeFollower(cat.cat, { speed: 3, staysThisClose: 1.5, house })
 //   ...then every frame:
 //   catFollower.follow(character.position, secondsPassed)
 
@@ -13,18 +13,21 @@ const BUMPING_DISTANCE = 0.8
 // How close someone has to be before the pet shuffles out of their way.
 const TOO_CLOSE = 1.2
 
-export function makeFollower(pet, { speed, staysThisClose }) {
+export function makeFollower(pet, { speed, staysThisClose, house }) {
   return {
     follow(friend, secondsPassed) {
-      const towards = directionFromTo(pet.position, friend)
+      // If our friend is in the house (and we're not), go round by the door.
+      const target = house.wayTowards(pet.position, friend)
+      const isGoingToTheDoor = target !== friend
+      const towards = directionFromTo(pet.position, target)
 
-      // Close enough? Then sit still and wait.
-      if (towards.distance < staysThisClose) {
+      // Close enough to our friend? Then sit still and wait.
+      if (!isGoingToTheDoor && towards.distance < staysThisClose) {
         return
       }
 
-      // Take a little step towards our friend.
-      const stepLength = speed * secondsPassed
+      // Take a little step towards where we're going (but don't overshoot it).
+      const stepLength = Math.min(speed * secondsPassed, towards.distance)
       pet.position.x += towards.direction.x * stepLength
       pet.position.z += towards.direction.z * stepLength
 

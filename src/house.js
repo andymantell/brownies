@@ -228,6 +228,34 @@ export function createHouse(screen) {
       }
     },
 
+    // Which spot should someone walk towards, to get to where they're going?
+    // Usually straight there. But if one of them is inside the house and
+    // the other is outside, they need to go through the door first.
+    wayTowards(from, to) {
+      if (isInside(from) === isInside(to)) {
+        return to
+      }
+
+      const outsideTheDoor = { x: doorway.x, z: doorway.z + 1 }
+      const insideTheDoor = { x: doorway.x, z: doorway.z - 1 }
+
+      let thisSide = outsideTheDoor
+      let otherSide = insideTheDoor
+      if (isInside(from)) {
+        thisSide = insideTheDoor
+        otherSide = outsideTheDoor
+      }
+
+      // Lined up with the door? Then walk straight through it.
+      const isLinedUp = Math.abs(from.x - doorway.x) < 0.2 && Math.abs(from.z - doorway.z) < 1.2
+      if (isLinedUp) {
+        return otherSide
+      }
+
+      // Otherwise, walk up to the door first.
+      return thisSide
+    },
+
     isDoorOpen() {
       return door.rotation.y > 1
     },
