@@ -1,5 +1,5 @@
 import { config } from './config.js'
-import { makeBox, makeGroup } from './engine/index.js'
+import { makeBox, makeGroup, makeSpeechBubble } from './engine/index.js'
 
 // Father Christmas, made out of boxes.
 // A red suit, a big white beard and a floppy red hat with a white bobble.
@@ -67,9 +67,23 @@ export function createSanta(screen) {
 
   screen.add(santa)
 
+  // A speech bubble, so Santa can talk.
+  const bubble = makeSpeechBubble(screen)
+
   return {
     position: santa.position,
     santa,
+
+    // Show some words in Santa's speech bubble.
+    say(words) {
+      bubble.say(words)
+    },
+
+    // Called every frame. Keeps the speech bubble floating above Santa's hat.
+    // Santa rides in the sleigh, so we tell him where the sleigh is.
+    update(whereSantaIs) {
+      bubble.stayAbove(whereSantaIs, 3.5)
+    },
   }
 }
 

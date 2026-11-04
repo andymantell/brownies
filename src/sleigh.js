@@ -49,6 +49,11 @@ export function createSleigh(screen) {
         sleigh.position.z += colours.speed * secondsPassed
       }
     },
+
+    // Has the sleigh reached its stopping place yet?
+    hasArrived() {
+      return sleigh.position.z >= colours.z
+    },
   }
 }
 
