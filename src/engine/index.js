@@ -26,6 +26,7 @@ export { areaUnder } from './areas.js'
 export { createPhysics, groundMadeOf } from './physics.js'
 export { makeFlippable } from './flipping.js'
 export { createSolidThings } from './bumping.js'
+export { makeWaves } from './waves.js'
 export {
   stillDirection,
   directionFromTo,

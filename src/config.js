@@ -172,5 +172,6 @@ export const config = {
     width: 24, // how far out the sea goes
     level: -0.4, // how high the water is: a bit lower than the grass
     colour: '#2f8fd8',
+    deepColour: '#1d5f9e', // the darker water underneath the waves
   },
 }

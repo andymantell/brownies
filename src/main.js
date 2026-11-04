@@ -195,6 +195,7 @@ startGameLoop((secondsPassed) => {
 
   snow.update(secondsPassed)
   volcano.update(secondsPassed)
+  sea.update(secondsPassed)
 
   // Doing a backflip punches away any lava that's about to land on you!
   // You get a point for every drop you punch.
