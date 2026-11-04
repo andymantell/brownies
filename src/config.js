@@ -172,6 +172,18 @@ export const config = {
     roofColour: '#e0e0e0',
   },
 
+  // A big passenger jet, parked on the grass. Get in and fly it!
+  jet: {
+    x: -17, // where it's parked: in the far corner, away from everything else
+    z: -20,
+    bodyColour: '#f4f6f8',
+    stripeColour: '#1d4e89',
+    tailColour: '#d62828',
+    windowColour: '#2b3a4a',
+    engineColour: '#b8c0c8',
+    wheelColour: '#222222',
+  },
+
   camera: {
     zoom: 14, // how much of the world fits on screen: bigger number = zoomed further out
     followSpeed: 4, // how quickly the camera catches up with the character
