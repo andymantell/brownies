@@ -113,6 +113,12 @@ export function createCharacter(screen, looks = config.character) {
       repaint(rightArm, colour)
     },
 
+    // Put on different coloured trousers.
+    wearTrousers(colour) {
+      repaint(leftLeg, colour)
+      repaint(rightLeg, colour)
+    },
+
     // Called every frame. `direction` says which way to walk (or nowhere).
     update(secondsPassed, direction) {
       const isWalking = direction.length() > 0

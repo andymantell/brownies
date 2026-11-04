@@ -21,5 +21,9 @@ export function createWardrobe(players) {
     panel.addColourChoices('Shirt', config.wardrobe.shirtColours, looks.bodyColour, (colour) => {
       person.wearShirt(colour)
     })
+
+    panel.addColourChoices('Trousers', config.wardrobe.trousersColours, looks.legColour, (colour) => {
+      person.wearTrousers(colour)
+    })
   }
 }

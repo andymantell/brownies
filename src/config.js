@@ -38,6 +38,7 @@ export const config = {
   // The Dress up panel: all the things you can pick from.
   wardrobe: {
     shirtColours: ['#ff6b6b', '#b388eb', '#5b8def', '#2a9d8f', '#7cc85a', '#f2c94c', '#ff9f1c', '#ff5fa2', '#ffffff', '#222222'],
+    trousersColours: ['#3d5a80', '#5c4d7d', '#1b2a49', '#6b4226', '#2a9d8f', '#ff5fa2', '#9b5de5', '#888888', '#222222'],
   },
 
   house: {
