@@ -12,7 +12,6 @@ import { createSleigh } from './sleigh.js'
 import { createSnow } from './snow.js'
 import { createVolcano } from './volcano.js'
 import { createCharacter } from './character.js'
-import { createMonkey } from './monkey.js'
 import { createControls, createGirlControls } from './controls.js'
 import { createPhysics, groundMadeOf } from './engine/index.js'
 import { connectTests } from './engine/testing.js'
@@ -67,14 +66,16 @@ girl.position.x = config.girl.startX
 girl.position.z = config.girl.startZ
 const girlControls = createGirlControls()
 
-// A little monkey sits on the girl's head, and goes everywhere she goes.
-const monkey = createMonkey()
-monkey.sitOnHeadOf(girl.person)
-
 // Things the character bumps into, instead of walking through.
 const solidThings = createSolidThings()
 solidThings.add(cat.cat)
 solidThings.add(sleigh.sleigh) // Santa, his sleigh and the dogs pulling it
+
+// The two players bump into each other, too.
+const heroBumpsInto = createSolidThings()
+heroBumpsInto.add(girl.person)
+const girlBumpsInto = createSolidThings()
+girlBumpsInto.add(character.person)
 solidThings.add(labrador.dog)
 solidThings.add(husky.dog)
 solidThings.add(catHouse.catHouse)
@@ -97,6 +98,7 @@ startGameLoop((secondsPassed) => {
   world.keepOnField(character.position)
   house.keepOutOfWalls(character.position, whereTheCharacterWas)
   solidThings.keepOutOf(character.position, whereTheCharacterWas)
+  heroBumpsInto.keepOutOf(character.position, whereTheCharacterWas)
   house.update(secondsPassed, character.position)
 
   // The girl walks with W A S D, and bumps into things too.
@@ -105,6 +107,7 @@ startGameLoop((secondsPassed) => {
   world.keepOnField(girl.position)
   house.keepOutOfWalls(girl.position, whereTheGirlWas)
   solidThings.keepOutOf(girl.position, whereTheGirlWas)
+  girlBumpsInto.keepOutOf(girl.position, whereTheGirlWas)
   sleigh.update(secondsPassed)
   if (sleigh.hasArrived()) {
     santa.say('Ho ho ho!')
