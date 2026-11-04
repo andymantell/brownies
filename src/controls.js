@@ -118,5 +118,10 @@ export function createGirlControls() {
       }
       return direction // stand still
     },
+
+    // Did the girl just press Q to jump?
+    wantsToJump() {
+      return keyboard.wasJustPressed('q')
+    },
   }
 }

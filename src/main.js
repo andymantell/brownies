@@ -127,6 +127,7 @@ solidThings.add(volcano.volcano)
 // It lands on the grass, or on top of solid things (if it jumps high enough).
 const physics = createPhysics(groundMadeOf(world, solidThings))
 const characterPhysics = physics.add(character.person, { height: 2.2 })
+const girlPhysics = physics.add(girl.person, { height: 2.2 })
 
 // The cat follows our hero around.
 const catFollower = makeFollower(cat.cat, {
@@ -231,9 +232,20 @@ startGameLoop((secondsPassed) => {
       character.doABackflip()
     }
   }
+  // Q to make the girl jump. Press it again in the air for a backflip!
+  if (girlControls.wantsToJump()) {
+    const jumped = girlPhysics.jump(2)
+    if (!jumped) {
+      girl.doABackflip()
+    }
+  }
+
   physics.update(secondsPassed)
   if (characterPhysics.isOnTheGround()) {
     character.landed()
+  }
+  if (girlPhysics.isOnTheGround()) {
+    girl.landed()
   }
 
   snow.update(secondsPassed)
