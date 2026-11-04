@@ -12,6 +12,9 @@ import { randomNumberBetween, pickAtRandom } from './maths.js'
 // Then one line makes an effect, anywhere you like:
 //   particles.burst('sparkles', character.position)
 //   particles.burst('crumbs', { x: 2, y: 0, z: 3 }, 'brown')
+//
+// Or keep an effect going, like a campfire:
+//   const campfire = particles.keepGoing('fire', { x: 3, y: 0, z: 3 })
 
 // Each style says how its pieces look and move. Copy one to make a new style!
 //   howMany        how many pieces in one burst
@@ -87,6 +90,21 @@ export const PARTICLE_STYLES = {
     flat: true,
   },
 
+  fire: {
+    howMany: 24,
+    size: 0.28,
+    colours: ['#ff3d00', '#ff8a00', '#ffd000'],
+    lastsFor: 0.8,
+    upwardsSpeed: [1.5, 3],
+    sidewaysSpeed: 0.4,
+    gravity: -2,
+    endSize: 0.1,
+    fades: true,
+    glows: true,
+    spins: true,
+    flat: false,
+  },
+
   // The same as the crumbs that fly out when a block breaks.
   crumbs: {
     howMany: 10,
@@ -109,8 +127,9 @@ const flatShape = new THREE.BoxGeometry(1, 0.1, 1)
 
 export function makeParticles(screen) {
   let flyingPieces = []
+  let keepGoingEffects = [] // effects that make a new burst every so often, like a campfire
 
-  return {
+  const particles = {
     // Make a burst of pieces in one of the styles, at a spot { x, y, z }.
     // `colour` is optional: give one to use it instead of the style's colours.
     burst(styleName, spot, colour) {
@@ -132,8 +151,36 @@ export function makeParticles(screen) {
       }
     },
 
+    // Keep making bursts at a spot, again and again, until you call stop() on it.
+    // Good for a campfire, a smoking chimney or a fountain:
+    //   const campfire = particles.keepGoing('fire', { x: 3, y: 0, z: 3 })
+    //   campfire.stop()
+    keepGoing(styleName, spot, secondsBetweenBursts = 0.15) {
+      const effect = {
+        styleName,
+        spot,
+        secondsBetweenBursts,
+        secondsUntilNextBurst: 0,
+        stop() {
+          keepGoingEffects = keepGoingEffects.filter((other) => {
+            return other !== effect
+          })
+        },
+      }
+      keepGoingEffects.push(effect)
+      return effect
+    },
+
     // Move every piece a little. Call this every frame.
     update(secondsPassed) {
+      for (const effect of keepGoingEffects) {
+        effect.secondsUntilNextBurst -= secondsPassed
+        if (effect.secondsUntilNextBurst <= 0) {
+          particles.burst(effect.styleName, effect.spot)
+          effect.secondsUntilNextBurst = effect.secondsBetweenBursts
+        }
+      }
+
       for (const piece of flyingPieces) {
         movePiece(piece, secondsPassed)
 
@@ -161,6 +208,8 @@ export function makeParticles(screen) {
       })
     },
   }
+
+  return particles
 }
 
 // Make one piece: its look, plus how fast it's going and how old it is.

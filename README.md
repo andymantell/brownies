@@ -46,7 +46,7 @@ game.character.person.scale.set(3, 3, 3)
 
 `src/spare-parts/` holds a block world with hills and trees, breakable blocks, a pathfinding duck and their tests. They're **not plugged in** right now. Its `README.md` says how to switch them back on. The engine helpers they use (`createBlockWorld`, `buildIsland`, `findPath`, `createPathWalker`) are still in `src/engine/`.
 
-There's also a particle helper, `makeParticles()`, with sparkles, smoke, splashes, confetti and crumbs, ready for when it's needed. The same `README.md` says how to plug it in.
+There's also a particle helper, `makeParticles()`, with sparkles, smoke, splashes, confetti, fire and crumbs, ready for when it's needed. The same `README.md` says how to plug it in.
 
 ## Making models in Blender
 

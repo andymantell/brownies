@@ -73,7 +73,7 @@ For a flat, empty block world, set `HILLINESS` and `HOW_MANY_TREES` to 0 at the 
 
 ## Plugging in particles
 
-`makeParticles()` (in `src/engine/particles.js`) makes bursts of little pieces. It has five ready-made styles: `sparkles`, `smoke`, `splash`, `confetti` and `crumbs`. To make a new style, copy one in `PARTICLE_STYLES` at the top of that file and change the numbers.
+`makeParticles()` (in `src/engine/particles.js`) makes bursts of little pieces. It has six ready-made styles: `sparkles`, `smoke`, `splash`, `confetti`, `fire` and `crumbs`. To make a new style, copy one in `PARTICLE_STYLES` at the top of that file and change the numbers.
 
 **`src/main.js`**
 
@@ -96,6 +96,13 @@ Then one line makes an effect, wherever you want it:
 particles.burst('sparkles', character.position)
 particles.burst('confetti', { x: 3, y: 0, z: -2 })
 particles.burst('crumbs', spot, 'brown') // a colour of your own instead of the style's
+```
+
+To keep an effect going, like a campfire or a smoking chimney:
+
+```js
+const campfire = particles.keepGoing('fire', { x: 3, y: 0, z: 3 })
+campfire.stop() // when you want it to go out
 ```
 
 Once `window.game` has `particles`, you can try them from the browser console too: `game.particles.burst('confetti', game.character.position)`.

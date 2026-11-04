@@ -118,6 +118,11 @@ export function makeEffect(styleName, x, z) {
   game.particles.burst(styleName, { x, y: groundHeightAt(x, z), z })
 }
 
+// Keep an effect going at a spot on the ground, like a campfire. Call stop() on it when you're done.
+export function keepEffectGoing(styleName, x, z) {
+  return game.particles.keepGoing(styleName, { x, y: groundHeightAt(x, z), z })
+}
+
 // How many particle pieces are flying about right now?
 export function howManyParticles() {
   return game.particles.howManyAreFlying()

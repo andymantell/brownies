@@ -4,11 +4,12 @@ import {
   check,
   wait,
   makeEffect,
+  keepEffectGoing,
   howManyParticles,
   whereAreTheParticles,
 } from '../engine/testing.js'
 
-// 🧪 Tests for particles (sparkles, smoke, splashes, confetti and crumbs).
+// 🧪 Tests for particles (sparkles, smoke, splashes, confetti, fire and crumbs).
 // This is a spare part: it isn't plugged into the game yet. See README.md in this folder.
 
 test(
@@ -57,5 +58,19 @@ test(
       const shouldMake = PARTICLE_STYLES[styleName].howMany
       check(`"${styleName}" made ${shouldMake} pieces`, madeThisTime === shouldMake)
     }
+  },
+)
+
+test(
+  'A campfire keeps burning, then goes out',
+  'A fire that keeps going should still have flames after a while, and none once we stop it.',
+  async () => {
+    const campfire = keepEffectGoing('fire', 2, -2)
+    await wait(2)
+    check('The fire is still burning after 2 seconds', howManyParticles() > 0)
+
+    campfire.stop()
+    await wait(3)
+    check('The fire has gone out', howManyParticles() === 0)
   },
 )
