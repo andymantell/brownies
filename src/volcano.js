@@ -1,5 +1,5 @@
 import { config } from './config.js'
-import { makeBox, makeGroup, makeParticles, PARTICLE_STYLES } from './engine/index.js'
+import { makeBox, makeGroup, makeParticles, PARTICLE_STYLES, randomNumberBetween } from './engine/index.js'
 
 // 🌋 A big blocky volcano, made of layers of rock that get smaller as they go up.
 // There's a pool of hot lava in the top, and every so often it erupts!
@@ -24,6 +24,26 @@ PARTICLE_STYLES.eruption = {
   spins: true,
   flat: false,
 }
+
+// How the lava drops look as they rain down from the sky.
+PARTICLE_STYLES.lavaDrop = {
+  howMany: 1,
+  size: 0.3,
+  colours: ['#ff3d00', '#ff8a00'],
+  lastsFor: 2,
+  upwardsSpeed: [-6, -6], // falling straight down
+  sidewaysSpeed: 0,
+  gravity: 0,
+  endSize: 1,
+  fades: false,
+  glows: true,
+  spins: true,
+  flat: false,
+}
+
+// How high up the lava drops start, and how fast they fall.
+const SKY_HEIGHT = 12
+const DROP_SPEED = 6
 
 export function createVolcano(screen) {
   const volcano = makeGroup()
@@ -66,10 +86,51 @@ export function createVolcano(screen) {
   let secondsOfEruptionLeft = 0
   let fountain = null
 
+  // How long the lava keeps raining down, and how many drops start falling every second.
+  let secondsOfRainLeft = 0
+  let dropsToMake = 0
+
+  // Lava drops that are still falling.
+  let fallingDrops = []
+
   // Start an eruption: lava keeps shooting out of the top for a few seconds.
   function erupt() {
     fountain = particles.keepGoing('eruption', top, 0.05)
     secondsOfEruptionLeft = config.volcano.eruptionLasts
+    secondsOfRainLeft = config.volcano.lavaRainLasts
+  }
+
+  // Drop a blob of lava from the sky, somewhere on the field.
+  function dropSomeLava() {
+    const halfTheField = config.world.size / 2
+    const spot = {
+      x: randomNumberBetween(-halfTheField, halfTheField),
+      y: SKY_HEIGHT,
+      z: randomNumberBetween(-halfTheField, halfTheField),
+    }
+    particles.burst('lavaDrop', spot)
+    fallingDrops.push(spot)
+  }
+
+  // While it's raining lava, keep dropping new blobs. Move the ones already falling.
+  function updateLavaRain(secondsPassed) {
+    if (secondsOfRainLeft > 0) {
+      secondsOfRainLeft -= secondsPassed
+      dropsToMake += config.volcano.lavaDropsPerSecond * secondsPassed
+    }
+
+    while (dropsToMake >= 1) {
+      dropSomeLava()
+      dropsToMake -= 1
+    }
+
+    for (const drop of fallingDrops) {
+      drop.y -= DROP_SPEED * secondsPassed
+    }
+
+    fallingDrops = fallingDrops.filter((drop) => {
+      return drop.y > 0
+    })
   }
 
   // Stop the lava shooting out.
@@ -92,6 +153,8 @@ export function createVolcano(screen) {
         stopErupting()
       }
     }
+
+    updateLavaRain(secondsPassed)
 
     particles.update(secondsPassed)
   }

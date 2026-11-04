@@ -134,6 +134,8 @@ export const config = {
     secondsBetweenEruptions: 30, // how often the volcano erupts
     secondsBeforeFirstEruption: 5, // so we don't have to wait long for the first one
     eruptionLasts: 3, // how many seconds lava shoots out for
+    lavaRainLasts: 6, // how many seconds lava rains down on the world after an eruption
+    lavaDropsPerSecond: 100, // how heavy the lava rain is
   },
 
   camera: {
