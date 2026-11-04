@@ -162,6 +162,13 @@ export function createHouse(screen) {
     house,
     roof,
     door,
+    isInside,
+
+    // Move someone to the middle of the house, just inside the door.
+    putInside(position) {
+      position.x = config.house.x
+      position.z = config.house.z + 1.5
+    },
 
     // Called every frame. Opens the door when the character is close to it,
     // and makes the roof see-through when they're inside, so we can still see them.

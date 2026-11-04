@@ -45,6 +45,10 @@ PARTICLE_STYLES.lavaDrop = {
 const SKY_HEIGHT = 12
 const DROP_SPEED = 6
 
+// How close a lava drop has to get to someone to hit them.
+const HIT_DISTANCE = 0.7
+const PERSON_HEIGHT = 2.2
+
 export function createVolcano(screen) {
   const volcano = makeGroup()
   volcano.position.set(config.volcano.x, 0, config.volcano.z)
@@ -159,10 +163,26 @@ export function createVolcano(screen) {
     particles.update(secondsPassed)
   }
 
+  // Has a lava drop just landed on someone standing here? If so, the drop splats.
+  function isHitByLava(position) {
+    for (const drop of fallingDrops) {
+      const howFarAway = Math.hypot(drop.x - position.x, drop.z - position.z)
+      const howHighAbove = drop.y - position.y
+      if (howFarAway < HIT_DISTANCE && howHighAbove < PERSON_HEIGHT) {
+        particles.burst('fire', drop)
+        fallingDrops = fallingDrops.filter((other) => {
+          return other !== drop
+        })
+        return true
+      }
+    }
+    return false
+  }
+
   // Is the volcano erupting right now?
   function isErupting() {
     return fountain !== null
   }
 
-  return { volcano, top, update, erupt, isErupting }
+  return { volcano, top, update, erupt, isErupting, isHitByLava }
 }

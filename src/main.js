@@ -160,6 +160,14 @@ startGameLoop((secondsPassed) => {
   snow.update(secondsPassed)
   volcano.update(secondsPassed)
 
+  // If lava lands on a player, they get sent back to the house to start again.
+  if (volcano.isHitByLava(character.position)) {
+    house.putInside(character.position)
+  }
+  if (volcano.isHitByLava(girl.position)) {
+    house.putInside(girl.position)
+  }
+
   // The camera keeps both players in view, zooming out if they walk apart.
   screen.followBoth(character.position, girl.position, secondsPassed)
   screen.draw()
