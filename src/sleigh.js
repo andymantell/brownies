@@ -9,7 +9,8 @@ export function createSleigh(screen) {
 
   // A group holds all the parts of the sleigh together, so they move as one.
   const sleigh = makeGroup()
-  sleigh.position.set(colours.x, 0, colours.z)
+  // It starts far away, at the edge of the field, and rides in from there.
+  sleigh.position.set(colours.x, 0, colours.startZ)
 
   // The two golden runners it slides along on.
   addRunner(sleigh, -0.7, colours)
@@ -39,6 +40,14 @@ export function createSleigh(screen) {
     carry(passenger) {
       passenger.position.set(0, 0.2, -0.4)
       sleigh.add(passenger)
+    },
+
+    // Called every frame. Slide forwards until we reach the stopping place.
+    update(secondsPassed) {
+      const stillComing = sleigh.position.z < colours.z
+      if (stillComing) {
+        sleigh.position.z += colours.speed * secondsPassed
+      }
     },
   }
 }

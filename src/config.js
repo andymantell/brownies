@@ -93,7 +93,9 @@ export const config = {
 
   sleigh: {
     x: 0, // where Santa's sleigh is
-    z: -6,
+    z: -6, // where the sleigh stops
+    startZ: -30, // where the sleigh comes from: right at the far edge of the field
+    speed: 4, // how fast the sleigh rides in
     woodColour: '#b3122e',
     trimColour: '#f4c430',
   },

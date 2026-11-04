@@ -62,6 +62,7 @@ startGameLoop((secondsPassed) => {
   house.keepOutOfWalls(character.position, whereTheCharacterWas)
   solidThings.keepOutOf(character.position, whereTheCharacterWas)
   house.update(secondsPassed, character.position)
+  sleigh.update(secondsPassed)
 
   // Space bar to jump, 2 blocks high.
   if (controls.wantsToJump()) {
