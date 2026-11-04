@@ -186,6 +186,8 @@ export const config = {
   nuggets: {
     isOn: true, // switch the nuggets on (true) or off (false)
     perSecond: 6, // how many nuggets fall every second
+    secondsOnTheGround: 10, // how long a nugget stays on the ground
+    tallestPile: 3, // how many nuggets can pile up on top of each other
   },
 
   bath: {
