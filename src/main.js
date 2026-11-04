@@ -7,6 +7,7 @@ import { createDog } from './dog.js'
 import { createGarden } from './garden.js'
 import { createCatHouse } from './cat-house.js'
 import { createCatBowls } from './cat-bowls.js'
+import { createSanta } from './santa.js'
 import { createCharacter } from './character.js'
 import { createControls } from './controls.js'
 import { connectTests } from './engine/testing.js'
@@ -35,6 +36,7 @@ const husky = createDog(screen, config.husky)
 const garden = createGarden(screen)
 const catHouse = createCatHouse(screen)
 const catBowls = createCatBowls(screen)
+const santa = createSanta(screen)
 const character = createCharacter(screen)
 const controls = createControls(screen)
 

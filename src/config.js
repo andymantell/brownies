@@ -79,6 +79,18 @@ export const config = {
     biscuitColour: '#8b5a2b',
   },
 
+  santa: {
+    x: 0, // where Santa is
+    z: -6,
+    suitColour: '#d62828',
+    beltColour: '#222222',
+    buckleColour: '#f4c430',
+    skinColour: '#ffd6a5',
+    beardColour: '#ffffff',
+    eyeColour: '#222222',
+    noseColour: '#ff8a8a',
+  },
+
   camera: {
     zoom: 14, // how much of the world fits on screen: bigger number = zoomed further out
     followSpeed: 4, // how quickly the camera catches up with the character
