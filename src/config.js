@@ -95,6 +95,19 @@ export const config = {
     walkSpeed: 2, // how fast the horse wanders about
   },
 
+  // A little red panda, with a stripy ringed tail. It wanders about the field.
+  redPanda: {
+    x: -4, // where the red panda starts
+    z: 2,
+    furColour: '#c1440e', // rusty red
+    faceColour: '#ffffff',
+    legColour: '#2b1a12', // dark brown, nearly black
+    eyeColour: '#111111',
+    noseColour: '#111111',
+    tailRingColour: '#7a2a08', // the dark stripes on its tail
+    walkSpeed: 1.5, // how fast the red panda wanders about
+  },
+
   garden: {
     x: 13, // where the flower garden is: out on the grass, away from everything else
     z: 4,

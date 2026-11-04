@@ -18,6 +18,7 @@ import { createYacht } from './yacht.js'
 import { createTrampoline } from './trampoline.js'
 import { createBath } from './bath.js'
 import { createHorse } from './horse.js'
+import { createRedPanda } from './red-panda.js'
 import { createLadybird } from './ladybird.js'
 import { createPortaloo } from './portaloo.js'
 import { createSnowman } from './snowman.js'
@@ -92,6 +93,7 @@ const horse = createHorse(screen)
 // A giant ladybird rides on the horse's back.
 const ladybird = createLadybird()
 ladybird.rideOn(horse.horse)
+const redPanda = createRedPanda(screen)
 const portaloo = createPortaloo(screen)
 const snowman = createSnowman(screen)
 const jet = createJet(screen)
