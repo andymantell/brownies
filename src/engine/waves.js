@@ -9,9 +9,9 @@ import * as THREE from 'three'
 // x and z are the middle of the patch. `level` is how high the calm water is.
 
 const BLOCK_SIZE = 1
-const WAVE_HEIGHT = 0.3 // how far the blocks go up and down
-const WAVE_SPEED = 2 // how fast the waves roll along
-const STEP = 0.1 // blocks move in little jumps, so the waves look blocky
+const WAVE_HEIGHT = 0.12 // how far the blocks go up and down
+const WAVE_SPEED = 1.2 // how fast the waves roll along
+const STEP = 0.04 // blocks move in little jumps, so the waves look blocky
 
 export function makeWaves(screen, { x, z, width, depth, level, colour }) {
   const across = Math.round(width / BLOCK_SIZE)
