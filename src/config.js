@@ -9,14 +9,16 @@ export const config = {
     skyColour: '#bfe6ff',
   },
 
+  // Our hero: a girl with light brown hair. She walks with the arrow keys.
   character: {
     speed: 5, // walking speed
     bodyColour: '#ff6b6b',
     headColour: '#ffd6a5',
-    hairColour: '#6b4226',
+    hairColour: '#b5835a', // light brown
     legColour: '#3d5a80',
     armColour: '#ff6b6b',
     eyeColour: '#222222',
+    hasLongHair: true,
   },
 
   // The second player: a girl, made of boxes too. She walks with W A S D.

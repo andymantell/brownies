@@ -27,7 +27,7 @@ export function createCharacter(screen, looks = config.character) {
   rightEye.position.set(0.16, 0.05, 0.36)
   head.add(rightEye)
 
-  // Short brown hair: a flat top, a fringe at the front, and bits over the ears and at the back.
+  // Hair: a flat top, a fringe at the front, and bits over the ears and at the back.
   const hairOnTop = makeBox({ width: 0.76, height: 0.16, depth: 0.76, colour: colours.hairColour })
   hairOnTop.position.set(0, 0.36, 0)
   head.add(hairOnTop)
