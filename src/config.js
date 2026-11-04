@@ -177,6 +177,8 @@ export const config = {
     x: 8, // where the snowman stands
     z: -8,
     snowColour: '#f7fbff',
+    coalColour: '#1e1e1e', // his eyes and buttons
+    carrotColour: '#ff8c1a', // his nose
   },
 
   // A big passenger jet, parked on the grass. Get in and fly it!

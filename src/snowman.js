@@ -27,6 +27,27 @@ export function createSnowman(screen) {
   head.position.y = 2.6
   snowman.add(head)
 
+  // Two coal eyes, on the front of his head.
+  const coalColour = config.snowman.coalColour
+  const leftEye = makeBox({ width: 0.14, height: 0.14, depth: 0.05, colour: coalColour })
+  leftEye.position.set(-0.2, 2.75, 0.46)
+  snowman.add(leftEye)
+  const rightEye = makeBox({ width: 0.14, height: 0.14, depth: 0.05, colour: coalColour })
+  rightEye.position.set(0.2, 2.75, 0.46)
+  snowman.add(rightEye)
+
+  // A long, pointy carrot nose, sticking out of his face.
+  const nose = makeBox({ width: 0.12, height: 0.12, depth: 0.5, colour: config.snowman.carrotColour })
+  nose.position.set(0, 2.55, 0.7)
+  snowman.add(nose)
+
+  // Three coal buttons, down the front of his tummy.
+  for (const height of [1.4, 1.7, 2.0]) {
+    const button = makeBox({ width: 0.14, height: 0.14, depth: 0.05, colour: coalColour })
+    button.position.set(0, height, 0.61)
+    snowman.add(button)
+  }
+
   screen.add(snowman)
 
   return {
