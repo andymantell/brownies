@@ -79,7 +79,19 @@ function createRenderer(canvas) {
   renderer.shadowMap.enabled = true
   renderer.shadowMap.type = THREE.PCFSoftShadowMap // soft-edged shadows
   renderer.toneMapping = THREE.ACESFilmicToneMapping // nicer, film-like colours
+  reloadWhenGraphicsComeBack(canvas)
   return renderer
+}
+
+// Sometimes the laptop's graphics card resets and the screen blanks for a moment.
+// Our picture is lost when that happens, so once the graphics come back we reload the page.
+function reloadWhenGraphicsComeBack(canvas) {
+  canvas.addEventListener('webglcontextlost', (event) => {
+    event.preventDefault() // tells the browser we'd like the graphics back
+  })
+  canvas.addEventListener('webglcontextrestored', () => {
+    window.location.reload()
+  })
 }
 
 // Soft light from all around: blue-ish from the sky above, green-ish bouncing up off the grass.
