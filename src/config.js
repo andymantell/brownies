@@ -140,6 +140,14 @@ export const config = {
     lavaDropsPerSecond: 250, // how heavy the lava rain is
   },
 
+  bath: {
+    x: -6, // where the bath is: out on the grass, in front of the house
+    z: 10,
+    colour: '#ffffff',
+    waterColour: '#6ec6ff',
+    feetColour: '#f4c430',
+  },
+
   camera: {
     zoom: 14, // how much of the world fits on screen: bigger number = zoomed further out
     followSpeed: 4, // how quickly the camera catches up with the character

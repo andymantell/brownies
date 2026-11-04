@@ -11,6 +11,7 @@ import { createSanta } from './santa.js'
 import { createSleigh } from './sleigh.js'
 import { createSnow } from './snow.js'
 import { createVolcano } from './volcano.js'
+import { createBath } from './bath.js'
 import { createCharacter } from './character.js'
 import { createMonkey } from './monkey.js'
 import { makeFollower } from './follower.js'
@@ -59,6 +60,7 @@ const snow = createSnow(screen)
 snow.keepOffUnder(house.roof)
 snow.keepOffUnder(catHouse.catHouse)
 const volcano = createVolcano(screen)
+const bath = createBath(screen)
 const character = createCharacter(screen)
 const controls = createControls(screen)
 
