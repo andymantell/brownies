@@ -7,17 +7,20 @@ import * as THREE from 'three'
 // something, they get put back, but they can still slide along it.
 
 const HOW_FAT_THE_PERSON_IS = 0.35
+const HOW_TALL_THE_PERSON_IS = 2.2
 
 export function createSolidThings() {
   const things = []
   let feetHeight = 0 // how high the person's feet are, so they can jump on top of things
 
-  // Is this spot inside anything solid? (Things below your feet don't count.)
+  // Is this spot inside anything solid?
+  // (Things below your feet don't count, and nor do things high above your head, like a plane flying over.)
   function isBlocked(x, z) {
     for (const thing of things) {
       const box = outlineOf(thing)
       const isBelowFeet = box.max.y < feetHeight + 0.05
-      if (isInside(box, x, z) && !isBelowFeet) {
+      const isAboveHead = box.min.y > feetHeight + HOW_TALL_THE_PERSON_IS
+      if (isInside(box, x, z) && !isBelowFeet && !isAboveHead) {
         return true
       }
     }

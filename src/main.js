@@ -275,11 +275,14 @@ startGameLoop((secondsPassed) => {
   physics.update(secondsPassed)
 
   // The jet. Stand by its door and press E to get in, and E again to get out.
+  // The pilot flies it with their walking keys. Let go of the keys to land.
   jet.update(secondsPassed, [character, girl])
   if (jet.pilotIs(character)) {
+    jet.fly(direction, secondsPassed) // the arrow keys
     characterPhysics.stop() // the pilot sits still in their seat, instead of falling
   }
   if (jet.pilotIs(girl)) {
+    jet.fly(girlControls.getDirection(), secondsPassed) // W A S D
     girlPhysics.stop()
   }
   if (characterPhysics.isOnTheGround()) {

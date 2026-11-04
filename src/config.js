@@ -195,6 +195,11 @@ export const config = {
     wheelColour: '#222222',
     doorColour: '#9aa5b1',
     pilotHatColour: '#1b2a49',
+    flySpeed: 10, // how fast it flies
+    takeOffSpeed: 6, // how fast it needs to go to take off
+    flyingHeight: 8, // how high up in the sky it flies
+    climbSpeed: 3, // how quickly it goes up and down
+    turnSpeed: 2, // how quickly it turns
   },
 
   // A hutch for the rabbit, inside the house: in the front right corner,

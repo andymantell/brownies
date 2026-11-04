@@ -1,5 +1,13 @@
 import { config } from './config.js'
-import { makeBox, makeGroup, createKeyboard, spotInFront } from './engine/index.js'
+import {
+  makeBox,
+  makeGroup,
+  createKeyboard,
+  spotInFront,
+  angleOf,
+  turnTowards,
+  keepInsideSquare,
+} from './engine/index.js'
 
 // A blocky passenger jet, parked on the grass.
 // It has a long body with windows, two big wings with engines underneath,
@@ -7,6 +15,7 @@ import { makeBox, makeGroup, createKeyboard, spotInFront } from './engine/index.
 // The nose points forwards (along z), so it can turn to face where it flies.
 //
 // Stand by the door and press E to get in. Press E again to get out.
+// The pilot flies it with their walking keys. Let go of the keys to come down and land.
 
 const LENGTH = 14 // from the nose to the tail
 const BODY_SIZE = 2.4 // how wide and tall the body is
@@ -15,6 +24,8 @@ const WING_SPAN = 15 // from one wing tip to the other
 const WING_HEIGHT = 1.65 // low enough to jump up onto!
 const DOOR_FORWARD = 5 // how far forward of the middle the door is
 const DOOR_REACH = 3 // how close you need to be to the door to get in
+const SPEED_UP = 4 // how quickly the jet gets faster
+const SLOW_DOWN = 2 // how quickly the jet slows down, when you let go of the keys
 
 export function createJet(screen) {
   const colours = config.jet
@@ -22,6 +33,7 @@ export function createJet(screen) {
   // A group holds all the parts, so we can move the whole jet as one.
   const jet = makeGroup()
   jet.position.set(colours.x, 0, colours.z)
+  jet.rotation.order = 'YXZ' // so it tips its nose and wings the way a real plane does
 
   // The long body.
   const body = makeBox({ width: BODY_SIZE, height: BODY_SIZE, depth: LENGTH, colour: colours.bodyColour })
@@ -87,6 +99,7 @@ export function createJet(screen) {
 
   const keyboard = createKeyboard()
   let pilot = null // who is flying the jet (null means nobody)
+  let speed = 0
 
   // The spot on the grass just outside the door.
   function spotByTheDoor() {
@@ -116,8 +129,15 @@ export function createJet(screen) {
     const door = spotByTheDoor()
     pilot.position.set(door.x, 0, door.z)
     pilot.person.visible = true
+    speed = 0
+    jet.rotation.z = 0
     pilotHat.visible = false
     pilot = null
+  }
+
+  // Is the jet back down on the grass?
+  function hasLanded() {
+    return jet.position.y === 0
   }
 
   return {
@@ -133,17 +153,51 @@ export function createJet(screen) {
     // Call this every frame, with everyone who could be the pilot.
     update(secondsPassed, players) {
       if (keyboard.wasJustPressed('e')) {
-        if (pilot) {
-          letThePilotOut()
-        } else {
+        if (!pilot) {
           letInWhoeverIsByTheDoor(players)
+        } else if (hasLanded()) {
+          letThePilotOut() // you can only get out once you've landed!
         }
       }
+    },
+
+    // Fly the jet. `direction` is which way the pilot wants to go, from their walking keys.
+    fly(direction, secondsPassed) {
+      const angleBefore = jet.rotation.y
+
+      // Holding a key? Speed up, and turn to face that way. Let go, and slow down.
+      if (direction.length() > 0) {
+        speed = Math.min(speed + SPEED_UP * secondsPassed, colours.flySpeed)
+        jet.rotation.y = turnTowards(jet.rotation.y, angleOf(direction), colours.turnSpeed * secondsPassed)
+      } else {
+        speed = Math.max(speed - SLOW_DOWN * secondsPassed, 0)
+      }
+
+      // Zoom forwards, the way the nose is pointing. Stay over the field.
+      const ahead = spotInFront(jet.position, jet.rotation.y, speed * secondsPassed)
+      jet.position.x = ahead.x
+      jet.position.z = ahead.z
+      keepInsideSquare(jet.position, config.world.size / 2)
+
+      // Fast enough? Take off and climb up into the sky. Too slow? Come down and land.
+      const climb = colours.climbSpeed * secondsPassed
+      if (speed >= colours.takeOffSpeed) {
+        jet.position.y = Math.min(jet.position.y + climb, colours.flyingHeight)
+        jet.rotation.x = -0.15 // nose up
+      } else {
+        jet.position.y = Math.max(jet.position.y - climb, 0)
+        jet.rotation.x = 0
+      }
+      if (jet.position.y === colours.flyingHeight || jet.position.y === 0) {
+        jet.rotation.x = 0 // flying level, or sitting on the grass
+      }
+
+      // Lean into the turns, like a real plane.
+      const howFastItsTurning = (jet.rotation.y - angleBefore) / secondsPassed
+      jet.rotation.z = Math.max(-0.5, Math.min(0.5, -howFastItsTurning * 0.3))
 
       // The pilot sits in the jet, and goes wherever it goes.
-      if (pilot) {
-        pilot.position.set(jet.position.x, jet.position.y, jet.position.z)
-      }
+      pilot.position.set(jet.position.x, jet.position.y, jet.position.z)
     },
   }
 }
