@@ -65,6 +65,15 @@ export function isInsideRectangle(spot, rectangle, radius) {
   return across < reachAcross && back < reachBack
 }
 
+// The nearest spot to `spot` that's inside a rectangle { x, z, width, depth }.
+// If the spot is already inside, that's the same spot.
+export function nearestSpotInRectangle(spot, rectangle) {
+  return {
+    x: keepBetween(spot.x, rectangle.x - rectangle.width / 2, rectangle.x + rectangle.width / 2),
+    z: keepBetween(spot.z, rectangle.z - rectangle.depth / 2, rectangle.z + rectangle.depth / 2),
+  }
+}
+
 // If a number is too small or too big, move it back to the nearest edge.
 function keepBetween(number, smallest, biggest) {
   const notTooSmall = Math.max(number, smallest)

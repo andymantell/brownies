@@ -69,6 +69,7 @@ snow.keepOffUnder(catHouse.catHouse)
 const volcano = createVolcano(screen)
 const sea = createSea(screen)
 const jetty = createJetty(screen)
+world.letPeopleWalkOn(jetty.planks) // so you can walk out to sea along the jetty
 volcano.keepLavaOffUnder(house.roof) // hide in the house to stay safe from the lava!
 volcano.keepLavaOffUnder(catHouse.catHouse)
 const scoreBoard = makeScoreBoard('Lava punched')

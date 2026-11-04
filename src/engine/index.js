@@ -35,6 +35,7 @@ export {
   turnTowards,
   keepInsideSquare,
   isInsideRectangle,
+  nearestSpotInRectangle,
   randomNumberBetween,
   pickAtRandom,
 } from './maths.js'
