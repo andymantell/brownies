@@ -31,3 +31,16 @@ export function makeSwingingBox({ width, height, depth, colour }) {
 
   return joint
 }
+
+// Make everything in a group see-through, like coloured glass.
+// `howSolid` goes from 1 (solid, you can't see through it) to 0 (invisible).
+//   makeSeeThrough(roof, 0.5) makes the roof half see-through.
+export function makeSeeThrough(group, howSolid) {
+  group.traverse((part) => {
+    if (part.isMesh) {
+      part.material.transparent = true
+      part.material.opacity = howSolid
+      part.material.depthWrite = howSolid > 0.99 // see-through things don't hide what's behind them
+    }
+  })
+}

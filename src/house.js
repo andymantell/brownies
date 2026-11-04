@@ -1,5 +1,5 @@
 import { config } from './config.js'
-import { makeBox, makeGroup, turnTowards, isInsideRectangle } from './engine/index.js'
+import { makeBox, makeGroup, turnTowards, isInsideRectangle, makeSeeThrough } from './engine/index.js'
 
 // A little house for our character, built out of boxes.
 //
@@ -67,13 +67,34 @@ export function createHouse(screen) {
   // Where the door is in the world (the middle of the doorway).
   const doorway = { x: config.house.x, z: config.house.z + DEPTH / 2 }
 
+  // Is this spot inside the walls of the house?
+  function isInside(position) {
+    const acrossFromMiddle = Math.abs(position.x - config.house.x)
+    const backFromMiddle = Math.abs(position.z - config.house.z)
+    return acrossFromMiddle < WIDTH / 2 && backFromMiddle < DEPTH / 2
+  }
+
+  // How solid the roof is: 1 is solid, 0 is invisible.
+  let roofSolidness = 1
+
   return {
     house,
     roof,
     door,
 
-    // Called every frame. Opens the door when the character is close to it.
+    // Called every frame. Opens the door when the character is close to it,
+    // and makes the roof see-through when they're inside, so we can still see them.
     update(secondsPassed, characterPosition) {
+      let wantedSolidness = 1 // solid
+      if (isInside(characterPosition)) {
+        wantedSolidness = 0.15 // nearly invisible
+      }
+
+      // Fade a little bit closer to how solid we want it, every frame.
+      const fadeSpeed = Math.min(secondsPassed * 5, 1)
+      roofSolidness += (wantedSolidness - roofSolidness) * fadeSpeed
+      makeSeeThrough(roof, roofSolidness)
+
       const distanceToDoor = Math.hypot(characterPosition.x - doorway.x, characterPosition.z - doorway.z)
       const isCloseToDoor = distanceToDoor < 2
 
@@ -108,6 +129,10 @@ export function createHouse(screen) {
 
     isDoorOpen() {
       return door.rotation.y > 1
+    },
+
+    isRoofSeeThrough() {
+      return roofSolidness < 0.5
     },
   }
 }

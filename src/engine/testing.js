@@ -94,6 +94,11 @@ export function isTheDoorOpen() {
   return game.house.isDoorOpen()
 }
 
+// Can we see through the house's roof?
+export function isTheRoofSeeThrough() {
+  return game.house.isRoofSeeThrough()
+}
+
 // Turn the character to face a spot.
 export function turnCharacterTowards(x, z) {
   const towards = directionFromTo(game.character.position, { x, z })
