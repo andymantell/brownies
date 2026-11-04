@@ -226,6 +226,8 @@ startGameLoop((secondsPassed) => {
   }
 
   snow.update(secondsPassed)
+  snow.trudgeThrough(character.position)
+  snow.trudgeThrough(girl.position)
   volcano.update(secondsPassed)
   sea.update(secondsPassed)
 

@@ -44,6 +44,12 @@ const deeperEachFlake = 0.03
 // The deepest the snow can get.
 const deepestSnow = 0.5
 
+// How deep the snow is in a footprint. 0 squashes it right down to the grass.
+const footprintDepth = 0
+
+// How many seconds before falling snow starts to fill a footprint back in.
+const footprintsLastFor = 20
+
 export function createSnow(screen) {
   const particles = makeParticles(screen)
   let flakesToMake = 0
@@ -57,6 +63,15 @@ export function createSnow(screen) {
 
   // Snowflakes that are still falling, and how long until each one lands.
   let fallingFlakes = []
+
+  // Fresh footprints, and how many seconds until snow can fill each one in.
+  const footprints = new Map()
+
+  // Which square of snow is this spot in? Gives back a name like "4,7".
+  function squareName(x, z) {
+    const step = blanket.blockSize
+    return Math.floor(x / step) + ',' + Math.floor(z / step)
+  }
 
   // The ground under roofs, where snow can't fall.
   const roofs = []
@@ -99,6 +114,14 @@ export function createSnow(screen) {
       return flake.secondsUntilItLands > 0
     })
 
+    for (const [name, secondsLeft] of footprints) {
+      if (secondsLeft <= secondsPassed) {
+        footprints.delete(name)
+      } else {
+        footprints.set(name, secondsLeft - secondsPassed)
+      }
+    }
+
     particles.update(secondsPassed)
   }
 
@@ -110,7 +133,8 @@ export function createSnow(screen) {
       for (let back = -1; back <= 1; back++) {
         const x = spot.x + across * step
         const z = spot.z + back * step
-        if (!isUnderARoof({ x, z })) {
+        const isInAFootprint = footprints.has(squareName(x, z))
+        if (!isUnderARoof({ x, z }) && !isInAFootprint) {
           const deeper = blanket.heightAt(x, z) + deeperEachFlake
           blanket.setHeightAt(x, z, Math.min(deeper, deepestSnow))
         }
@@ -124,5 +148,15 @@ export function createSnow(screen) {
     roofs.push(areaUnder(thing))
   }
 
-  return { update, keepOffUnder }
+  // Someone is walking through the snow, so squash it down where their feet are.
+  // Call this every frame for each player:
+  //   snow.trudgeThrough(character.position)
+  function trudgeThrough(position) {
+    if (blanket.heightAt(position.x, position.z) > footprintDepth) {
+      blanket.setHeightAt(position.x, position.z, footprintDepth)
+    }
+    footprints.set(squareName(position.x, position.z), footprintsLastFor)
+  }
+
+  return { update, keepOffUnder, trudgeThrough }
 }
