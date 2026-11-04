@@ -12,6 +12,7 @@ import { createSleigh } from './sleigh.js'
 import { createSnow } from './snow.js'
 import { createVolcano } from './volcano.js'
 import { createCharacter } from './character.js'
+import { createMonkey } from './monkey.js'
 import { createControls, createGirlControls } from './controls.js'
 import { createPhysics, groundMadeOf } from './engine/index.js'
 import { connectTests } from './engine/testing.js'
@@ -65,6 +66,10 @@ const girl = createCharacter(screen, config.girl)
 girl.position.x = config.girl.startX
 girl.position.z = config.girl.startZ
 const girlControls = createGirlControls()
+
+// A little monkey sits on the girl's head, and goes everywhere she goes.
+const monkey = createMonkey()
+monkey.sitOnHeadOf(girl.person)
 
 // Things the character bumps into, instead of walking through.
 const solidThings = createSolidThings()
