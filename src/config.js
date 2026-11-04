@@ -203,7 +203,7 @@ export const config = {
   // A yacht, tied up at the end of the jetty.
   yacht: {
     x: 39, // where it is: right next to the end of the jetty
-    z: 4.9, // on the far side of the jetty, so it doesn't hide the players
+    z: 5, // on the far side of the jetty (so it doesn't hide the players), right up against it
     hullColour: '#ffffff',
     stripeColour: '#1d4e89',
     deckColour: '#c8955c',

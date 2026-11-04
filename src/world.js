@@ -32,10 +32,7 @@ export function createWorld(screen) {
     // Let people walk on this too, even though it's past the edge of the field.
     //   world.letPeopleWalkOn(jetty.planks)
     letPeopleWalkOn(thing) {
-      const area = areaUnder(thing)
-      area.width -= 0.6 // stay a little way in from the edges, so you don't hang over the water
-      area.depth -= 0.6
-      placesToWalk.push(area)
+      placesToWalk.push(areaUnder(thing))
     },
 
     // Stop someone walking off the edge of the field (or off the jetty, into the sea).

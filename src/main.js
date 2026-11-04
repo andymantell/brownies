@@ -72,6 +72,7 @@ const sea = createSea(screen)
 const jetty = createJetty(screen)
 world.letPeopleWalkOn(jetty.planks) // so you can walk out to sea along the jetty
 const yacht = createYacht(screen)
+world.letPeopleWalkOn(yacht.hull) // so you can walk about on the deck
 volcano.keepLavaOffUnder(house.roof) // hide in the house to stay safe from the lava!
 volcano.keepLavaOffUnder(catHouse.catHouse)
 const scoreBoard = makeScoreBoard('Lava punched')
@@ -101,6 +102,9 @@ monkey.sitOnHeadOf(girl.person)
 // Things the character bumps into, instead of walking through.
 const solidThings = createSolidThings()
 solidThings.add(sleigh.sleigh) // Santa, his sleigh and the dogs pulling it
+solidThings.add(yacht.hull) // jump up onto the deck of the yacht!
+solidThings.add(yacht.cabin)
+solidThings.add(yacht.mast)
 for (const part of bath.solidParts) {
   solidThings.add(part) // the bath: jump onto the edge, or right into the water!
 }
