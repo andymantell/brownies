@@ -42,6 +42,17 @@ export function createSleigh(screen) {
       sleigh.add(passenger)
     },
 
+    // Tie a dog to the front of the sleigh with a rope, so it pulls the sleigh along.
+    hitch(dog, { x, z }) {
+      dog.position.set(x, 0, z)
+      sleigh.add(dog)
+
+      const ropeLength = z - 1.4
+      const rope = makeBox({ width: 0.05, height: 0.05, depth: ropeLength, colour: colours.ropeColour })
+      rope.position.set(x, 0.75, 1.4 + ropeLength / 2)
+      sleigh.add(rope)
+    },
+
     // Called every frame. Slide forwards until we reach the stopping place.
     update(secondsPassed) {
       const stillComing = sleigh.position.z < colours.z

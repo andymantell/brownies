@@ -101,6 +101,7 @@ export const config = {
     speed: 4, // how fast the sleigh rides in
     woodColour: '#b3122e',
     trimColour: '#f4c430',
+    ropeColour: '#6b4226',
   },
 
   camera: {

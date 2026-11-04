@@ -41,6 +41,13 @@ const catBowls = createCatBowls(screen)
 const santa = createSanta(screen)
 const sleigh = createSleigh(screen)
 sleigh.carry(santa.santa)
+
+// A labrador and a husky pull Santa's sleigh.
+const sleighLabrador = createDog(screen, config.labrador)
+sleigh.hitch(sleighLabrador.dog, { x: -0.6, z: 2.8 })
+const sleighHusky = createDog(screen, config.husky)
+sleigh.hitch(sleighHusky.dog, { x: 0.6, z: 2.8 })
+
 const character = createCharacter(screen)
 const controls = createControls(screen)
 
