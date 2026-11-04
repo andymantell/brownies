@@ -23,9 +23,10 @@ export function createScreen(canvas, settings) {
   addSkyLight(scene)
   const sun = addSun(scene, sunColour, sunStrength)
 
-  fitCameraToWindow(camera, renderer, zoom)
+  let currentZoom = zoom // grows when we zoom out to fit two players in
+  fitCameraToWindow(camera, renderer, currentZoom)
   window.addEventListener('resize', () => {
-    fitCameraToWindow(camera, renderer, zoom)
+    fitCameraToWindow(camera, renderer, currentZoom)
   })
 
   const lookingAt = new THREE.Vector3()
@@ -51,6 +52,18 @@ export function createScreen(canvas, settings) {
       // The sun moves too, so there are always shadows near whatever we follow.
       sun.position.copy(lookingAt).add(SUN_DISTANCE)
       sun.target.position.copy(lookingAt)
+    },
+
+    // Keep two players in view: look at the spot halfway between them,
+    // and zoom out if they walk far apart (then back in when they come together).
+    followBoth(firstPosition, secondPosition, secondsPassed) {
+      const halfway = new THREE.Vector3().lerpVectors(firstPosition, secondPosition, 0.5)
+      this.follow(halfway, secondsPassed)
+
+      const wantedZoom = zoomToFitBoth(camera, firstPosition, secondPosition, zoom)
+      const catchUp = Math.min(cameraFollowSpeed * secondsPassed, 1)
+      currentZoom += (wantedZoom - currentZoom) * catchUp
+      fitCameraToWindow(camera, renderer, currentZoom)
     },
 
     // Draw one new picture of the world.
@@ -88,6 +101,24 @@ function addSun(scene, colour, strength) {
   scene.add(sun)
   scene.add(sun.target)
   return sun
+}
+
+// How far out we need to zoom so two things both fit on the screen, with some space round the edges.
+// It never zooms in closer than `normalZoom`.
+function zoomToFitBoth(camera, firstPosition, secondPosition, normalZoom) {
+  const spaceRoundTheEdges = 8
+  const gap = new THREE.Vector3().subVectors(firstPosition, secondPosition)
+
+  // How far apart they look on the screen: across, and up-and-down.
+  const screenAcross = new THREE.Vector3().setFromMatrixColumn(camera.matrixWorld, 0)
+  const screenUp = new THREE.Vector3().setFromMatrixColumn(camera.matrixWorld, 1)
+  const apartAcross = Math.abs(gap.dot(screenAcross))
+  const apartUpAndDown = Math.abs(gap.dot(screenUp))
+
+  const windowShape = window.innerWidth / window.innerHeight
+  const zoomForAcross = (apartAcross + spaceRoundTheEdges) / windowShape
+  const zoomForUpAndDown = apartUpAndDown + spaceRoundTheEdges
+  return Math.max(normalZoom, zoomForAcross, zoomForUpAndDown)
 }
 
 // Make the picture fill the window without stretching. `zoom` is how much of the world fits top-to-bottom.
