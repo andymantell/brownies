@@ -8,12 +8,22 @@ export function createGarden(screen) {
   const garden = makeGroup()
   garden.position.set(config.garden.x, 0, config.garden.z)
 
+  const soil = makeSoil(config.garden.size)
+  garden.add(soil)
+
   const flower = makeFlower(config.garden.petalColour)
   garden.add(flower)
 
   screen.add(garden)
 
   return { garden }
+}
+
+// A flat patch of brown soil, for the flowers to grow in.
+function makeSoil(size) {
+  const soil = makeBox({ width: size, height: 0.1, depth: size, colour: config.garden.soilColour })
+  soil.position.y = 0.05
+  return soil
 }
 
 // One flower: a green stem, with petals around a yellow middle on top.

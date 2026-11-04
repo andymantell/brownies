@@ -96,8 +96,10 @@ export const config = {
   },
 
   garden: {
-    x: 5, // where the flower garden is
-    z: -2,
+    x: 13, // where the flower garden is: out on the grass, away from everything else
+    z: 4,
+    size: 6, // how big the soil patch is, from side to side
+    soilColour: '#7a4b2a',
     petalColour: '#ff5fa2',
   },
 
