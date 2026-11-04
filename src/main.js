@@ -176,6 +176,11 @@ startGameLoop((secondsPassed) => {
   snow.update(secondsPassed)
   volcano.update(secondsPassed)
 
+  // Doing a backflip punches away any lava that's about to land on you!
+  if (character.isDoingABackflip()) {
+    volcano.punchAwayLavaNear(character.position)
+  }
+
   // If lava lands on a player, they get sent back to the house to start again.
   if (volcano.isHitByLava(character.position)) {
     house.putInside(character.position)

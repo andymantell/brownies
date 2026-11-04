@@ -94,6 +94,11 @@ export function createCharacter(screen, looks = config.character) {
       hasFlippedThisJump = true
     },
 
+    // Are we in the middle of a backflip right now?
+    isDoingABackflip() {
+      return isFlipping
+    },
+
     // Called when we land, so we always end up the right way up.
     landed() {
       isFlipping = false

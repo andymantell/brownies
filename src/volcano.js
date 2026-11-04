@@ -57,6 +57,9 @@ const DROP_SPEED = 6
 const HIT_DISTANCE = 0.7
 const PERSON_HEIGHT = 2.2
 
+// How close a lava drop has to be for a backflip to punch it away.
+const PUNCH_DISTANCE = 1.5
+
 export function createVolcano(screen) {
   const volcano = makeGroup()
   volcano.position.set(config.volcano.x, 0, config.volcano.z)
@@ -135,7 +138,8 @@ export function createVolcano(screen) {
     if (isUnderARoof(spot)) {
       return
     }
-    particles.burst('lavaDrop', spot)
+    const pieces = particles.burst('lavaDrop', spot)
+    spot.piece = pieces[0] // remember the piece, so we can move it if it gets punched
     fallingDrops.push(spot)
   }
 
@@ -193,13 +197,43 @@ export function createVolcano(screen) {
       const howHighAbove = drop.y - position.y
       if (howFarAway < HIT_DISTANCE && howHighAbove < PERSON_HEIGHT) {
         particles.burst('fire', drop)
-        fallingDrops = fallingDrops.filter((other) => {
-          return other !== drop
-        })
+        drop.piece.mesh.visible = false
+        forgetDrop(drop)
         return true
       }
     }
     return false
+  }
+
+  // Punch away any lava drops close to this spot, sending them flying off into the sky.
+  // It gives back how many drops got punched.
+  function punchAwayLavaNear(position) {
+    let howManyPunched = 0
+    for (const drop of fallingDrops) {
+      const howFarAway = Math.hypot(drop.x - position.x, drop.z - position.z)
+      const howHighAbove = drop.y - position.y
+      if (howFarAway < PUNCH_DISTANCE && howHighAbove < PERSON_HEIGHT + 1) {
+        flingAway(drop, position)
+        forgetDrop(drop)
+        howManyPunched += 1
+      }
+    }
+    return howManyPunched
+  }
+
+  // Send a lava drop flying up and away from a spot.
+  function flingAway(drop, from) {
+    const awayX = drop.x - from.x
+    const awayZ = drop.z - from.z
+    drop.piece.speed.set(awayX * 8, 10, awayZ * 8)
+    particles.burst('sparkles', drop)
+  }
+
+  // Stop keeping track of a lava drop: it can't hit anyone now.
+  function forgetDrop(drop) {
+    fallingDrops = fallingDrops.filter((other) => {
+      return other !== drop
+    })
   }
 
   // Keep the lava off the ground under this thing, like a roof:
@@ -213,5 +247,5 @@ export function createVolcano(screen) {
     return fountain !== null
   }
 
-  return { volcano, top, update, erupt, isErupting, isHitByLava, keepLavaOffUnder }
+  return { volcano, top, update, erupt, isErupting, isHitByLava, punchAwayLavaNear, keepLavaOffUnder }
 }

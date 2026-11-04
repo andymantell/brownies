@@ -132,6 +132,7 @@ export function makeParticles(screen) {
   const particles = {
     // Make a burst of pieces in one of the styles, at a spot { x, y, z }.
     // `colour` is optional: give one to use it instead of the style's colours.
+    // It gives back the pieces it made, in case you want to move them yourself.
     burst(styleName, spot, colour) {
       const style = PARTICLE_STYLES[styleName]
       if (!style) {
@@ -139,6 +140,7 @@ export function makeParticles(screen) {
         throw new Error(`There's no particle style called "${styleName}". Try one of: ${allNames}`)
       }
 
+      const madePieces = []
       for (let number = 0; number < style.howMany; number++) {
         const piece = makePiece(style, colour)
         piece.mesh.position.set(
@@ -148,7 +150,9 @@ export function makeParticles(screen) {
         )
         screen.scene.add(piece.mesh)
         flyingPieces.push(piece)
+        madePieces.push(piece)
       }
+      return madePieces
     },
 
     // Keep making bursts at a spot, again and again, until you call stop() on it.
