@@ -34,6 +34,12 @@ export const config = {
     noseColour: '#ff9eb5',
   },
 
+  garden: {
+    x: 5, // where the flower garden is
+    z: -2,
+    petalColour: '#ff5fa2',
+  },
+
   camera: {
     zoom: 14, // how much of the world fits on screen: bigger number = zoomed further out
     followSpeed: 4, // how quickly the camera catches up with the character
