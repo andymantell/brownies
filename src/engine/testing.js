@@ -1,5 +1,7 @@
 import * as THREE from 'three'
 import { waitForGameSeconds } from './loop.js'
+import { findPath } from './pathfinding.js'
+import { angleOf, directionFromTo } from './maths.js'
 
 // The testing toolbox: helpers for writing tests in src/tests.js, plus the bits that run them.
 //
@@ -7,11 +9,12 @@ import { waitForGameSeconds } from './loop.js'
 // and then checks that the right thing happened.
 
 const allTests = []
-let game = null // the character, controls and screen, once connectTests() has been called
+let game = null // the character, controls, screen and world, once connectTests() has been called
 let currentChecks = null // where check() writes its results while a test is running
 let keysPressedByTest = new Set()
 let fingerIsDown = false // is a pretend finger held down on the grass?
 const fingerSpot = { x: 0, z: 0 } // where the pretend finger last was
+let blocksPutByTest = [] // tidied away when each test finishes
 
 // ---- Helpers for writing tests ----
 
@@ -34,6 +37,13 @@ export function wait(seconds) {
 export async function holdKey(key, seconds) {
   pressKey(key)
   await wait(seconds)
+  releaseKey(key)
+}
+
+// Press a key and let go straight away.
+export async function tapKey(key) {
+  pressKey(key)
+  await wait(0.1)
   releaseKey(key)
 }
 
@@ -68,9 +78,39 @@ export function whereIsCharacter() {
   return { x: position.x, z: position.z }
 }
 
-// Pick the character up and put them down somewhere else.
+// How high are the character's feet? (0 is the normal ground level.)
+export function howHighIsCharacter() {
+  return game.character.position.y
+}
+
+// Pick the character up and put them down somewhere else, standing on the ground.
 export function putCharacterAt(x, z) {
-  game.character.position.set(x, 0, z)
+  const ground = game.world.blocks.topOfColumn(x, z)
+  game.character.position.set(x, ground, z)
+}
+
+// Turn the character to face a spot.
+export function turnCharacterTowards(x, z) {
+  const towards = directionFromTo(game.character.position, { x, z })
+  game.character.person.rotation.y = angleOf(towards.direction)
+}
+
+// Put a block in the world, just for this test. It's taken away when the test finishes.
+export function putBlock(x, y, z, type) {
+  game.world.blocks.put(x, y, z, type)
+  blocksPutByTest.push({ x, y, z })
+}
+
+// Is there a block here?
+export function isThereABlockAt(x, y, z) {
+  return game.world.blocks.isSolid(x, y, z)
+}
+
+// Use pathfinding to find a route between two spots on the ground.
+// Gives back a list of squares, each { x, y, z }.
+export function findRoute(from, to) {
+  const fromSpot = { x: from.x, y: game.world.blocks.topOfColumn(from.x, from.z), z: from.z }
+  return findPath(game.world.blocks, fromSpot, to)
 }
 
 // How many steps (metres) apart are two spots?
@@ -81,8 +121,8 @@ export function stepsBetween(spotA, spotB) {
 // ---- Behind the scenes: running the tests ----
 
 // Give the tests the bits of the game they need to poke at.
-export function connectTests({ character, controls, screen }) {
-  game = { character, controls, screen }
+export function connectTests({ character, controls, screen, world }) {
+  game = { character, controls, screen, world }
 }
 
 export function getAllTests() {
@@ -104,6 +144,7 @@ export async function runTest(oneTest) {
   } finally {
     keysPressedByTest.forEach(releaseKey)
     liftFinger()
+    takeAwayTestBlocks()
   }
 
   const results = currentChecks
@@ -117,6 +158,13 @@ function resetGame() {
   liftFinger()
   game.controls.stopWalking()
   putCharacterAt(0, 0)
+}
+
+function takeAwayTestBlocks() {
+  for (const spot of blocksPutByTest) {
+    game.world.blocks.remove(spot.x, spot.y, spot.z)
+  }
+  blocksPutByTest = []
 }
 
 function pressKey(key) {
@@ -134,8 +182,9 @@ function sendFingerEvent(type, x, z) {
   fingerSpot.x = x
   fingerSpot.z = z
 
-  // Work out where that spot is on the screen, in pixels.
-  const onScreen = new THREE.Vector3(x, 0, z).project(game.screen.camera)
+  // Work out where that spot is on the screen, in pixels (on top of the ground there).
+  const ground = Math.max(game.world.blocks.topOfColumn(x, z), 0)
+  const onScreen = new THREE.Vector3(x, ground, z).project(game.screen.camera)
   const pixelsAcross = ((onScreen.x + 1) / 2) * window.innerWidth
   const pixelsDown = ((1 - onScreen.y) / 2) * window.innerHeight
 

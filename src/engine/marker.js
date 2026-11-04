@@ -12,7 +12,7 @@ export function makeTapMarker() {
   return {
     ring,
     showAt(spot) {
-      ring.position.set(spot.x, 0.02, spot.z) // just above the grass so it isn't hidden
+      ring.position.set(spot.x, spot.y + 0.02, spot.z) // just above the ground so it isn't hidden
       ring.visible = true
     },
     hide() {

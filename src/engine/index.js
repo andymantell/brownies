@@ -14,10 +14,15 @@ export { createKeyboard, createFinger, SCREEN } from './input.js'
 export { makeTapMarker } from './marker.js'
 export { loadModel } from './models.js'
 export { makeSpeechBubble } from './speech-bubble.js'
+export { createBlockWorld } from './block-world.js'
+export { buildIsland } from './terrain.js'
+export { findPath } from './pathfinding.js'
+export { createPathWalker } from './path-walker.js'
 export {
   stillDirection,
   directionFromTo,
   angleOf,
+  spotInFront,
   turnTowards,
   keepInsideSquare,
   randomNumberBetween,

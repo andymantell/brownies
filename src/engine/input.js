@@ -14,14 +14,21 @@ export const SCREEN = {
 // Keeps track of which keys are being held down.
 //   const keyboard = createKeyboard()
 //   if (keyboard.isHeld('ArrowUp', 'w')) { ... }
+//   if (keyboard.wasJustPressed(' ')) { ... }
 export function createKeyboard() {
   const keysHeldDown = new Set()
+  const keysJustPressed = new Set() // pressed, but we haven't asked about them yet
 
   window.addEventListener('keydown', (event) => {
     keysHeldDown.add(event.key.toLowerCase())
 
-    // Stop the arrow keys scrolling the page.
-    if (event.key.startsWith('Arrow')) {
+    // Holding a key down makes it "repeat". We only count the first press.
+    if (!event.repeat) {
+      keysJustPressed.add(event.key.toLowerCase())
+    }
+
+    // Stop the arrow keys and space bar scrolling the page.
+    if (event.key.startsWith('Arrow') || event.key === ' ') {
       event.preventDefault()
     }
   })
@@ -33,20 +40,29 @@ export function createKeyboard() {
   // Forget all the keys if you switch to another window.
   window.addEventListener('blur', () => {
     keysHeldDown.clear()
+    keysJustPressed.clear()
   })
 
   return {
     isHeld(...keys) {
       return keys.some((key) => keysHeldDown.has(key.toLowerCase()))
     },
+
+    // Was this key pressed since we last asked? (Each press only counts once.)
+    wasJustPressed(key) {
+      const wasPressed = keysJustPressed.has(key.toLowerCase())
+      keysJustPressed.delete(key.toLowerCase())
+      return wasPressed
+    },
   }
 }
 
 // Keeps track of a finger (or a mouse button) held down on the ground.
 // `whenPressed(spot)` runs as soon as the finger goes down, with the spot it touched.
-//   const finger = createFinger(screen, (spot) => { ... })
+// `blocks` is the block world, so we can tell which block the finger is on.
+//   const finger = createFinger(screen, blocks, (spot) => { ... })
 //   if (finger.isDown()) { const spot = finger.spotOnGround() }
-export function createFinger(screen, whenPressed) {
+export function createFinger(screen, blocks, whenPressed) {
   let isDown = false
   let fingerId = null // which finger, if there's more than one on the screen
   const whereOnScreen = { x: 0, y: 0 }
@@ -67,7 +83,7 @@ export function createFinger(screen, whenPressed) {
       screen.canvas.setPointerCapture(event.pointerId)
     } catch {}
 
-    whenPressed(findSpotOnGround(whereOnScreen, screen.camera))
+    whenPressed(findSpotOnGround(whereOnScreen, screen.camera, blocks))
   })
 
   window.addEventListener('pointermove', (event) => {
@@ -95,22 +111,38 @@ export function createFinger(screen, whenPressed) {
     // The spot on the ground under the finger, right now.
     // (Worked out fresh each time, because the camera moves under the finger.)
     spotOnGround() {
-      return findSpotOnGround(whereOnScreen, screen.camera)
+      return findSpotOnGround(whereOnScreen, screen.camera, blocks)
     },
   }
 }
 
 // Find the spot on the ground under a point on the screen (in pixels).
-function findSpotOnGround(whereOnScreen, camera) {
+function findSpotOnGround(whereOnScreen, camera, blocks) {
   // three.js wants the screen position as numbers from -1 to 1.
   const across = (whereOnScreen.x / window.innerWidth) * 2 - 1
   const up = -(whereOnScreen.y / window.innerHeight) * 2 + 1
   const screenPosition = new THREE.Vector2(across, up)
 
-  // Shine an imaginary laser from the camera through that point, and see where it hits the ground.
+  // Shine an imaginary laser from the camera through that point, and see which block it hits.
   const laser = new THREE.Raycaster()
   laser.setFromCamera(screenPosition, camera)
 
-  const ground = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0)
-  return laser.ray.intersectPlane(ground, new THREE.Vector3())
+  const hit = blocks.findBlockAlongLaser(laser)
+  if (hit) {
+    // Stand on top of the block we hit, as near as we can to where the laser touched it.
+    const nearlyHalf = 0.49
+    return new THREE.Vector3(
+      keepBetween(hit.spot.x, hit.block.x - nearlyHalf, hit.block.x + nearlyHalf),
+      hit.block.y + 1,
+      keepBetween(hit.spot.z, hit.block.z - nearlyHalf, hit.block.z + nearlyHalf),
+    )
+  }
+
+  // Missed all the blocks (off the edge of the world)? Use the flat ground level instead.
+  const flatGround = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0)
+  return laser.ray.intersectPlane(flatGround, new THREE.Vector3())
+}
+
+function keepBetween(number, smallest, biggest) {
+  return Math.min(Math.max(number, smallest), biggest)
 }

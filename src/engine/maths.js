@@ -20,6 +20,15 @@ export function angleOf(direction) {
   return Math.atan2(direction.x, direction.z)
 }
 
+// The spot a certain distance in front of something facing a certain angle.
+export function spotInFront(position, facingAngle, distance) {
+  return {
+    x: position.x + Math.sin(facingAngle) * distance,
+    y: position.y,
+    z: position.z + Math.cos(facingAngle) * distance,
+  }
+}
+
 // Turn a little bit from one angle towards another, going the short way round.
 // (Angles are in "radians": a full circle is about 6.28, which is 2 × π.)
 export function turnTowards(currentAngle, wantedAngle, howMuch) {

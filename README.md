@@ -17,7 +17,8 @@ Then open http://localhost:8000 and refresh after each change. `serve.py` tells 
 ## Play
 
 - **Arrow keys** or **WASD** to walk
-- **Click / tap** the grass to walk there
+- **Click / tap** the ground to walk there
+- **Space bar** to break the block in front of you
 
 ## Where things live
 
@@ -25,7 +26,9 @@ Then open http://localhost:8000 and refresh after each change. `serve.py` tells 
 | --- | --- |
 | `src/config.js` | The fun knobs: colours, speed, zoom, title. Start here. |
 | `src/main.js` | Builds everything and runs the game loop |
-| `src/world.js` | The grassy field. Add trees, houses, ponds here. |
+| `src/world.js` | The island of blocks, and the trees on it. Add houses, ponds here. |
+| `src/blocks.js` | The kinds of block (grass, stone, wood...) and their colours. Add your own! |
+| `src/duck.js` | A demo duck that uses pathfinding to follow you around (temporary) |
 | `src/character.js` | The box character and its walk animation |
 | `src/controls.js` | Keyboard and tap-to-move |
 | `src/speech.js` | The things the character says in a speech bubble |
@@ -40,6 +43,15 @@ You can also poke the game from the browser console through `window.game`, for e
 ```js
 game.character.person.scale.set(3, 3, 3)
 ```
+
+## Blocks, pathfinding and breaking
+
+The world is made of 1 × 1 × 1 blocks on a grid (see `src/engine/block-world.js`). In `src/world.js`, `blocks.put(x, y, z, 'stone')` adds a block and `blocks.remove(x, y, z)` takes one away. A block's bottom is at height `y`, so the normal ground is the grass at `y = -1` and you stand at height 0.
+
+- `buildIsland` (in `src/engine/terrain.js`) makes the island. Set `hilliness: 0` and `howManyTrees: 0` in `config.js` for a flat, empty world.
+- You can step up one block, but not two, and you drop off ledges. Everyone who walks uses `blocks.moveAlong(...)`, so the rules are the same for everyone.
+- `createPathWalker` (in `src/engine/path-walker.js`) walks a creature along a route from `findPath` (A* pathfinding, in `src/engine/pathfinding.js`). The duck in `src/duck.js` shows how, with white dots showing its route.
+- `blocks.break(x, y, z)` breaks a block with a burst of crumbs. Blocks marked `unbreakable` in `blocks.js` (like bedrock) can't be broken.
 
 ## Making models in Blender
 

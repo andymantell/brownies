@@ -4,8 +4,10 @@ export const config = {
   title: 'Our Game',
 
   world: {
-    size: 60, // how big the grassy field is
-    grassColour: '#7cc85a',
+    size: 60, // how many blocks across the island is
+    hilliness: 5, // how tall the hills get, in blocks (0 for flat)
+    flatInTheMiddle: 10, // how far from the middle stays flat
+    howManyTrees: 25,
     skyColour: '#bfe6ff',
   },
 
