@@ -52,10 +52,14 @@ export function createHouse(screen) {
   const bed = makeBed()
   addFurniture(house, walls, bed, { x: -WIDTH / 2 + 1.3, z: -DEPTH / 2 + 1.9, width: 2, depth: 3.2 })
 
-  // A sofa on the right, turned to face the right-hand wall (where the TV will go).
+  // A sofa on the right, turned right round to face the TV on the back wall.
   const sofa = makeSofa()
-  sofa.rotation.y = Math.PI / 2 // a quarter turn
-  addFurniture(house, walls, sofa, { x: WIDTH / 2 - 4, z: -1, width: 1.1, depth: 2.6 })
+  sofa.rotation.y = Math.PI // a half turn
+  addFurniture(house, walls, sofa, { x: 2, z: -1.2, width: 2.6, depth: 1.1 })
+
+  // A TV against the back wall, a bit to the right.
+  const tv = makeTv()
+  addFurniture(house, walls, tv, { x: 2, z: -DEPTH / 2 + 0.5, width: 2, depth: 0.6 })
 
   const roof = makeRoof()
   house.add(roof)
@@ -214,6 +218,30 @@ function makeSofa() {
   sofa.add(rightArm)
 
   return sofa
+}
+
+// A TV on a little wooden cabinet, with a glowing blue screen.
+function makeTv() {
+  const tv = makeGroup()
+
+  const cabinet = makeBox({ width: 2, height: 0.7, depth: 0.6, colour: config.house.bedColour })
+  cabinet.position.y = 0.35
+  tv.add(cabinet)
+
+  const stand = makeBox({ width: 0.4, height: 0.15, depth: 0.3, colour: '#222222' })
+  stand.position.set(0, 0.77, -0.1)
+  tv.add(stand)
+
+  const screenBox = makeBox({ width: 1.8, height: 1.1, depth: 0.12, colour: '#111111' })
+  screenBox.position.set(0, 1.4, -0.1)
+  tv.add(screenBox)
+
+  // The picture on the front of the screen.
+  const picture = makeBox({ width: 1.6, height: 0.9, depth: 0.02, colour: '#9fd3ff' })
+  picture.position.set(0, 1.4, -0.03)
+  tv.add(picture)
+
+  return tv
 }
 
 // A pointy roof, made of layers of boxes that get thinner as they go up,
