@@ -1,5 +1,5 @@
 import { config } from './config.js'
-import { makeBox, makeGroup, turnTowards, isInsideRectangle, makeSeeThrough } from './engine/index.js'
+import { makeBox, makeGroup, turnTowards, isInsideRectangle, makeSeeThrough, makeDrawingScreen } from './engine/index.js'
 
 // A little house for our character, built out of boxes.
 //
@@ -58,7 +58,8 @@ export function createHouse(screen) {
   addFurniture(house, walls, sofa, { x: 2, z: -1.2, width: 2.6, depth: 1.1 })
 
   // A TV against the back wall, a bit to the right.
-  const tv = makeTv()
+  const tvScreen = makeDrawingScreen({ width: 1.6, height: 0.9 })
+  const tv = makeTv(tvScreen.screen)
   addFurniture(house, walls, tv, { x: 2, z: -DEPTH / 2 + 0.5, width: 2, depth: 0.6 })
 
   const roof = makeRoof()
@@ -90,6 +91,9 @@ export function createHouse(screen) {
   // How solid the roof is: 1 is solid, 0 is invisible.
   let roofSolidness = 1
 
+  // How long the TV programme has been on, in seconds.
+  let showTime = 0
+
   return {
     house,
     roof,
@@ -107,6 +111,12 @@ export function createHouse(screen) {
       const fadeSpeed = Math.min(secondsPassed * 5, 1)
       roofSolidness += (wantedSolidness - roofSolidness) * fadeSpeed
       makeSeeThrough(roof, roofSolidness)
+
+      // Paint the next picture of the TV programme.
+      showTime += secondsPassed
+      tvScreen.paint((brush) => {
+        drawTvProgramme(brush, showTime)
+      })
 
       const distanceToDoor = Math.hypot(characterPosition.x - doorway.x, characterPosition.z - doorway.z)
       const isCloseToDoor = distanceToDoor < 2
@@ -220,8 +230,8 @@ function makeSofa() {
   return sofa
 }
 
-// A TV on a little wooden cabinet, with a glowing blue screen.
-function makeTv() {
+// A TV on a little wooden cabinet. `screen` is the picture on the front.
+function makeTv(screen) {
   const tv = makeGroup()
 
   const cabinet = makeBox({ width: 2, height: 0.7, depth: 0.6, colour: config.house.bedColour })
@@ -236,12 +246,39 @@ function makeTv() {
   screenBox.position.set(0, 1.4, -0.1)
   tv.add(screenBox)
 
-  // The picture on the front of the screen.
-  const picture = makeBox({ width: 1.6, height: 0.9, depth: 0.02, colour: '#9fd3ff' })
-  picture.position.set(0, 1.4, -0.03)
-  tv.add(picture)
+  // The picture goes just in front of the black box.
+  screen.position.set(0, 1.4, -0.03)
+  tv.add(screen)
 
   return tv
+}
+
+// 📺 Brownies TV! A little cartoon: a box person bouncing over a hill.
+// `time` is how many seconds the programme has been on.
+// The picture is 256 dots across and 144 dots down. Dot 0, 0 is the top left.
+function drawTvProgramme(brush, time) {
+  // The blue sky.
+  brush.fillAll('#7ec8ff')
+
+  // The sun, up in the corner.
+  brush.circle(220, 34, 18, '#ffd93b')
+
+  // A big green hill. (It's a giant circle, mostly hidden below the screen.)
+  brush.circle(128, 330, 220, '#4caf50')
+
+  // The box person walks across the screen, then starts again from the left.
+  const across = (time * 50) % 300 - 30
+
+  // ...and bounces up and down as they go.
+  const bounce = Math.abs(Math.sin(time * 5)) * 30
+  const feet = 112 - bounce
+
+  brush.rectangle(across, feet - 24, 20, 24, '#ff6b6b') // body
+  brush.rectangle(across + 2, feet - 40, 16, 16, '#ffd6a5') // head
+  brush.rectangle(across + 11, feet - 35, 3, 3, '#222222') // eye
+
+  // The name of the channel.
+  brush.words('Brownies TV', 10, 26, 'white', 20)
 }
 
 // A pointy roof, made of layers of boxes that get thinner as they go up,

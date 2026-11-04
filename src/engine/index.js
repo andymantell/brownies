@@ -8,6 +8,7 @@
 export { createScreen } from './screen.js'
 export { startGameLoop } from './loop.js'
 export { makeBox, makeGroup, makeSwingingBox, makeSeeThrough } from './boxes.js'
+export { makeDrawingScreen } from './tv-screen.js'
 export { makeSquaresPicture } from './pictures.js'
 export { makeFlatGround } from './ground.js'
 export { createKeyboard, createFinger, SCREEN } from './input.js'
