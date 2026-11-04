@@ -7,7 +7,7 @@
 
 export { createScreen } from './screen.js'
 export { startGameLoop } from './loop.js'
-export { makeBox, makeGroup, makeSwingingBox } from './boxes.js'
+export { makeBox, makeGroup, makeSwingingBox, makeSeeThrough } from './boxes.js'
 export { makeSquaresPicture } from './pictures.js'
 export { makeFlatGround } from './ground.js'
 export { createKeyboard, createFinger, SCREEN } from './input.js'
@@ -20,6 +20,7 @@ export { findPath } from './pathfinding.js'
 export { createPathWalker } from './path-walker.js'
 export { makeParticles, PARTICLE_STYLES } from './particles.js'
 export { createPhysics } from './physics.js'
+export { createSolidThings } from './bumping.js'
 export {
   stillDirection,
   directionFromTo,

@@ -1,5 +1,5 @@
 import { config } from './config.js'
-import { createScreen, startGameLoop } from './engine/index.js'
+import { createScreen, startGameLoop, createSolidThings } from './engine/index.js'
 import { createWorld } from './world.js'
 import { createHouse } from './house.js'
 import { createCat } from './cat.js'
@@ -30,11 +30,16 @@ const world = createWorld(screen)
 const house = createHouse(screen)
 const cat = createCat(screen)
 const labrador = createDog(screen, config.labrador)
+const husky = createDog(screen, config.husky)
 const garden = createGarden(screen)
 const catHouse = createCatHouse(screen)
 const catBowls = createCatBowls(screen)
 const character = createCharacter(screen)
 const controls = createControls(screen)
+
+// Things the character bumps into, instead of walking through.
+const solidThings = createSolidThings()
+solidThings.add(cat.cat)
 
 // The game loop runs about 60 times every second.
 // Each time, we move things a tiny bit and draw a new picture.
@@ -44,6 +49,7 @@ startGameLoop((secondsPassed) => {
   character.update(secondsPassed, direction)
   world.keepOnField(character.position)
   house.keepOutOfWalls(character.position, whereTheCharacterWas)
+  solidThings.keepOutOf(character.position, whereTheCharacterWas)
   house.update(secondsPassed, character.position)
 
   screen.follow(character.position, secondsPassed)
@@ -56,4 +62,4 @@ createTestSidebar()
 
 // Lets you play with the game from the browser console. Try:
 //   game.character.person.scale.set(3, 3, 3)
-window.game = { screen, world, house, cat, labrador, catHouse, catBowls, garden, character, config }
+window.game = { screen, world, house, cat, labrador, husky, catHouse, catBowls, garden, character, config }

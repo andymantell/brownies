@@ -12,6 +12,7 @@ import {
   putCharacterAt,
   stepsBetween,
   isTheDoorOpen,
+  isTheRoofSeeThrough,
 } from './engine/testing.js'
 
 // 🧪 Our tests!
@@ -54,7 +55,7 @@ test(
   'Walks to where you tap',
   'Tapping the grass should make the character walk to that spot and stop there.',
   async () => {
-    const spot = { x: 3, z: 3 }
+    const spot = { x: -3, z: 5 } // a clear bit of grass, away from the cat and the house
 
     tapGround(spot.x, spot.z)
     await wait(2)
@@ -157,8 +158,41 @@ test(
   },
 )
 
+test(
+  'Bumps into the cat',
+  "Walking at the cat should stop the character, instead of walking through it.",
+  async () => {
+    // Stand a little way from the cat, then try to walk to where the cat is.
+    const cat = { x: config.cat.x, z: config.cat.z }
+    putCharacterAt(cat.x, cat.z - 3)
+    tapGround(cat.x, cat.z)
+    await wait(2)
+
+    const end = whereIsCharacter()
+    check('The character stopped before reaching the cat', stepsBetween(end, cat) > 0.5)
+  },
+)
+
 // Is a spot inside the field? (The field goes from -half to +half in both directions.)
 function isOnTheField(spot) {
   const half = config.world.size / 2
   return Math.abs(spot.x) < half && Math.abs(spot.z) < half
 }
+
+test(
+  'The roof goes see-through when you are inside',
+  'The roof should be solid when you are outside, and see-through when you are inside the house.',
+  async () => {
+    check('The roof is solid to start with', !isTheRoofSeeThrough())
+
+    // Stand in the middle of the house.
+    putCharacterAt(config.house.x, config.house.z)
+    await wait(1)
+    check('The roof is see-through', isTheRoofSeeThrough())
+
+    // Go back outside.
+    putCharacterAt(0, 0)
+    await wait(1)
+    check('The roof is solid again', !isTheRoofSeeThrough())
+  },
+)
