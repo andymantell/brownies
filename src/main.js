@@ -59,6 +59,7 @@ const controls = createControls(screen)
 // Things the character bumps into, instead of walking through.
 const solidThings = createSolidThings()
 solidThings.add(cat.cat)
+solidThings.add(sleigh.sleigh) // Santa, his sleigh and the dogs pulling it
 solidThings.add(labrador.dog)
 solidThings.add(husky.dog)
 solidThings.add(catHouse.catHouse)
