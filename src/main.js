@@ -172,6 +172,9 @@ const labradorFollower = makeFollower(labrador.dog, {
 // The horse wanders about on its own.
 const horseWanderer = makeWanderer(horse.horse, { speed: config.horse.walkSpeed })
 
+// The red panda wanders about on its own too.
+const redPandaWanderer = makeWanderer(redPanda.redPanda, { speed: config.redPanda.walkSpeed })
+
 // The game loop runs about 60 times every second.
 // Each time, we move things a tiny bit and draw a new picture.
 startGameLoop((secondsPassed) => {
@@ -251,6 +254,18 @@ startGameLoop((secondsPassed) => {
   }
   horseWanderer.turnIfBumped(whereTheHorseWas, secondsPassed)
   horse.update(secondsPassed) // NEIGH!
+
+  // The red panda pads about, bumping into things. It stays out of the house too.
+  const whereTheRedPandaWas = { x: redPanda.position.x, z: redPanda.position.z }
+  redPandaWanderer.wander(secondsPassed)
+  world.keepOnField(redPanda.position)
+  house.keepOutOfWalls(redPanda.position, whereTheRedPandaWas)
+  solidThings.keepOutOf(redPanda.position, whereTheRedPandaWas)
+  if (house.isInside(redPanda.position)) {
+    redPanda.position.x = whereTheRedPandaWas.x
+    redPanda.position.z = whereTheRedPandaWas.z
+  }
+  redPandaWanderer.turnIfBumped(whereTheRedPandaWas, secondsPassed)
 
   // Land on the trampoline and you bounce up really high!
   if (characterPhysics.isOnTheGround() && trampoline.isStandingOn(character.position)) {

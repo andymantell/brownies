@@ -1,8 +1,8 @@
 import { config } from './config.js'
-import { makeBox, makeGroup, makeSwingingBox } from './engine/index.js'
+import { makeBox, makeGroup, makeSwingingBox, makeLegsWalk } from './engine/index.js'
 
 // A little red panda, made out of boxes.
-// It has rusty red fur, a white face and dark legs.
+// It has rusty red fur, a white face and dark legs. Its legs walk whenever it moves.
 
 export function createRedPanda(screen) {
   const looks = config.redPanda
@@ -43,11 +43,14 @@ export function createRedPanda(screen) {
   addEar(head, { x: -0.19, looks })
   addEar(head, { x: 0.19, looks })
 
-  // Four dark legs, one at each corner of the body.
-  addLeg(redPanda, { x: -0.18, z: 0.35, looks })
-  addLeg(redPanda, { x: 0.18, z: 0.35, looks })
-  addLeg(redPanda, { x: -0.18, z: -0.35, looks })
-  addLeg(redPanda, { x: 0.18, z: -0.35, looks })
+  // Four dark legs, one at each corner of the body. They walk whenever the red panda moves.
+  makeLegsWalk(redPanda, {
+    frontLeft: addLeg(redPanda, { x: -0.18, z: 0.35, looks }),
+    frontRight: addLeg(redPanda, { x: 0.18, z: 0.35, looks }),
+    backLeft: addLeg(redPanda, { x: -0.18, z: -0.35, looks }),
+    backRight: addLeg(redPanda, { x: 0.18, z: -0.35, looks }),
+    legLength: LEG_LENGTH,
+  })
 
   // A big, bushy tail at the back, with dark rings all the way along it.
   addStripyTail(redPanda, looks)
