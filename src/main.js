@@ -10,6 +10,7 @@ import { createCatBowls } from './cat-bowls.js'
 import { createSanta } from './santa.js'
 import { createSleigh } from './sleigh.js'
 import { createSnow } from './snow.js'
+import { createNuggets } from './nuggets.js'
 import { createVolcano } from './volcano.js'
 import { makeScoreBoard } from './engine/score-board.js'
 import { createSea } from './sea.js'
@@ -75,6 +76,9 @@ sleigh.hitch(secondLabrador.dog, { x: 0.6, z: 4.4 })
 const snow = createSnow(screen)
 snow.keepOffUnder(house.roof)
 snow.keepOffUnder(catHouse.catHouse)
+const nuggets = createNuggets(screen) // chicken nuggets falling from the sky!
+nuggets.keepOffUnder(house.roof)
+nuggets.keepOffUnder(catHouse.catHouse)
 const volcano = createVolcano(screen)
 const sea = createSea(screen)
 world.letPeopleSwimIn(sea.water) // so you can jump in the sea and swim!
@@ -328,6 +332,7 @@ startGameLoop((secondsPassed) => {
   snow.update(secondsPassed)
   snow.trudgeThrough(character.position)
   snow.trudgeThrough(girl.position)
+  nuggets.update(secondsPassed)
   volcano.update(secondsPassed)
   sea.update(secondsPassed)
 

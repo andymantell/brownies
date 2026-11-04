@@ -182,6 +182,12 @@ export const config = {
     lavaDropsPerSecond: 250, // how heavy the lava rain is
   },
 
+  // 🍗 Chicken nuggets that fall from the sky all over the field.
+  nuggets: {
+    isOn: true, // switch the nuggets on (true) or off (false)
+    perSecond: 6, // how many nuggets fall every second
+  },
+
   bath: {
     x: -6, // where the bath is: out on the grass, in front of the house
     z: 10,
