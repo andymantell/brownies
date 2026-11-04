@@ -172,6 +172,13 @@ export const config = {
     roofColour: '#e0e0e0',
   },
 
+  // A blocky snowman, out on the grass between Santa and the volcano.
+  snowman: {
+    x: 8, // where the snowman stands
+    z: -8,
+    snowColour: '#f7fbff',
+  },
+
   // A big passenger jet, parked on the grass. Get in and fly it!
   jet: {
     x: -17, // where it's parked: in the far corner, away from everything else

@@ -20,6 +20,7 @@ import { createBath } from './bath.js'
 import { createHorse } from './horse.js'
 import { createLadybird } from './ladybird.js'
 import { createPortaloo } from './portaloo.js'
+import { createSnowman } from './snowman.js'
 import { createJet } from './jet.js'
 import { createCharacter } from './character.js'
 import { createMonkey } from './monkey.js'
@@ -90,6 +91,7 @@ const horse = createHorse(screen)
 const ladybird = createLadybird()
 ladybird.rideOn(horse.horse)
 const portaloo = createPortaloo(screen)
+const snowman = createSnowman(screen)
 const jet = createJet(screen)
 const character = createCharacter(screen)
 const controls = createControls(screen)
@@ -117,6 +119,7 @@ for (const part of bath.solidParts) {
 for (const wall of portaloo.walls) {
   solidThings.add(wall) // the portaloo: walk in through the doorway
 }
+solidThings.add(snowman.snowman) // jump up onto the snowman's head!
 for (const part of jet.solidParts) {
   solidThings.add(part) // the jet: jump up onto its wings!
 }
