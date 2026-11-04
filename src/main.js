@@ -14,6 +14,7 @@ import { createVolcano } from './volcano.js'
 import { makeScoreBoard } from './engine/score-board.js'
 import { createSea } from './sea.js'
 import { createJetty } from './jetty.js'
+import { createYacht } from './yacht.js'
 import { createBath } from './bath.js'
 import { createHorse } from './horse.js'
 import { createLadybird } from './ladybird.js'
@@ -70,6 +71,7 @@ const volcano = createVolcano(screen)
 const sea = createSea(screen)
 const jetty = createJetty(screen)
 world.letPeopleWalkOn(jetty.planks) // so you can walk out to sea along the jetty
+const yacht = createYacht(screen)
 volcano.keepLavaOffUnder(house.roof) // hide in the house to stay safe from the lava!
 volcano.keepLavaOffUnder(catHouse.catHouse)
 const scoreBoard = makeScoreBoard('Lava punched')

@@ -199,4 +199,16 @@ export const config = {
     woodColour: '#b07a45',
     postColour: '#6b4226',
   },
+
+  // A yacht, tied up at the end of the jetty.
+  yacht: {
+    x: 39, // where it is: right next to the end of the jetty
+    z: 4.9, // on the far side of the jetty, so it doesn't hide the players
+    hullColour: '#ffffff',
+    stripeColour: '#1d4e89',
+    deckColour: '#c8955c',
+    cabinColour: '#e9eef2',
+    mastColour: '#8b5a2b',
+    sailColour: '#fffaf0',
+  },
 }
