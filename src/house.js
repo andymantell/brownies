@@ -1,5 +1,13 @@
 import { config } from './config.js'
-import { makeBox, makeGroup, turnTowards, isInsideRectangle, makeSeeThrough, makeDrawingScreen } from './engine/index.js'
+import {
+  makeBox,
+  makeGroup,
+  turnTowards,
+  isInsideRectangle,
+  makeSeeThrough,
+  makeDrawingScreen,
+  createKeyboard,
+} from './engine/index.js'
 
 // A little house for our character, built out of boxes.
 //
@@ -12,6 +20,7 @@ const WALL_HEIGHT = config.house.wallHeight
 const WALL_THICKNESS = 0.3
 const DOOR_WIDTH = 1.4
 const DOOR_HEIGHT = 2.4
+const WATER_HEIGHT = 0.47 // how high the water in the toilet is
 
 export function createHouse(screen) {
   const colour = config.house.wallColour
@@ -62,6 +71,12 @@ export function createHouse(screen) {
   const tv = makeTv(tvScreen.screen)
   addFurniture(house, walls, tv, { x: 2, z: -DEPTH / 2 + 0.5, width: 2, depth: 0.6 })
 
+  // A toilet against the back wall, between the bed and the TV.
+  const toilet = makeToilet()
+  const toiletX = -1.5
+  const toiletZ = -DEPTH / 2 + 0.6
+  addFurniture(house, walls, toilet, { x: toiletX, z: toiletZ, width: 0.8, depth: 0.9 })
+
   const roof = makeRoof()
   house.add(roof)
 
@@ -94,6 +109,55 @@ export function createHouse(screen) {
   // How long the TV programme has been on, in seconds.
   let showTime = 0
 
+  // Where the toilet is in the world.
+  const toiletSpot = { x: config.house.x + toiletX, z: config.house.z + toiletZ }
+
+  // How many seconds of flushing are left. 0 means it isn't flushing.
+  const FLUSH_SECONDS = 2
+  let flushTimeLeft = 0
+
+  // The house listens to the keyboard too, for the F key that flushes the toilet.
+  const keyboard = createKeyboard()
+
+  // Start flushing the toilet (unless it's already flushing).
+  function flush() {
+    if (flushTimeLeft === 0) {
+      flushTimeLeft = FLUSH_SECONDS
+    }
+  }
+
+  // While it's flushing, the water spins round and sinks down, then fills up again.
+  function updateFlushing(secondsPassed) {
+    flushTimeLeft = Math.max(flushTimeLeft - secondsPassed, 0)
+    const water = toilet.water
+    const handle = toilet.handle
+
+    if (flushTimeLeft === 0) {
+      water.rotation.y = 0
+      water.scale.set(1, 1, 1)
+      water.position.y = WATER_HEIGHT
+      handle.rotation.z = 0
+      return
+    }
+
+    // How far through the flush we are: 0 at the start, 1 at the end.
+    const howFarThrough = 1 - flushTimeLeft / FLUSH_SECONDS
+
+    // Down to the bottom half way through, and back up by the end.
+    const howSunk = Math.sin(howFarThrough * Math.PI)
+
+    water.rotation.y += secondsPassed * 12 // spin!
+    water.position.y = WATER_HEIGHT - howSunk * 0.15
+    water.scale.set(1 - howSunk * 0.6, 1, 1 - howSunk * 0.6) // swirl down the plughole
+
+    // The handle dips down at the start of the flush.
+    if (howFarThrough < 0.3) {
+      handle.rotation.z = 0.6
+    } else {
+      handle.rotation.z = 0
+    }
+  }
+
   return {
     house,
     roof,
@@ -111,6 +175,13 @@ export function createHouse(screen) {
       const fadeSpeed = Math.min(secondsPassed * 5, 1)
       roofSolidness += (wantedSolidness - roofSolidness) * fadeSpeed
       makeSeeThrough(roof, roofSolidness)
+
+      // Press F next to the toilet to flush it!
+      const distanceToToilet = Math.hypot(characterPosition.x - toiletSpot.x, characterPosition.z - toiletSpot.z)
+      if (keyboard.wasJustPressed('f') && distanceToToilet < 2) {
+        flush()
+      }
+      updateFlushing(secondsPassed)
 
       // Paint the next picture of the TV programme.
       showTime += secondsPassed
@@ -156,6 +227,18 @@ export function createHouse(screen) {
 
     isRoofSeeThrough() {
       return roofSolidness < 0.5
+    },
+
+    flushTheToilet() {
+      flush()
+    },
+
+    isToiletFlushing() {
+      return flushTimeLeft > 0
+    },
+
+    whereIsTheToilet() {
+      return toiletSpot
     },
   }
 }
@@ -251,6 +334,56 @@ function makeTv(screen) {
   tv.add(screen)
 
   return tv
+}
+
+// A white toilet: a bowl, a seat, a tank of water at the back, and a handle.
+// The water and the handle move when you flush, so we keep hold of them.
+function makeToilet() {
+  const toilet = makeGroup()
+
+  const bowl = makeBox({ width: 0.6, height: 0.45, depth: 0.7, colour: 'white' })
+  bowl.position.set(0, 0.225, 0.1)
+  toilet.add(bowl)
+
+  // The seat is a ring, made of four thin boxes around the edge of the bowl.
+  const seatColour = '#f0f0f0'
+  const seatBack = makeBox({ width: 0.66, height: 0.06, depth: 0.12, colour: seatColour })
+  seatBack.position.set(0, 0.48, -0.22)
+  toilet.add(seatBack)
+
+  const seatFront = makeBox({ width: 0.66, height: 0.06, depth: 0.12, colour: seatColour })
+  seatFront.position.set(0, 0.48, 0.42)
+  toilet.add(seatFront)
+
+  const seatLeft = makeBox({ width: 0.12, height: 0.06, depth: 0.76, colour: seatColour })
+  seatLeft.position.set(-0.27, 0.48, 0.1)
+  toilet.add(seatLeft)
+
+  const seatRight = makeBox({ width: 0.12, height: 0.06, depth: 0.76, colour: seatColour })
+  seatRight.position.set(0.27, 0.48, 0.1)
+  toilet.add(seatRight)
+
+  // The water, inside the seat.
+  const water = makeBox({ width: 0.4, height: 0.04, depth: 0.5, colour: '#4aa3df' })
+  water.position.set(0, WATER_HEIGHT, 0.1)
+  toilet.add(water)
+
+  // The tank at the back, where the flushing water comes from.
+  const tank = makeBox({ width: 0.8, height: 0.8, depth: 0.3, colour: 'white' })
+  tank.position.set(0, 0.9, -0.3)
+  toilet.add(tank)
+
+  // The handle, on the front of the tank. It turns at one end, like a lever.
+  const handle = makeGroup()
+  const lever = makeBox({ width: 0.2, height: 0.05, depth: 0.05, colour: '#999999' })
+  lever.position.x = 0.1
+  handle.add(lever)
+  handle.position.set(-0.3, 1.15, -0.13)
+  toilet.add(handle)
+
+  toilet.water = water
+  toilet.handle = handle
+  return toilet
 }
 
 // 📺 Brownies TV! A little cartoon: a box person bouncing over a hill.

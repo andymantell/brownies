@@ -13,6 +13,9 @@ import {
   stepsBetween,
   isTheDoorOpen,
   isTheRoofSeeThrough,
+  whereIsTheToilet,
+  isTheToiletFlushing,
+  tapKey,
 } from './engine/testing.js'
 
 // 🧪 Our tests!
@@ -209,5 +212,24 @@ test(
     putCharacterAt(0, 0)
     await wait(1)
     check('The roof is solid again', !isTheRoofSeeThrough())
+  },
+)
+
+test(
+  'Flushes the toilet',
+  'Pressing F next to the toilet should flush it, and it should stop flushing after a little while.',
+  async () => {
+    check('The toilet is not flushing to start with', !isTheToiletFlushing())
+
+    // Stand just in front of the toilet, and press F.
+    const toilet = whereIsTheToilet()
+    putCharacterAt(toilet.x, toilet.z + 1)
+    await wait(0.5)
+    await tapKey('f')
+    check('The toilet is flushing', isTheToiletFlushing())
+
+    // Wait for the flush to finish.
+    await wait(2.5)
+    check('The toilet has finished flushing', !isTheToiletFlushing())
   },
 )

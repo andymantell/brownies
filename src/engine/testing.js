@@ -99,6 +99,16 @@ export function isTheRoofSeeThrough() {
   return game.house.isRoofSeeThrough()
 }
 
+// Where is the toilet in the house? Gives back { x, z }.
+export function whereIsTheToilet() {
+  return game.house.whereIsTheToilet()
+}
+
+// Is the toilet flushing right now?
+export function isTheToiletFlushing() {
+  return game.house.isToiletFlushing()
+}
+
 // Turn the character to face a spot.
 export function turnCharacterTowards(x, z) {
   const towards = directionFromTo(game.character.position, { x, z })
