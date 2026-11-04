@@ -228,6 +228,14 @@ startGameLoop((secondsPassed) => {
   horseWanderer.turnIfBumped(whereTheHorseWas, secondsPassed)
   horse.update(secondsPassed) // NEIGH!
 
+  // Land on the trampoline and you bounce up really high!
+  if (characterPhysics.isOnTheGround() && trampoline.isStandingOn(character.position)) {
+    characterPhysics.jump(config.trampoline.bounceHeight)
+  }
+  if (girlPhysics.isOnTheGround() && trampoline.isStandingOn(girl.position)) {
+    girlPhysics.jump(config.trampoline.bounceHeight)
+  }
+
   // Space bar to jump, 2 blocks high. Press it again in the air to do a backflip!
   if (controls.wantsToJump()) {
     const jumped = characterPhysics.jump(2)

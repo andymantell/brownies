@@ -220,5 +220,6 @@ export const config = {
     matColour: '#222222',
     frameColour: '#2f80ed',
     legColour: '#888888',
+    bounceHeight: 6, // how many blocks high you bounce
   },
 }

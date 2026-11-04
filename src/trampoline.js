@@ -1,7 +1,7 @@
 import { config } from './config.js'
-import { makeBox, makeGroup } from './engine/index.js'
+import { makeBox, makeGroup, areaUnder, isInsideRectangle } from './engine/index.js'
 
-// A trampoline on the deck of the yacht.
+// A trampoline on the deck of the yacht. Stand on it and BOING, up you go!
 // It's a bouncy black mat, with a blue frame round the edge and four little legs.
 
 const SIZE = 2.4 // from side to side
@@ -34,7 +34,17 @@ export function createTrampoline(screen) {
 
   screen.add(trampoline)
 
-  return { trampoline }
+  const area = areaUnder(trampoline)
+  const top = colours.y + LEG_HEIGHT + FRAME_THICKNESS
+
+  // Is someone standing right on top of the trampoline?
+  function isStandingOn(position) {
+    const isOverTheMat = isInsideRectangle(position, area, 0)
+    const isOnTop = Math.abs(position.y - top) < 0.1
+    return isOverTheMat && isOnTop
+  }
+
+  return { trampoline, isStandingOn }
 }
 
 // One leg, holding up a corner.
