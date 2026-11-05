@@ -12,11 +12,11 @@ import { createSleigh } from './sleigh.js'
 import { createSnow } from './snow.js'
 import { createNuggets } from './nuggets.js'
 import { createVolcano } from './volcano.js'
-import { makeScoreBoard } from './engine/score-board.js'
 import { createSea } from './sea.js'
 import { createJetty } from './jetty.js'
 import { createYacht } from './yacht.js'
 import { createTrampoline } from './trampoline.js'
+import { makeScoreBoard } from './engine/score-board.js'
 import { createBath } from './bath.js'
 import { createHorse } from './horse.js'
 import { createRedPanda } from './red-panda.js'
@@ -129,6 +129,11 @@ createWardrobe([
 
 // Things the character bumps into, instead of walking through.
 const solidThings = createSolidThings()
+solidThings.add(catHouse.catHouse)
+solidThings.add(garden.garden)
+solidThings.add(catBowls.waterBowl)
+solidThings.add(catBowls.foodBowl)
+solidThings.add(volcano.volcano)
 solidThings.add(sleigh.sleigh) // Santa, his sleigh and the dogs pulling it
 solidThings.add(yacht.hull) // jump up onto the deck of the yacht!
 solidThings.add(yacht.cabin)
@@ -155,11 +160,6 @@ girlBumpsInto.add(character.person)
 // Both players bump into the red panda, too.
 heroBumpsInto.add(redPanda.redPanda)
 girlBumpsInto.add(redPanda.redPanda)
-solidThings.add(catHouse.catHouse)
-solidThings.add(garden.garden)
-solidThings.add(catBowls.waterBowl)
-solidThings.add(catBowls.foodBowl)
-solidThings.add(volcano.volcano)
 
 // Physics gives the character gravity, so it can jump and land again.
 // It lands on the grass, or on top of solid things (if it jumps high enough).
@@ -362,4 +362,4 @@ createTestSidebar()
 
 // Lets you play with the game from the browser console. Try:
 //   game.character.person.scale.set(3, 3, 3)
-window.game = { screen, world, house, cat, labrador, husky, catHouse, catBowls, garden, character, girl, config }
+window.game = { screen, world, house, cat, labrador, santa, husky, catHouse, catBowls, garden, character, girl, config }
