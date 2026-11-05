@@ -82,10 +82,11 @@ test(
     check('The character walked towards the finger', afterPressing.x > 1)
 
     // Slide the finger, still holding it down.
-    slideFingerTo(1, 4) // (not too near the cat, or we would bump into it)
+    // (Slide it away from the pets, who are just behind us, or we would bump into them.)
+    slideFingerTo(3, -4)
     await wait(0.5)
     const afterSliding = whereIsCharacter()
-    check('The character followed the finger', afterSliding.z > afterPressing.z + 1)
+    check('The character followed the finger', afterSliding.z < afterPressing.z - 1)
 
     // Let go, and the character should soon stop.
     liftFinger()
@@ -101,10 +102,11 @@ test(
   "Can't fall off the edge",
   'Walking towards the edge of the field for a long time should not take the character off it.',
   async () => {
-    putCharacterAt(25, 0) // near the edge
+    // Use the left edge. (The right edge has the sea, and you can swim in that!)
+    putCharacterAt(-25, 0) // near the left edge
     await wait(1) // give the camera time to catch up so we can watch
 
-    await holdKey('ArrowRight', 2)
+    await holdKey('ArrowLeft', 2)
 
     const end = whereIsCharacter()
     check('The character is still on the field', isOnTheField(end))

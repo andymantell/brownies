@@ -357,7 +357,8 @@ startGameLoop((secondsPassed) => {
 })
 
 // Hook up the tests, and the sidebar that runs them (see tests.js).
-connectTests({ character, controls, screen, house })
+const animals = [cat, husky, labrador, horse, redPanda] // put back in their places before each test
+connectTests({ character, controls, screen, house, animals })
 createTestSidebar()
 
 // Lets you play with the game from the browser console. Try:

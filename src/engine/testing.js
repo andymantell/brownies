@@ -161,8 +161,13 @@ export function stepsBetween(spotA, spotB) {
 // ---- Behind the scenes: running the tests ----
 
 // Give the tests the bits of the game they need to poke at.
-export function connectTests({ character, controls, screen, world, particles, house }) {
+// The animals go back to where they started at the start of every test,
+// so a dog that followed you in one test isn't in the way in the next one.
+export function connectTests({ character, controls, screen, world, particles, house, animals = [] }) {
   game = { character, controls, screen, world, particles, house }
+  game.animals = animals.map((animal) => {
+    return { animal, startX: animal.position.x, startZ: animal.position.z }
+  })
 }
 
 export function getAllTests() {
@@ -198,6 +203,15 @@ function resetGame() {
   liftFinger()
   game.controls.stopWalking()
   putCharacterAt(0, 0)
+  putTheAnimalsBack()
+}
+
+// Put every animal back where it started.
+function putTheAnimalsBack() {
+  for (const { animal, startX, startZ } of game.animals) {
+    animal.position.x = startX
+    animal.position.z = startZ
+  }
 }
 
 // How high is the ground here? It's 0 everywhere, unless the world is made of blocks.
