@@ -23,10 +23,13 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+      # The GitHub runner already has the system libraries Chromium needs, so we skip
+      # --with-deps (it installs extra fonts from a mirror that is sometimes very slow).
+      # --only-shell downloads just the small headless browser, not the full one.
       - name: Install a headless browser
         run: |
           npm install --no-save playwright@1.63.0
-          npx playwright install --with-deps chromium
+          npx playwright install --only-shell chromium
       - name: Run the tests
         run: |
           python3 serve.py &
